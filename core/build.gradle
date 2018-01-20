@@ -1,0 +1,66 @@
+description = 'libticker-core'
+
+apply plugin: 'java-library'
+apply plugin: 'kotlin'
+apply plugin: 'maven-publish'
+
+sourceCompatibility = 1.8
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+javadoc.failOnError = false
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+dependencies {
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$versions.kotlin"
+
+    // JUnit
+    testImplementation "junit:junit:$versions.junit"
+
+    // Rx
+    implementation "io.reactivex.rxjava2:rxkotlin:$versions.rxKotlin"
+
+    // Twitter4J
+    implementation "org.twitter4j:twitter4j-core:$versions.twitter4j"
+
+    // ForecasIO
+    implementation "com.github.dvdme:ForecastIOLib:$versions.forecastIo"
+
+    // Sunrise sunset
+    implementation "ca.rmen:lib-sunrise-sunset:$versions.sunriseSunset"
+
+    // FRC
+    implementation "ca.rmen:lib-french-revolutionary-calendar:$versions.libFrc"
+
+    // Klaxon
+    implementation "com.beust:klaxon:$versions.klaxon"
+
+    // Json
+    implementation "org.json:json:$versions.json"
+
+    // Plugin api
+    api project(':plugin-api')
+}
+
+// Use "./gradlew install" to deploy the artifacts to your local maven repository
