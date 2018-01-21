@@ -30,12 +30,17 @@ import io.reactivex.schedulers.Schedulers
 import org.jraf.libticker.message.MessageQueue
 import org.jraf.libticker.plugin.api.Plugin
 import org.jraf.libticker.plugin.api.PluginConfiguration
+import java.util.ResourceBundle
 import java.util.concurrent.TimeUnit
 
 abstract class PeriodicPlugin : Plugin {
     lateinit var messageQueue: MessageQueue
     abstract val periodMs: Long
     open val initialDelayMs: Long = 0
+
+    val resourceBundle: ResourceBundle by lazy {
+        ResourceBundle.getBundle(javaClass.name)
+    }
 
     private var taskDisposable: Disposable? = null
 

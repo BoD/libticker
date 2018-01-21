@@ -30,15 +30,10 @@ import org.jraf.libticker.plugin.PeriodicPlugin
 import java.util.Calendar
 import java.util.GregorianCalendar
 import java.util.Locale
-import java.util.ResourceBundle
 import java.util.concurrent.TimeUnit
 
 class FrcPlugin : PeriodicPlugin() {
     override val periodMs = TimeUnit.MINUTES.toMillis(8)
-
-    private val resourceBundle by lazy {
-        ResourceBundle.getBundle(javaClass.name)
-    }
 
     override fun queueMessage() {
         val frcDate = FrenchRevolutionaryCalendar(Locale.FRENCH, FrenchRevolutionaryCalendar.CalculationMethod.ROMME).getDate(Calendar.getInstance() as GregorianCalendar)

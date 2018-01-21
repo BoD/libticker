@@ -42,7 +42,8 @@ class Sample {
                             "org.jraf.libticker.plugin.frc.FrcPlugin" to null,
                             "org.jraf.libticker.plugin.weather.WeatherPlugin" to PluginConfiguration().apply {
                                 put("apiKey", System.getenv("org.jraf.libticker.plugin.weather.WeatherPlugin.apiKey"))
-                            }
+                            },
+                            "org.jraf.libticker.plugin.btc.BtcPlugin" to null
                     )
                     .start()
 

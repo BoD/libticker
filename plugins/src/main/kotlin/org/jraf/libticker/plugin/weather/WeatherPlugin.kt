@@ -29,15 +29,10 @@ import org.jraf.android.ticker.provider.datetimeweather.weather.forecastio.Forec
 import org.jraf.libticker.message.MessageQueue
 import org.jraf.libticker.plugin.PeriodicPlugin
 import org.jraf.libticker.plugin.api.PluginConfiguration
-import java.util.ResourceBundle
 import java.util.concurrent.TimeUnit
 
 class WeatherPlugin : PeriodicPlugin() {
     override val periodMs = TimeUnit.MINUTES.toMillis(7)
-
-    private val resourceBundle by lazy {
-        ResourceBundle.getBundle(javaClass.name)
-    }
 
     private lateinit var forecastIoClient: ForecastIoClient
 
