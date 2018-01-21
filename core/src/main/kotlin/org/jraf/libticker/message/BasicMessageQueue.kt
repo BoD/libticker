@@ -29,11 +29,11 @@ import java.util.ArrayDeque
 import java.util.ArrayList
 
 class BasicMessageQueue(private val size: Int) : MessageQueue {
-    private val messageList: ArrayList<CharSequence> = ArrayList(size * 2)
+    private val messageList: ArrayList<String> = ArrayList(size * 2)
     private var messageListCurrentIndex = 0
-    private val urgentMessageQueue: ArrayDeque<CharSequence> = ArrayDeque(size * 2)
+    private val urgentMessageQueue: ArrayDeque<String> = ArrayDeque(size * 2)
 
-    override val next: CharSequence?
+    override val next: String?
         @Synchronized get() {
             // Try the urgent queue first
             if (!urgentMessageQueue.isEmpty()) return urgentMessageQueue.pop()
@@ -47,7 +47,7 @@ class BasicMessageQueue(private val size: Int) : MessageQueue {
 
 
     @Synchronized
-    override fun add(vararg messages: CharSequence) {
+    override fun add(vararg messages: String) {
         messageList.addAll(messages)
 
         // Discard old items if any
@@ -64,7 +64,7 @@ class BasicMessageQueue(private val size: Int) : MessageQueue {
 
 
     @Synchronized
-    override fun addUrgent(vararg messages: CharSequence) {
+    override fun addUrgent(vararg messages: String) {
         urgentMessageQueue.addAll(messages)
     }
 }

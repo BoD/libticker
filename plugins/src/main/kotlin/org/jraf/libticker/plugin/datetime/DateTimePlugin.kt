@@ -37,9 +37,9 @@ class DateTimePlugin : PeriodicPlugin() {
         private val TIME_FORMAT = SimpleDateFormat("HH:mm")
     }
 
-    override val period = TimeUnit.MINUTES.toMillis(5)
+    override val periodMs = TimeUnit.MINUTES.toMillis(5)
     override val initialDelayMs: Long
-        get() = period - (System.currentTimeMillis() % period)
+        get() = periodMs - (System.currentTimeMillis() % periodMs)
 
     override fun queueMessage() {
         val date = Date()

@@ -26,10 +26,10 @@
 package org.jraf.libticker.message
 
 interface MessageQueue {
-    fun add(vararg messages: CharSequence)
-    fun addUrgent(vararg messages: CharSequence)
-    val next: CharSequence?
+    fun add(vararg messages: String)
+    fun addUrgent(vararg messages: String)
+    val next: String?
 
-    operator fun plusAssign(message: CharSequence) = add(message)
-    operator fun timesAssign(message: CharSequence) = addUrgent(message)
+    operator fun plusAssign(message: String) = add(message)
+    operator fun timesAssign(message: String) = addUrgent(message)
 }

@@ -33,7 +33,7 @@ import java.util.ResourceBundle
 import java.util.concurrent.TimeUnit
 
 class WeatherPlugin : PeriodicPlugin() {
-    override val period = TimeUnit.MINUTES.toMillis(7)
+    override val periodMs = TimeUnit.MINUTES.toMillis(7)
 
     private val resourceBundle by lazy {
         ResourceBundle.getBundle(javaClass.name)

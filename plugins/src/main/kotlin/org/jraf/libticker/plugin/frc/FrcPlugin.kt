@@ -34,7 +34,7 @@ import java.util.ResourceBundle
 import java.util.concurrent.TimeUnit
 
 class FrcPlugin : PeriodicPlugin() {
-    override val period = TimeUnit.MINUTES.toMillis(8)
+    override val periodMs = TimeUnit.MINUTES.toMillis(8)
 
     private val resourceBundle by lazy {
         ResourceBundle.getBundle(javaClass.name)

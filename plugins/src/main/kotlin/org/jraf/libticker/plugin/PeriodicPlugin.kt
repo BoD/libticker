@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit
 
 abstract class PeriodicPlugin : Plugin {
     lateinit var messageQueue: MessageQueue
-    abstract val period: Long
+    abstract val periodMs: Long
     open val initialDelayMs: Long = 0
 
     private var taskDisposable: Disposable? = null
@@ -44,7 +44,8 @@ abstract class PeriodicPlugin : Plugin {
     }
 
     override fun start() {
-        taskDisposable = Schedulers.computation().schedulePeriodicallyDirect({ queueMessage() }, initialDelayMs, period, TimeUnit.MILLISECONDS)
+        taskDisposable = Schedulers.computation().schedulePeriodicallyDirect({ queueMessage() },
+                initialDelayMs, periodMs, TimeUnit.MILLISECONDS)
     }
 
     abstract fun queueMessage()
