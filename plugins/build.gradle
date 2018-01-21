@@ -56,11 +56,11 @@ dependencies {
     // Klaxon
     implementation "com.beust:klaxon:$versions.klaxon"
 
-    // Json
-    implementation "org.json:json:$versions.json"
-
     // Plugin api
     compileOnly project(':plugin-api')
+
+    // Slf4j
+    implementation "org.slf4j:slf4j-api:$versions.slf4j"
 }
 
 // Use "./gradlew install" to deploy the artifacts to your local maven repository

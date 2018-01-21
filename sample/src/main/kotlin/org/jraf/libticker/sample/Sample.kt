@@ -27,6 +27,7 @@ package org.jraf.libticker.sample
 
 import io.reactivex.schedulers.Schedulers
 import org.jraf.libticker.message.BasicMessageQueue
+import org.jraf.libticker.plugin.api.PluginConfiguration
 import org.jraf.libticker.plugin.manager.PluginManager
 import java.util.concurrent.TimeUnit
 
@@ -38,10 +39,16 @@ class Sample {
             PluginManager(messageQueue)
                     .addPlugins(
                             "org.jraf.libticker.plugin.datetime.DateTimePlugin" to null,
-                            "org.jraf.libticker.plugin.frc.FrcPlugin" to null)
+                            "org.jraf.libticker.plugin.frc.FrcPlugin" to null,
+                            "org.jraf.libticker.plugin.weather.WeatherPlugin" to PluginConfiguration().apply {
+                                put("apiKey", System.getenv("org.jraf.libticker.plugin.weather.WeatherPlugin.apiKey"))
+                            }
+                    )
                     .start()
 
-            Schedulers.computation().schedulePeriodicallyDirect({ println(messageQueue.next) }, 0, 5, TimeUnit.SECONDS)
+            Schedulers.computation().schedulePeriodicallyDirect({
+                messageQueue.next?.let(::println)
+            }, 0, 5, TimeUnit.SECONDS)
 
             Object().let {
                 synchronized(it) {

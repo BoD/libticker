@@ -38,8 +38,14 @@ dependencies {
     // Rx
     implementation "io.reactivex.rxjava2:rxkotlin:$versions.rxKotlin"
 
+    // Slf4j
+    implementation "org.slf4j:slf4j-simple:$versions.slf4j"
+
     // Core
     implementation project(':core')
+
+    // Plugin api
+    compileOnly project(':plugin-api')
 
     // Plugins
     implementation project(':plugins')

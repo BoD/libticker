@@ -23,28 +23,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jraf.libticker.plugin.frc
+package org.jraf.libticker.plugin.weather
 
-import ca.rmen.lfrc.FrenchRevolutionaryCalendar
+import org.jraf.android.ticker.provider.datetimeweather.weather.forecastio.ForecastIoClient
+import org.jraf.libticker.message.MessageQueue
 import org.jraf.libticker.plugin.PeriodicPlugin
-import java.util.Calendar
-import java.util.GregorianCalendar
-import java.util.Locale
+import org.jraf.libticker.plugin.api.PluginConfiguration
 import java.util.ResourceBundle
 import java.util.concurrent.TimeUnit
 
-class FrcPlugin : PeriodicPlugin() {
-    override val period = TimeUnit.MINUTES.toMillis(8)
+class WeatherPlugin : PeriodicPlugin() {
+    override val period = TimeUnit.MINUTES.toMillis(7)
 
     private val resourceBundle by lazy {
         ResourceBundle.getBundle(javaClass.name)
     }
 
-    override fun queueMessage() {
-        val frcDate = FrenchRevolutionaryCalendar(Locale.FRENCH, FrenchRevolutionaryCalendar.CalculationMethod.ROMME).getDate(Calendar.getInstance() as GregorianCalendar)
-        val frcDateStr = resourceBundle.getString("frc_date").format(frcDate.weekdayName, frcDate.dayOfMonth, frcDate.monthName, frcDate.year)
-        val frcObjectStr = resourceBundle.getString("frc_object").format(frcDate.objectTypeName, frcDate.objectOfTheDay)
+    private lateinit var forecastIoClient: ForecastIoClient
 
-        messageQueue.addUrgent(frcDateStr, frcObjectStr)
+    override fun init(messageQueue: MessageQueue, configuration: PluginConfiguration?) {
+        super.init(messageQueue, configuration)
+        forecastIoClient = ForecastIoClient(configuration!!.getString("apiKey"))
+    }
+
+    override fun queueMessage() {
+        forecastIoClient.weather?.let { weatherResult ->
+            val weatherNow = resourceBundle.getString("weather_now").format(
+                    weatherResult.todayWeatherCondition.symbol,
+                    weatherResult.currentTemperature)
+            val weatherMin = resourceBundle.getString("weather_min").format(weatherResult.todayMinTemperature)
+            val weatherMax = resourceBundle.getString("weather_max").format(weatherResult.todayMaxTemperature)
+
+            messageQueue.addUrgent(weatherNow, weatherMin, weatherMax)
+        }
     }
 }

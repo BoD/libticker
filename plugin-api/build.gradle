@@ -36,7 +36,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$versions.kotlin"
 
     // Json
-    implementation "org.json:json:$versions.json"
+    api "org.json:json:$versions.json"
 
 }
 
