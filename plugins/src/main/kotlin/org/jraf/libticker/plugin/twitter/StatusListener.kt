@@ -22,26 +22,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.jraf.libticker.plugin.twitter
 
-package org.jraf.libticker.plugin.datetime
+import twitter4j.Status
 
-import org.jraf.libticker.plugin.PeriodicPlugin
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import java.util.concurrent.TimeUnit
-
-class DateTimePlugin : PeriodicPlugin() {
-    companion object {
-        private val DATE_FORMAT = SimpleDateFormat("EEEE d MMMM yyy", Locale.FRANCE)
-        private val TIME_FORMAT = SimpleDateFormat("HH:mm")
-    }
-
-    override val periodMs = TimeUnit.MINUTES.toMillis(5)
-    override val initialDelayMs get() = periodMs - (System.currentTimeMillis() % periodMs)
-
-    override fun queueMessage() {
-        val date = Date()
-        messageQueue.addUrgent(DATE_FORMAT.format(date), TIME_FORMAT.format(date))
-    }
+internal interface StatusListener {
+    fun onNewStatuses(statuses: List<Status>)
 }
