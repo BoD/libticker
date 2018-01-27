@@ -4,17 +4,15 @@ apply plugin: 'java'
 apply plugin: 'kotlin'
 apply plugin: 'application'
 
-sourceCompatibility = 1.8
-
 compileKotlin {
-    kotlinOptions.jvmTarget = '1.8'
+    kotlinOptions.jvmTarget = '1.6'
 }
 
 mainClassName = 'org.jraf.libticker.sample.SampleKt'
 
 dependencies {
     // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$versions.kotlin"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$versions.kotlin"
 
     // Rx
     implementation "io.reactivex.rxjava2:rxkotlin:$versions.rxKotlin"

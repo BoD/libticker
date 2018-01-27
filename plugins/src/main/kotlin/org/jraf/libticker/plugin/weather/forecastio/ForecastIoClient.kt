@@ -61,7 +61,12 @@ internal class ForecastIoClient(private val apiKey: String) {
                 return lastResult
             }
 
-            val res = callForecastIo(location)
+            val res = try {
+                callForecastIo(location)
+            } catch (t: Throwable) {
+                LOGGER.warn("Could not retrieve the weather", t)
+                null
+            }
             this._weather = res
             return res
         }
