@@ -42,6 +42,6 @@ class DateTimePlugin : PeriodicPlugin() {
 
     override fun queueMessage() {
         val date = Date()
-        messageQueue.addUrgent(DATE_FORMAT.format(date), TIME_FORMAT.format(date))
+        messageQueue.addUrgent(DATE_FORMAT.format(date).capitalize(), TIME_FORMAT.format(date))
     }
 }

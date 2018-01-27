@@ -6,7 +6,7 @@ buildscript {
     ext.versions.with {
         gradleVersionsPlugin = '0.17.0'
 
-        kotlin = '1.2.20'
+        kotlin = '1.2.21'
         rxJava = '2.1.7'
         rxKotlin = '2.2.0'
         okHttp = '3.9.0'
@@ -15,7 +15,7 @@ buildscript {
         twitter4j = '4.0.6'
         forecastIo = '1.6.0'
         sunriseSunset = '1.1.1'
-        klaxon = '2.0.11'
+        klaxon = '2.1.2'
         json = '20171018'
         slf4j = '1.7.25'
     }
@@ -54,7 +54,7 @@ apply plugin: 'com.github.ben-manes.versions'
 dependencyUpdates.resolutionStrategy = {
     componentSelection { rules ->
         rules.all { selection ->
-            boolean rejected = [/*'alpha', 'beta', 'rc',*/ '20050927'].any { qualifier ->
+            boolean rejected = ['alpha', 'beta', 'rc'].any { qualifier ->
                 selection.candidate.version.toLowerCase() ==~ /.*-${qualifier}.*/
             }
             if (rejected) {

@@ -7,11 +7,7 @@ apply plugin: 'maven-publish'
 sourceCompatibility = 1.8
 
 compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-}
-
-compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = '1.8'
 }
 
 javadoc.failOnError = false
@@ -40,21 +36,6 @@ dependencies {
 
     // Rx
     implementation "io.reactivex.rxjava2:rxkotlin:$versions.rxKotlin"
-
-    // Twitter4J
-    implementation "org.twitter4j:twitter4j-core:$versions.twitter4j"
-
-    // ForecasIO
-    implementation "com.github.dvdme:ForecastIOLib:$versions.forecastIo"
-
-    // Sunrise sunset
-    implementation "ca.rmen:lib-sunrise-sunset:$versions.sunriseSunset"
-
-    // FRC
-    implementation "ca.rmen:lib-french-revolutionary-calendar:$versions.libFrc"
-
-    // Klaxon
-    implementation "com.beust:klaxon:$versions.klaxon"
 
     // Json
     implementation "org.json:json:$versions.json"
