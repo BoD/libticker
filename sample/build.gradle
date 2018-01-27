@@ -10,7 +10,7 @@ compileKotlin {
     kotlinOptions.jvmTarget = '1.8'
 }
 
-mainClassName = 'org.jraf.libticker.sample.Sample'
+mainClassName = 'org.jraf.libticker.sample.SampleKt'
 
 dependencies {
     // Kotlin

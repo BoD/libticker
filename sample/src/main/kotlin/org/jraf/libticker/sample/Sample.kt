@@ -31,37 +31,44 @@ import org.jraf.libticker.plugin.api.PluginConfiguration
 import org.jraf.libticker.plugin.manager.PluginManager
 import java.util.concurrent.TimeUnit
 
-class Sample {
-    companion object {
-        @JvmStatic
-        fun main(av: Array<String>) {
-            val messageQueue = BasicMessageQueue(40)
-            PluginManager(messageQueue)
-                .addPlugins(
-                    "org.jraf.libticker.plugin.datetime.DateTimePlugin" to null,
-                    "org.jraf.libticker.plugin.frc.FrcPlugin" to null,
-                    "org.jraf.libticker.plugin.weather.WeatherPlugin" to PluginConfiguration().apply {
-                        put("apiKey", System.getenv("org.jraf.libticker.plugin.weather.WeatherPlugin.apiKey"))
-                    },
-                    "org.jraf.libticker.plugin.btc.BtcPlugin" to null,
-                    "org.jraf.libticker.plugin.twitter.TwitterPlugin" to PluginConfiguration().apply {
-                        put("oAuthConsumerKey", System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthConsumerKey"))
-                        put("oAuthConsumerSecret", System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthConsumerSecret"))
-                        put("oAuthAccessToken", System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthAccessToken"))
-                        put("oAuthAccessTokenSecret", System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthAccessTokenSecret"))
-                    }
+fun main(av: Array<String>) {
+    val messageQueue = BasicMessageQueue(40)
+    PluginManager(messageQueue)
+        .addPlugins(
+            "org.jraf.libticker.plugin.datetime.DateTimePlugin" to null,
+            "org.jraf.libticker.plugin.frc.FrcPlugin" to null,
+            "org.jraf.libticker.plugin.weather.WeatherPlugin" to PluginConfiguration().apply {
+                put("apiKey", System.getenv("org.jraf.libticker.plugin.weather.WeatherPlugin.apiKey"))
+            },
+            "org.jraf.libticker.plugin.btc.BtcPlugin" to null,
+            "org.jraf.libticker.plugin.twitter.TwitterPlugin" to PluginConfiguration().apply {
+                put(
+                    "oAuthConsumerKey",
+                    System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthConsumerKey")
                 )
-                .start()
-
-            Schedulers.computation().schedulePeriodicallyDirect({
-                messageQueue.next?.let(::println)
-            }, 0, 5, TimeUnit.SECONDS)
-
-            Object().let {
-                synchronized(it) {
-                    it.wait()
-                }
+                put(
+                    "oAuthConsumerSecret",
+                    System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthConsumerSecret")
+                )
+                put(
+                    "oAuthAccessToken",
+                    System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthAccessToken")
+                )
+                put(
+                    "oAuthAccessTokenSecret",
+                    System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthAccessTokenSecret")
+                )
             }
+        )
+        .start()
+
+    Schedulers.computation().schedulePeriodicallyDirect({
+        messageQueue.next?.let(::println)
+    }, 0, 5, TimeUnit.SECONDS)
+
+    Object().let {
+        synchronized(it) {
+            it.wait()
         }
     }
 }
