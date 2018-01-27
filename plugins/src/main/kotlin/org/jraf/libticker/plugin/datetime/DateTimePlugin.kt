@@ -25,7 +25,10 @@
 
 package org.jraf.libticker.plugin.datetime
 
+import org.jraf.libticker.message.MessageQueue
 import org.jraf.libticker.plugin.PeriodicPlugin
+import org.jraf.libticker.plugin.api.PluginConfiguration
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -33,15 +36,25 @@ import java.util.concurrent.TimeUnit
 
 class DateTimePlugin : PeriodicPlugin() {
     companion object {
-        private val DATE_FORMAT = SimpleDateFormat("EEEE d MMMM yyy", Locale.FRANCE)
         private val TIME_FORMAT = SimpleDateFormat("HH:mm")
     }
 
     override val periodMs = TimeUnit.MINUTES.toMillis(5)
     override val initialDelayMs get() = periodMs - (System.currentTimeMillis() % periodMs)
 
+    private lateinit var dateLocale: Locale
+    private val dateFormat by lazy { DateFormat.getDateInstance(DateFormat.FULL, dateLocale) }
+
+
+    override fun init(messageQueue: MessageQueue, configuration: PluginConfiguration?) {
+        super.init(messageQueue, configuration)
+        dateLocale = configuration?.optString("dateLocale", null).let {
+            if (it == null) Locale.getDefault() else Locale.forLanguageTag(it)
+        }
+    }
+
     override fun queueMessage() {
         val date = Date()
-        messageQueue.addUrgent(DATE_FORMAT.format(date).capitalize(), TIME_FORMAT.format(date))
+        messageQueue.addUrgent(dateFormat.format(date).capitalize(), TIME_FORMAT.format(date))
     }
 }

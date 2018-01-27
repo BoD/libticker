@@ -69,7 +69,7 @@ class TwitterPlugin : Plugin {
 
                     // Add author
                     val author = "@" + screenName
-                    statusText = """<font size="2">$author</font> $statusText"""
+                    statusText = """<small><small><font color="#26A69A">$author</font></small></small> $statusText"""
 
                     messageQueue += statusText
                 }

@@ -33,10 +33,14 @@ import twitter4j.Twitter
 import twitter4j.TwitterFactory
 import twitter4j.conf.ConfigurationBuilder
 import java.util.Collections
-import java.util.Comparator
 import java.util.concurrent.TimeUnit
 
-internal class TwitterClient(oAuthConsumerKey: String, oAuthConsumerSecret: String, oAuthAccessToken: String, oAuthAccessTokenSecret: String) {
+internal class TwitterClient(
+    oAuthConsumerKey: String,
+    oAuthConsumerSecret: String,
+    oAuthAccessToken: String,
+    oAuthAccessTokenSecret: String
+) {
     companion object {
         private var LOGGER = LoggerFactory.getLogger(TwitterClient::class.java)
 
@@ -51,13 +55,14 @@ internal class TwitterClient(oAuthConsumerKey: String, oAuthConsumerSecret: Stri
 
     private val twitter: Twitter = TwitterFactory(
         ConfigurationBuilder()
-            .setDebugEnabled(true).setOAuthConsumerKey(oAuthConsumerKey)
+            .setDebugEnabled(true)
+            .setOAuthConsumerKey(oAuthConsumerKey)
             .setOAuthConsumerSecret(oAuthConsumerSecret)
             .setOAuthAccessToken(oAuthAccessToken)
             .setOAuthAccessTokenSecret(oAuthAccessTokenSecret)
+            .setTweetModeExtended(true)
             .build()
-    )
-        .instance
+    ).instance
 
 
     fun addListener(listener: StatusListener) = listeners.add(listener)
@@ -67,7 +72,8 @@ internal class TwitterClient(oAuthConsumerKey: String, oAuthConsumerSecret: Stri
 
     fun startClient() {
         checkForNewTweetsDisposable =
-                Schedulers.computation().schedulePeriodicallyDirect(CheckForNewTweetsRunnable(), 0, CHECK_PERIOD_MS, TimeUnit.MILLISECONDS)
+                Schedulers.computation()
+                    .schedulePeriodicallyDirect(CheckForNewTweetsRunnable(), 0, CHECK_PERIOD_MS, TimeUnit.MILLISECONDS)
     }
 
     fun stopClient() {

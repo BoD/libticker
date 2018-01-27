@@ -35,7 +35,9 @@ fun main(av: Array<String>) {
     val messageQueue = BasicMessageQueue(40)
     PluginManager(messageQueue)
         .addPlugins(
-            "org.jraf.libticker.plugin.datetime.DateTimePlugin" to null,
+            "org.jraf.libticker.plugin.datetime.DateTimePlugin" to PluginConfiguration().apply {
+                put("dateLocale", "fr")
+            },
             "org.jraf.libticker.plugin.frc.FrcPlugin" to null,
             "org.jraf.libticker.plugin.weather.WeatherPlugin" to PluginConfiguration().apply {
                 put("apiKey", System.getenv("org.jraf.libticker.plugin.weather.WeatherPlugin.apiKey"))
