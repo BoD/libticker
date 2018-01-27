@@ -33,6 +33,9 @@ buildscript {
 }
 
 allprojects {
+    group = 'org.jraf'
+    version = '1.0.0'
+
     repositories {
         mavenLocal()
         google()
@@ -45,7 +48,7 @@ task clean(type: Delete) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.4.1'
+    gradleVersion = '4.5'
     distributionType = Wrapper.DistributionType.ALL
 }
 

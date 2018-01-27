@@ -22,9 +22,16 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
-artifacts {
-    archives sourcesJar
-    archives javadocJar
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifactId project.description
+
+            artifact sourcesJar
+            artifact javadocJar
+        }
+    }
 }
 
 dependencies {
@@ -44,4 +51,4 @@ dependencies {
     api project(':plugin-api')
 }
 
-// Use "./gradlew install" to deploy the artifacts to your local maven repository
+// Use "./gradlew publishToMavenLocal" to deploy the artifacts to your local maven repository

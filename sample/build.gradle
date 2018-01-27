@@ -25,9 +25,6 @@ dependencies {
     // Core
     implementation project(':core')
 
-    // Plugin api
-    compileOnly project(':plugin-api')
-
     // Plugins
     implementation project(':plugins')
 }
