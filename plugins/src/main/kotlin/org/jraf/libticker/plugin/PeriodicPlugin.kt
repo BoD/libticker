@@ -49,8 +49,13 @@ abstract class PeriodicPlugin : Plugin {
     }
 
     override fun start() {
-        taskDisposable = Schedulers.computation().schedulePeriodicallyDirect({ queueMessage() },
-                initialDelayMs, periodMs, TimeUnit.MILLISECONDS)
+        taskDisposable = Schedulers.computation().schedulePeriodicallyDirect(
+            { queueMessage() },
+            // Add a few milliseconds because sometimes we are called too early!
+            initialDelayMs + 500,
+            periodMs,
+            TimeUnit.MILLISECONDS
+        )
     }
 
     abstract fun queueMessage()
