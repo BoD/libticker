@@ -26,6 +26,7 @@
 package org.jraf.libticker.plugin.weather
 
 import org.jraf.android.ticker.provider.datetimeweather.weather.forecastio.ForecastIoClient
+import org.jraf.libticker.message.Message
 import org.jraf.libticker.message.MessageQueue
 import org.jraf.libticker.plugin.PeriodicPlugin
 import org.jraf.libticker.plugin.api.PluginConfiguration
@@ -48,17 +49,37 @@ class WeatherPlugin : PeriodicPlugin() {
 
     override fun queueMessage() {
         forecastIoClient.weather?.let { weatherResult ->
-            val weatherNow = resourceBundle.getString("weather_now").format(
+            // Plain
+            val weatherNowPlain = resourceBundle.getString("weather_now_plain").format(
                 formattingLocale,
                 weatherResult.todayWeatherCondition.symbol,
                 weatherResult.currentTemperature
             )
-            val weatherMin =
-                resourceBundle.getString("weather_min").format(formattingLocale, weatherResult.todayMinTemperature)
-            val weatherMax =
-                resourceBundle.getString("weather_max").format(formattingLocale, weatherResult.todayMaxTemperature)
+            val weatherMinPlain =
+                resourceBundle.getString("weather_min_plain")
+                    .format(formattingLocale, weatherResult.todayMinTemperature)
+            val weatherMaxPlain =
+                resourceBundle.getString("weather_max_plain")
+                    .format(formattingLocale, weatherResult.todayMaxTemperature)
 
-            messageQueue.addUrgent(weatherNow, weatherMin, weatherMax)
+            // Formatted
+            val weatherNowFormatted = resourceBundle.getString("weather_now_formatted").format(
+                formattingLocale,
+                weatherResult.todayWeatherCondition.symbol,
+                weatherResult.currentTemperature
+            )
+            val weatherMinFormatted =
+                resourceBundle.getString("weather_min_formatted")
+                    .format(formattingLocale, weatherResult.todayMinTemperature)
+            val weatherMaxFormatted =
+                resourceBundle.getString("weather_max_formatted")
+                    .format(formattingLocale, weatherResult.todayMaxTemperature)
+
+            messageQueue.addUrgent(
+                Message(weatherNowPlain, weatherNowFormatted),
+                Message(weatherMinPlain, weatherMinFormatted),
+                Message(weatherMaxPlain, weatherMaxFormatted)
+            )
         }
     }
 }

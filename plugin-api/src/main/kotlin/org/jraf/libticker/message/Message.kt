@@ -25,11 +25,24 @@
 
 package org.jraf.libticker.message
 
-interface MessageQueue {
-    fun add(vararg messages: Message)
-    fun addUrgent(vararg messages: Message)
-    val next: Message?
+data class Message(
+    /**
+     * Plain text.
+     */
+    val text: String,
 
-    operator fun plusAssign(message: Message) = add(message)
-    operator fun timesAssign(message: Message) = addUrgent(message)
-}
+    /**
+     * A formatted version of the text (may contain simple HTML markup).
+     */
+    val textFormatted: String = text,
+
+    /**
+     * Optional URI to the source of this message.
+     */
+    val uri: String? = null,
+
+    /**
+     * Optional URI to an image.
+     */
+    val imageUri: String? = null
+)

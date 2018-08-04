@@ -26,6 +26,7 @@ package org.jraf.libticker.plugin.btc
 
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
+import org.jraf.libticker.message.Message
 import org.jraf.libticker.plugin.PeriodicPlugin
 import org.slf4j.LoggerFactory
 import java.net.HttpURLConnection
@@ -52,7 +53,10 @@ class BtcPlugin : PeriodicPlugin() {
                 connection.disconnect()
             }
 
-            messageQueue *= resourceBundle.getString("btc_value").format(value.toInt())
+            messageQueue *= Message(
+                text = resourceBundle.getString("btc_value_plain").format(value.toInt()),
+                textFormatted = resourceBundle.getString("btc_value_formatted").format(value.toInt())
+            )
         } catch (e: Exception) {
             LOGGER.warn("Could not get btc value", e)
         }

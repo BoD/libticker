@@ -25,7 +25,7 @@
 
 package org.jraf.libticker.plugin.frc
 
-import ca.rmen.lfrc.FrenchRevolutionaryCalendar
+import org.jraf.libticker.message.Message
 import org.jraf.libticker.plugin.PeriodicPlugin
 import java.util.Calendar
 import java.util.GregorianCalendar
@@ -36,10 +36,14 @@ class FrcPlugin : PeriodicPlugin() {
     override val periodMs = TimeUnit.MINUTES.toMillis(8)
 
     override fun queueMessage() {
-        val frcDate = FrenchRevolutionaryCalendar(Locale.FRENCH, FrenchRevolutionaryCalendar.CalculationMethod.ROMME).getDate(Calendar.getInstance() as GregorianCalendar)
-        val frcDateStr = resourceBundle.getString("frc_date").format(frcDate.weekdayName, frcDate.dayOfMonth, frcDate.monthName, frcDate.year)
+        val frcDate =
+            FrenchRevolutionaryCalendar(Locale.FRENCH, FrenchRevolutionaryCalendar.CalculationMethod.ROMME).getDate(
+                Calendar.getInstance() as GregorianCalendar
+            )
+        val frcDateStr = resourceBundle.getString("frc_date")
+            .format(frcDate.weekdayName, frcDate.dayOfMonth, frcDate.monthName, frcDate.year)
         val frcObjectStr = resourceBundle.getString("frc_object").format(frcDate.objectTypeName, frcDate.objectOfTheDay)
 
-        messageQueue.addUrgent(frcDateStr, frcObjectStr)
+        messageQueue.addUrgent(Message(frcDateStr), Message(frcObjectStr))
     }
 }

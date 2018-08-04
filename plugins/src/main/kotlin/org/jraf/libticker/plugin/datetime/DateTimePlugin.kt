@@ -25,6 +25,7 @@
 
 package org.jraf.libticker.plugin.datetime
 
+import org.jraf.libticker.message.Message
 import org.jraf.libticker.message.MessageQueue
 import org.jraf.libticker.plugin.PeriodicPlugin
 import org.jraf.libticker.plugin.api.PluginConfiguration
@@ -36,7 +37,7 @@ import java.util.concurrent.TimeUnit
 
 class DateTimePlugin : PeriodicPlugin() {
     companion object {
-        private val TIME_FORMAT = SimpleDateFormat("HH:mm")
+        private val TIME_FORMAT = SimpleDateFormat("H:mm")
     }
 
     override val periodMs = TimeUnit.MINUTES.toMillis(5)
@@ -55,6 +56,6 @@ class DateTimePlugin : PeriodicPlugin() {
 
     override fun queueMessage() {
         val date = Date()
-        messageQueue.addUrgent(dateFormat.format(date).capitalize(), TIME_FORMAT.format(date))
+        messageQueue *= Message(dateFormat.format(date).capitalize(), TIME_FORMAT.format(date))
     }
 }

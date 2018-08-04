@@ -45,7 +45,7 @@ abstract class PeriodicPlugin : Plugin {
     private var taskDisposable: Disposable? = null
 
     override fun init(messageQueue: MessageQueue, configuration: PluginConfiguration?) {
-        this.messageQueue = messageQueue;
+        this.messageQueue = messageQueue
     }
 
     override fun start() {

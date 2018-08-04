@@ -25,15 +25,21 @@
 
 package org.jraf.libticker.plugin.twitter
 
+import org.jraf.libticker.message.Message
 import org.jraf.libticker.message.MessageQueue
 import org.jraf.libticker.plugin.api.Plugin
 import org.jraf.libticker.plugin.api.PluginConfiguration
 import twitter4j.Status
+import java.util.ResourceBundle
 import java.util.regex.Pattern
 
 class TwitterPlugin : Plugin {
     private lateinit var messageQueue: MessageQueue
     private lateinit var twitterClient: TwitterClient
+
+    val resourceBundle: ResourceBundle by lazy {
+        ResourceBundle.getBundle(javaClass.name)
+    }
 
     override fun init(messageQueue: MessageQueue, configuration: PluginConfiguration?) {
         this.messageQueue = messageQueue
@@ -67,11 +73,16 @@ class TwitterPlugin : Plugin {
                         statusText = statusText.substring(0, statusText.length - 1)
                     }
 
-                    // Add author
-                    val author = "@" + screenName
-                    statusText = """<small><small><font color="#26A69A">$author</font></small></small> $statusText"""
+                    // Add author and format
+                    val textPlain = resourceBundle.getString("status_plain").format(screenName, statusText)
+                    val textFormatted = resourceBundle.getString("status_formatted").format(screenName, statusText)
 
-                    messageQueue += statusText
+                    messageQueue += Message(
+                        text = textPlain,
+                        textFormatted = textFormatted,
+                        uri = "https://twitter.com/$screenName/status/${status.id}",
+                        imageUri = status.mediaEntities.firstOrNull { it.type == "photo" }?.mediaURLHttps
+                    )
                 }
             }
         })
