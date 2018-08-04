@@ -27,7 +27,6 @@ package org.jraf.libticker.plugin.weather.location
 
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
-import com.beust.klaxon.float
 import org.slf4j.LoggerFactory
 import java.net.HttpURLConnection
 import java.net.URL

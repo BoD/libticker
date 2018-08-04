@@ -26,8 +26,6 @@ package org.jraf.libticker.plugin.btc
 
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
-import com.beust.klaxon.float
-import com.beust.klaxon.obj
 import org.jraf.libticker.plugin.PeriodicPlugin
 import org.slf4j.LoggerFactory
 import java.net.HttpURLConnection

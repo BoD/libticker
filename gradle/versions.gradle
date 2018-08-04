@@ -1,0 +1,48 @@
+// Versions used across modules
+def versions = [:]
+
+// Plugins
+def plugins = [:]
+plugins.with {
+    gradleVersions = '0.20.0'
+}
+versions.plugins = plugins
+
+// Libs used for building
+def buildLibs = [:]
+buildLibs.with {
+    frc = '1.8.2'
+}
+versions.buildLibs = buildLibs
+
+// Build parameters
+def build = [:]
+build.with {
+    gradle = '4.9'
+    kotlinJvmTarget = '1.6'
+}
+versions.build = build
+
+// Testing dependencies
+def testing = [:]
+testing.with {
+    junit = '4.12'
+}
+versions.testing = testing
+
+// Other dependencies
+versions.with {
+    kotlin = '1.2.60'
+    rxJava = '2.1.7'
+    rxKotlin = '2.2.0'
+    okHttp = '3.9.0'
+    twitter4j = '4.0.6'
+    forecastIo = '1.6.0'
+    sunriseSunset = '1.1.1'
+    klaxon = '3.0.6'
+    json = '20180130'
+    slf4j = '1.7.25'
+    libFrc = '1.8.2'
+}
+
+ext.versions = versions
