@@ -32,33 +32,54 @@ import org.slf4j.LoggerFactory
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.concurrent.TimeUnit
+import kotlin.math.roundToInt
 
 class BtcPlugin : PeriodicPlugin() {
     companion object {
         private var LOGGER = LoggerFactory.getLogger(BtcPlugin::class.java)
 
-        private const val URL_API = "https://blockchain.info/ticker"
+        private const val URL_CURRENT_VALUE = "https://blockchain.info/ticker"
+        private const val URL_PAST_VALUES = "https://api.blockchain.info/charts/market-price?timespan=30days"
+        private const val URL_CHART =
+            "https://chart.googleapis.com/chart?cht=ls&chs=320x200&chf=bg,s,000000&chls=6.0&chd=t:%1\$s"
     }
 
     override val periodMs = TimeUnit.MINUTES.toMillis(6)
 
     override fun queueMessage() {
         try {
-            val connection = URL(URL_API).openConnection() as HttpURLConnection
-            val value = try {
-                val jsonStr = connection.inputStream.bufferedReader().readText()
-                val rootJson: JsonObject = Parser().parse(StringBuilder(jsonStr)) as JsonObject
-                rootJson.obj("EUR")!!.float("15m")!!
-            } finally {
-                connection.disconnect()
-            }
+            val currentValueJson = fetch(URL_CURRENT_VALUE)
+            val currentValue = currentValueJson.obj("EUR")!!.float("15m")!!.toInt()
+
+            val pastValuesJson = fetch(URL_PAST_VALUES)
+            val pastValues = pastValuesJson.array<JsonObject>("values")!!
+                .map { it.float("y")!! }
+                .normalize()
+                .map { it.roundToInt() }
 
             messageQueue *= Message(
-                text = resourceBundle.getString("btc_value_plain").format(value.toInt()),
-                textFormatted = resourceBundle.getString("btc_value_formatted").format(value.toInt())
+                text = resourceBundle.getString("btc_value_plain").format(currentValue),
+                textFormatted = resourceBundle.getString("btc_value_formatted").format(currentValue),
+                imageUri = URL_CHART.format(pastValues.joinToString(","))
             )
-        } catch (e: Exception) {
-            LOGGER.warn("Could not get btc value", e)
+        } catch (t: Throwable) {
+            LOGGER.warn("Could not call api", t)
+        }
+    }
+
+    private fun Iterable<Float>.normalize(): Iterable<Float> {
+        val min = min()!!
+        val max = max()!!
+        return map { (100F / (max - min)) * (it - min) }
+    }
+
+    private fun fetch(url: String): JsonObject {
+        val connection = URL(url).openConnection() as HttpURLConnection
+        return try {
+            val jsonStr = connection.inputStream.bufferedReader().readText()
+            Parser().parse(StringBuilder(jsonStr)) as JsonObject
+        } finally {
+            connection.disconnect()
         }
     }
 }
