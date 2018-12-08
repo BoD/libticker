@@ -77,7 +77,7 @@ class BtcPlugin : PeriodicPlugin() {
         val connection = URL(url).openConnection() as HttpURLConnection
         return try {
             val jsonStr = connection.inputStream.bufferedReader().readText()
-            Parser().parse(StringBuilder(jsonStr)) as JsonObject
+            Parser.default().parse(StringBuilder(jsonStr)) as JsonObject
         } finally {
             connection.disconnect()
         }

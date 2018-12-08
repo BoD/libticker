@@ -56,7 +56,7 @@ internal class IpApiClient {
         val connection = URL(URL_API).openConnection() as HttpURLConnection
         return try {
             val jsonStr = connection.inputStream.bufferedReader().readText()
-            val rootJson: JsonObject = Parser().parse(StringBuilder(jsonStr)) as JsonObject
+            val rootJson: JsonObject = Parser.default().parse(StringBuilder(jsonStr)) as JsonObject
             Location(rootJson.float("lat")!!.toDouble(), rootJson.float("lon")!!.toDouble())
         } finally {
             connection.disconnect()
