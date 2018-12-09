@@ -25,6 +25,7 @@
 
 package org.jraf.libticker.plugin.frc
 
+import ca.rmen.lfrc.FrenchRevolutionaryCalendar
 import org.jraf.libticker.message.Message
 import org.jraf.libticker.plugin.base.PeriodicPlugin
 import java.util.Calendar
