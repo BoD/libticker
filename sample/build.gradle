@@ -31,8 +31,8 @@ dependencies {
     // Plugins
     implementation project(':plugins')
 
-//    // Http conf
-//    implementation project(':httpconf')
+    // Http conf
+    implementation project(':httpconf')
 }
 
 // Use "./gradlew run" to run the sample

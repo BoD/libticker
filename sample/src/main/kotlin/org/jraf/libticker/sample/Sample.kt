@@ -26,12 +26,16 @@
 package org.jraf.libticker.sample
 
 import io.reactivex.schedulers.Schedulers
+import org.jraf.libticker.httpconf.HttpConf
 import org.jraf.libticker.message.BasicMessageQueue
 import org.jraf.libticker.plugin.api.PluginConfiguration
 import org.jraf.libticker.plugin.manager.PluginManager
 import java.util.concurrent.TimeUnit
 
 fun main() {
+    // Logging
+    System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace")
+
     val messageQueue = BasicMessageQueue(40)
 
     val pluginManager = PluginManager(messageQueue).apply {
@@ -77,7 +81,7 @@ fun main() {
         messageQueue.next?.let(::println)
     }, 0, 5, TimeUnit.SECONDS)
 
-//    HttpConf.start()
+    HttpConf(pluginManager).start()
 
     Object().let {
         synchronized(it) {

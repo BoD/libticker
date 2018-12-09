@@ -25,22 +25,63 @@
 
 package org.jraf.libticker.httpconf
 
+import freemarker.cache.ClassTemplateLoader
 import io.ktor.application.call
-import io.ktor.http.ContentType
+import io.ktor.application.install
+import io.ktor.features.CallLogging
+import io.ktor.features.DefaultHeaders
+import io.ktor.freemarker.FreeMarker
+import io.ktor.freemarker.FreeMarkerContent
+import io.ktor.request.receiveParameters
+import io.ktor.response.respond
+import io.ktor.response.respondRedirect
 import io.ktor.response.respondText
 import io.ktor.routing.get
+import io.ktor.routing.post
+import io.ktor.routing.route
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import org.jraf.libticker.plugin.manager.PluginManager
 
-object HttpConf {
+class HttpConf(private val pluginManager: PluginManager, private val configuration: Configuration = Configuration()) {
     fun start() {
-        embeddedServer(Netty, 8080) {
+        embeddedServer(Netty, configuration.port) {
+            install(DefaultHeaders)
+            install(CallLogging)
+            install(FreeMarker) {
+                templateLoader = ClassTemplateLoader(this::class.java.classLoader, "templates")
+            }
+
             routing {
-                get("/") {
-                    call.respondText("My Example Blog", ContentType.Text.Html)
+                route("/") {
+                    get {
+                        call.respond(
+                            FreeMarkerContent(
+                                "index.ftl",
+                                mapOf(
+                                    "configuration" to configuration,
+                                    "managedPlugins" to pluginManager.managedPlugins,
+                                    "availablePlugins" to pluginManager.availablePlugins
+                                )
+                            )
+                        )
+                    }
+                }
+
+                route("/action") {
+                    post {
+                        val parameters = call.receiveParameters()
+                        if (parameters["action"] == "unmanage" && parameters["idx"]?.toIntOrNull() != null) {
+                            pluginManager.unmanagePlugin(pluginManager.managedPlugins[parameters["idx"]!!.toInt()])
+                            call.respondRedirect("/", permanent = false)
+                        } else {
+                            call.respondText("Error")
+                        }
+                    }
                 }
             }
-        }.start(wait = true)
+
+        }.start(wait = false)
     }
 }

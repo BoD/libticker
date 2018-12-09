@@ -1,1 +1,1 @@
-include ':core', ':plugin-api', ':plugins', ':sample'
+include ':httpconf', ':core', ':plugin-api', ':plugins', ':sample'

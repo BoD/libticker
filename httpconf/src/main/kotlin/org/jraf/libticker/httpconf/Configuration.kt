@@ -23,34 +23,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jraf.libticker.plugin.api
+package org.jraf.libticker.httpconf
 
-interface PluginDescriptorProvider {
-    val pluginDescriptor: PluginDescriptor
-}
-
-data class PluginDescriptor(
-    val className: String,
-    val displayName: String,
-    val moreInfo: String? = null,
-    val configurationDescriptor: PluginConfigurationDescriptor? = null
+data class Configuration(
+    val port: Int = 8042,
+    val appName: String = "libticker",
+    val appVersion: String = "v1.0.0"
 )
-
-data class PluginConfigurationDescriptor(
-    val configurationItemDescriptors: List<ConfigurationItemDescriptor>
-)
-
-data class ConfigurationItemDescriptor(
-    val key: String,
-    val type: ConfigurationItemType,
-    val displayName: String,
-    val moreInfo: String? = null,
-    val defaultValue: String? = null,
-    val required: Boolean = true
-)
-
-enum class ConfigurationItemType {
-    STRING,
-    NUMBER,
-    BOOLEAN
-}
