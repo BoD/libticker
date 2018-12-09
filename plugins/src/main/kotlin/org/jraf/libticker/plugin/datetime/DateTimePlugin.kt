@@ -27,8 +27,8 @@ package org.jraf.libticker.plugin.datetime
 
 import org.jraf.libticker.message.Message
 import org.jraf.libticker.message.MessageQueue
-import org.jraf.libticker.plugin.PeriodicPlugin
 import org.jraf.libticker.plugin.api.PluginConfiguration
+import org.jraf.libticker.plugin.base.PeriodicPlugin
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -39,6 +39,8 @@ class DateTimePlugin : PeriodicPlugin() {
     companion object {
         private val TIME_FORMAT = SimpleDateFormat("H:mm")
     }
+
+    override val descriptor = DateTimePluginDescriptor.DESCRIPTOR
 
     override val periodMs = TimeUnit.MINUTES.toMillis(5)
     override val initialDelayMs get() = periodMs - (System.currentTimeMillis() % periodMs)

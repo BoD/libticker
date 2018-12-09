@@ -31,42 +31,53 @@ import org.jraf.libticker.plugin.api.PluginConfiguration
 import org.jraf.libticker.plugin.manager.PluginManager
 import java.util.concurrent.TimeUnit
 
-fun main(av: Array<String>) {
+fun main() {
     val messageQueue = BasicMessageQueue(40)
-    PluginManager(messageQueue)
-        .addPlugins(
-            "org.jraf.libticker.plugin.datetime.DateTimePlugin" to PluginConfiguration().apply {
+
+    val pluginManager = PluginManager(messageQueue).apply {
+        managePlugin(
+            "org.jraf.libticker.plugin.datetime.DateTimePlugin", PluginConfiguration().apply {
                 put("dateLocale", "fr")
-            },
-            "org.jraf.libticker.plugin.frc.FrcPlugin" to null,
-            "org.jraf.libticker.plugin.weather.WeatherPlugin" to PluginConfiguration().apply {
-                put("apiKey", System.getenv("org.jraf.libticker.plugin.weather.WeatherPlugin.apiKey"))
-            },
-            "org.jraf.libticker.plugin.btc.BtcPlugin" to null,
-            "org.jraf.libticker.plugin.twitter.TwitterPlugin" to PluginConfiguration().apply {
-                put(
-                    "oAuthConsumerKey",
-                    System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthConsumerKey")
-                )
-                put(
-                    "oAuthConsumerSecret",
-                    System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthConsumerSecret")
-                )
-                put(
-                    "oAuthAccessToken",
-                    System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthAccessToken")
-                )
-                put(
-                    "oAuthAccessTokenSecret",
-                    System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthAccessTokenSecret")
-                )
-            }
-        )
-        .start()
+            })
+            .start()
+
+        managePlugin("org.jraf.libticker.plugin.frc.FrcPlugin", null)
+            .start()
+
+        managePlugin("org.jraf.libticker.plugin.weather.WeatherPlugin", PluginConfiguration().apply {
+            put("apiKey", System.getenv("org.jraf.libticker.plugin.weather.WeatherPlugin.apiKey"))
+        })
+            .start()
+
+        managePlugin("org.jraf.libticker.plugin.btc.BtcPlugin", null).start()
+        managePlugin("org.jraf.libticker.plugin.twitter.TwitterPlugin", PluginConfiguration().apply {
+            put(
+                "oAuthConsumerKey",
+                System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthConsumerKey")
+            )
+            put(
+                "oAuthConsumerSecret",
+                System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthConsumerSecret")
+            )
+            put(
+                "oAuthAccessToken",
+                System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthAccessToken")
+            )
+            put(
+                "oAuthAccessTokenSecret",
+                System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthAccessTokenSecret")
+            )
+        })
+            .start()
+    }
+
+    println(pluginManager.availablePlugins)
 
     Schedulers.computation().schedulePeriodicallyDirect({
         messageQueue.next?.let(::println)
     }, 0, 5, TimeUnit.SECONDS)
+
+//    HttpConf.start()
 
     Object().let {
         synchronized(it) {

@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2018 Benoit 'BoD' Lubek (BoD@JRAF.org)
+ * Copyright (C) 2018-present Benoit 'BoD' Lubek (BoD@JRAF.org)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,18 +25,30 @@
 
 package org.jraf.libticker.plugin.api
 
-import org.jraf.libticker.message.MessageQueue
+interface PluginDescriptorProvider {
+    val pluginDescriptor: PluginDescriptor
+}
 
-interface Plugin {
-    val descriptor: PluginDescriptor
+data class PluginDescriptor(
+    val className: String,
+    val displayName: String,
+    val moreInfo: String? = null,
+    val configurationDescriptor: PluginConfigurationDescriptor? = null
+)
 
-    fun init(messageQueue: MessageQueue, configuration: PluginConfiguration?)
+data class PluginConfigurationDescriptor(
+    val configurationItemDescriptors: List<ConfigurationItemDescriptor>
+)
 
-    val configuration: PluginConfiguration?
+data class ConfigurationItemDescriptor(
+    val key: String,
+    val type: ConfigurationItemType,
+    val displayName: String,
+    val defaultValue: String? = null
+)
 
-    fun start()
-
-    fun stop()
-
-    val isRunning: Boolean
+enum class ConfigurationItemType {
+    STRING,
+    NUMBER,
+    BOOLEAN
 }

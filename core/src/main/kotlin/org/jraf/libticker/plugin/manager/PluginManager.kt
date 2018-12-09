@@ -28,24 +28,28 @@ package org.jraf.libticker.plugin.manager
 import org.jraf.libticker.message.MessageQueue
 import org.jraf.libticker.plugin.api.Plugin
 import org.jraf.libticker.plugin.api.PluginConfiguration
+import org.jraf.libticker.plugin.api.PluginDescriptor
+import org.jraf.libticker.plugin.api.PluginDescriptorProvider
+import java.util.ServiceLoader
 
 class PluginManager(private val messageQueue: MessageQueue) {
-    private val plugins = mutableListOf<Plugin>()
+    private val _managedPlugins = mutableListOf<Plugin>()
 
-    fun addPlugin(pluginClassName: String, configuration: PluginConfiguration?): PluginManager {
-        (Class.forName(pluginClassName).newInstance() as Plugin).let {
-            it.init(messageQueue, configuration)
-            plugins += it
-        }
-        return this
+    fun managePlugin(pluginClassName: String, configuration: PluginConfiguration?): Plugin {
+        val plugin = (Class.forName(pluginClassName).newInstance() as Plugin)
+        _managedPlugins += plugin
+        plugin.init(messageQueue, configuration)
+        return plugin
     }
 
-    fun addPlugins(vararg pluginClassAndConf: Pair<String, PluginConfiguration?>): PluginManager {
-        pluginClassAndConf.forEach { addPlugin(it.first, it.second) }
-        return this
+    fun unmanagePlugin(plugin: Plugin) {
+        if (!plugin.isRunning) plugin.stop()
+        _managedPlugins -= plugin
     }
 
-    fun start() = plugins.forEach { it.start() }
+    val managedPlugins: List<Plugin> = _managedPlugins
 
-    fun stop() = plugins.forEach { it.stop() }
+    val availablePlugins: List<PluginDescriptor> by lazy {
+        ServiceLoader.load(PluginDescriptorProvider::class.java).map { it.pluginDescriptor }
+    }
 }

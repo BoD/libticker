@@ -27,7 +27,7 @@ package org.jraf.libticker.plugin.btc
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import org.jraf.libticker.message.Message
-import org.jraf.libticker.plugin.PeriodicPlugin
+import org.jraf.libticker.plugin.base.PeriodicPlugin
 import org.slf4j.LoggerFactory
 import java.net.HttpURLConnection
 import java.net.URL
@@ -35,6 +35,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
 
 class BtcPlugin : PeriodicPlugin() {
+
     companion object {
         private var LOGGER = LoggerFactory.getLogger(BtcPlugin::class.java)
 
@@ -43,6 +44,8 @@ class BtcPlugin : PeriodicPlugin() {
         private const val URL_CHART =
             "https://chart.googleapis.com/chart?cht=ls&chs=320x200&chf=bg,s,000000&chls=6.0&chd=t:%1\$s"
     }
+
+    override val descriptor = BtcPluginDescriptor.DESCRIPTOR
 
     override val periodMs = TimeUnit.MINUTES.toMillis(6)
 

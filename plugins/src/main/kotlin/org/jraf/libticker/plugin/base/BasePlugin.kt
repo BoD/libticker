@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2018 Benoit 'BoD' Lubek (BoD@JRAF.org)
+ * Copyright (C) 2018-present Benoit 'BoD' Lubek (BoD@JRAF.org)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,44 +23,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jraf.libticker.plugin
+package org.jraf.libticker.plugin.base
 
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import org.jraf.libticker.message.MessageQueue
 import org.jraf.libticker.plugin.api.Plugin
 import org.jraf.libticker.plugin.api.PluginConfiguration
-import java.util.ResourceBundle
-import java.util.concurrent.TimeUnit
 
-abstract class PeriodicPlugin : Plugin {
+abstract class BasePlugin : Plugin {
     lateinit var messageQueue: MessageQueue
-    abstract val periodMs: Long
-    open val initialDelayMs: Long = 0
-
-    val resourceBundle: ResourceBundle by lazy {
-        ResourceBundle.getBundle(javaClass.name)
-    }
-
-    private var taskDisposable: Disposable? = null
+    private var _configuration: PluginConfiguration? = null
+    private var _isRunning: Boolean = false
 
     override fun init(messageQueue: MessageQueue, configuration: PluginConfiguration?) {
         this.messageQueue = messageQueue
+        _configuration = configuration
     }
+
+    override val configuration: PluginConfiguration?
+        get() = _configuration
 
     override fun start() {
-        taskDisposable = Schedulers.computation().schedulePeriodicallyDirect(
-            { queueMessage() },
-            // Add a few milliseconds because sometimes we are called too early!
-            initialDelayMs + 500,
-            periodMs,
-            TimeUnit.MILLISECONDS
-        )
+        _isRunning = true
     }
-
-    abstract fun queueMessage()
 
     override fun stop() {
-        taskDisposable?.dispose()
+        _isRunning = false
     }
+
+    override val isRunning: Boolean
+        get() = _isRunning
 }

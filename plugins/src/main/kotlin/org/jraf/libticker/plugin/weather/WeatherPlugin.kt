@@ -28,12 +28,14 @@ package org.jraf.libticker.plugin.weather
 import org.jraf.android.ticker.provider.datetimeweather.weather.forecastio.ForecastIoClient
 import org.jraf.libticker.message.Message
 import org.jraf.libticker.message.MessageQueue
-import org.jraf.libticker.plugin.PeriodicPlugin
 import org.jraf.libticker.plugin.api.PluginConfiguration
+import org.jraf.libticker.plugin.base.PeriodicPlugin
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 class WeatherPlugin : PeriodicPlugin() {
+    override val descriptor = WeatherPluginDescriptor.DESCRIPTOR
+
     override val periodMs = TimeUnit.MINUTES.toMillis(7)
 
     private lateinit var forecastIoClient: ForecastIoClient

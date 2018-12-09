@@ -43,6 +43,7 @@ versions.with {
     json = '20180130'
     slf4j = '1.7.25'
     libFrc = '1.8.2'
+    ktor = '1.0.1'
 }
 
 ext.versions = versions

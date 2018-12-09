@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2018 Benoit 'BoD' Lubek (BoD@JRAF.org)
+ * Copyright (C) 2018-present Benoit 'BoD' Lubek (BoD@JRAF.org)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,20 +23,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jraf.libticker.plugin.api
+package org.jraf.libticker.plugin.btc
 
-import org.jraf.libticker.message.MessageQueue
+import org.jraf.libticker.plugin.api.PluginDescriptor
+import org.jraf.libticker.plugin.api.PluginDescriptorProvider
 
-interface Plugin {
-    val descriptor: PluginDescriptor
+object BtcPluginDescriptor {
+    val DESCRIPTOR = PluginDescriptor(
+        className = "${this::class.java.`package`.name}.BtcPlugin",
+        displayName = "Bitcoin exchange rate"
+    )
+}
 
-    fun init(messageQueue: MessageQueue, configuration: PluginConfiguration?)
-
-    val configuration: PluginConfiguration?
-
-    fun start()
-
-    fun stop()
-
-    val isRunning: Boolean
+class BtcPluginDescriptorProvider : PluginDescriptorProvider {
+    override val pluginDescriptor = BtcPluginDescriptor.DESCRIPTOR
 }

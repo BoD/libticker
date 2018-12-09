@@ -27,14 +27,15 @@ package org.jraf.libticker.plugin.twitter
 
 import org.jraf.libticker.message.Message
 import org.jraf.libticker.message.MessageQueue
-import org.jraf.libticker.plugin.api.Plugin
 import org.jraf.libticker.plugin.api.PluginConfiguration
+import org.jraf.libticker.plugin.base.BasePlugin
 import twitter4j.Status
 import java.util.ResourceBundle
 import java.util.regex.Pattern
 
-class TwitterPlugin : Plugin {
-    private lateinit var messageQueue: MessageQueue
+class TwitterPlugin : BasePlugin() {
+    override val descriptor = TwitterPluginDescriptor.DESCRIPTOR
+
     private lateinit var twitterClient: TwitterClient
 
     val resourceBundle: ResourceBundle by lazy {
@@ -42,8 +43,7 @@ class TwitterPlugin : Plugin {
     }
 
     override fun init(messageQueue: MessageQueue, configuration: PluginConfiguration?) {
-        this.messageQueue = messageQueue
-        configuration!!
+        super.init(messageQueue, configuration!!)
         twitterClient = TwitterClient(
             configuration.getString("oAuthConsumerKey"),
             configuration.getString("oAuthConsumerSecret"),
@@ -53,6 +53,7 @@ class TwitterPlugin : Plugin {
     }
 
     override fun start() {
+        super.start()
         twitterClient.addListener(object : StatusListener {
             override fun onNewStatuses(statuses: List<Status>) {
                 for (status in statuses) {
@@ -90,5 +91,8 @@ class TwitterPlugin : Plugin {
         twitterClient.startClient()
     }
 
-    override fun stop() = twitterClient.stopClient()
+    override fun stop() {
+        twitterClient.stopClient()
+        super.stop()
+    }
 }
