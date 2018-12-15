@@ -51,7 +51,7 @@ class DateTimePlugin : PeriodicPlugin() {
 
     override fun init(messageQueue: MessageQueue, configuration: PluginConfiguration?) {
         super.init(messageQueue, configuration)
-        dateLocale = configuration?.optString("dateLocale", null).let {
+        dateLocale = configuration?.getString("dateLocale").let {
             if (it == null) Locale.getDefault() else Locale.forLanguageTag(it)
         }
     }

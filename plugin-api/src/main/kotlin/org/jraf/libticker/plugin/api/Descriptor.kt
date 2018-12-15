@@ -37,19 +37,19 @@ data class PluginDescriptor(
 )
 
 data class PluginConfigurationDescriptor(
-    val configurationItemDescriptors: List<ConfigurationItemDescriptor>
+    val itemDescriptors: List<PluginConfigurationItemDescriptor>
 )
 
-data class ConfigurationItemDescriptor(
+data class PluginConfigurationItemDescriptor(
     val key: String,
-    val type: ConfigurationItemType,
+    val type: PluginConfigurationItemType,
     val displayName: String,
     val moreInfo: String? = null,
     val defaultValue: String? = null,
     val required: Boolean = true
 )
 
-enum class ConfigurationItemType {
+enum class PluginConfigurationItemType {
     STRING,
     NUMBER,
     BOOLEAN

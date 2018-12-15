@@ -25,9 +25,9 @@
 
 package org.jraf.libticker.plugin.datetime
 
-import org.jraf.libticker.plugin.api.ConfigurationItemDescriptor
-import org.jraf.libticker.plugin.api.ConfigurationItemType
 import org.jraf.libticker.plugin.api.PluginConfigurationDescriptor
+import org.jraf.libticker.plugin.api.PluginConfigurationItemDescriptor
+import org.jraf.libticker.plugin.api.PluginConfigurationItemType
 import org.jraf.libticker.plugin.api.PluginDescriptor
 import org.jraf.libticker.plugin.api.PluginDescriptorProvider
 
@@ -37,9 +37,9 @@ object DateTimePluginDescriptor {
         displayName = "Date and time",
         configurationDescriptor = PluginConfigurationDescriptor(
             listOf(
-                ConfigurationItemDescriptor(
+                PluginConfigurationItemDescriptor(
                     key = "dateLocale",
-                    type = ConfigurationItemType.STRING,
+                    type = PluginConfigurationItemType.STRING,
                     displayName = "Date locale",
                     defaultValue = "en"
                 )

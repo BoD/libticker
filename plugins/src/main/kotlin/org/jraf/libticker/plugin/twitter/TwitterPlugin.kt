@@ -45,10 +45,10 @@ class TwitterPlugin : BasePlugin() {
     override fun init(messageQueue: MessageQueue, configuration: PluginConfiguration?) {
         super.init(messageQueue, configuration!!)
         twitterClient = TwitterClient(
-            configuration.getString("oAuthConsumerKey"),
-            configuration.getString("oAuthConsumerSecret"),
-            configuration.getString("oAuthAccessToken"),
-            configuration.getString("oAuthAccessTokenSecret")
+            configuration.getString("oAuthConsumerKey")!!,
+            configuration.getString("oAuthConsumerSecret")!!,
+            configuration.getString("oAuthAccessToken")!!,
+            configuration.getString("oAuthAccessTokenSecret")!!
         )
     }
 

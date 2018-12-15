@@ -25,8 +25,8 @@
 
 package org.jraf.libticker.plugin.twitter
 
-import org.jraf.libticker.plugin.api.ConfigurationItemDescriptor
-import org.jraf.libticker.plugin.api.ConfigurationItemType
+import org.jraf.libticker.plugin.api.PluginConfigurationItemDescriptor
+import org.jraf.libticker.plugin.api.PluginConfigurationItemType
 import org.jraf.libticker.plugin.api.PluginConfigurationDescriptor
 import org.jraf.libticker.plugin.api.PluginDescriptor
 import org.jraf.libticker.plugin.api.PluginDescriptorProvider
@@ -37,24 +37,24 @@ object TwitterPluginDescriptor {
         displayName = "Twitter",
         configurationDescriptor = PluginConfigurationDescriptor(
             listOf(
-                ConfigurationItemDescriptor(
+                PluginConfigurationItemDescriptor(
                     key = "oAuthConsumerKey",
-                    type = ConfigurationItemType.STRING,
+                    type = PluginConfigurationItemType.STRING,
                     displayName = "OAuth consumer key"
                 ),
-                ConfigurationItemDescriptor(
+                PluginConfigurationItemDescriptor(
                     key = "oAuthConsumerSecret",
-                    type = ConfigurationItemType.STRING,
+                    type = PluginConfigurationItemType.STRING,
                     displayName = "OAuth consumer secret"
                 ),
-                ConfigurationItemDescriptor(
+                PluginConfigurationItemDescriptor(
                     key = "oAuthAccessToken",
-                    type = ConfigurationItemType.STRING,
+                    type = PluginConfigurationItemType.STRING,
                     displayName = "OAuth access token"
                 ),
-                ConfigurationItemDescriptor(
+                PluginConfigurationItemDescriptor(
                     key = "oAuthAccessTokenSecret",
-                    type = ConfigurationItemType.STRING,
+                    type = PluginConfigurationItemType.STRING,
                     displayName = "OAuth access token secret"
                 )
             )

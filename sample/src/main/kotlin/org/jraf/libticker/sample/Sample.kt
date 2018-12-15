@@ -39,39 +39,38 @@ fun main() {
     val messageQueue = BasicMessageQueue(40)
 
     val pluginManager = PluginManager(messageQueue).apply {
+        // Date time
         managePlugin(
-            "org.jraf.libticker.plugin.datetime.DateTimePlugin", PluginConfiguration().apply {
-                put("dateLocale", "fr")
-            })
+            "org.jraf.libticker.plugin.datetime.DateTimePlugin", PluginConfiguration(
+                "dateLocale" to "fr"
+            )
+        )
             .start()
 
+        // FRC
         managePlugin("org.jraf.libticker.plugin.frc.FrcPlugin", null)
             .start()
 
-        managePlugin("org.jraf.libticker.plugin.weather.WeatherPlugin", PluginConfiguration().apply {
-            put("apiKey", System.getenv("org.jraf.libticker.plugin.weather.WeatherPlugin.apiKey"))
-        })
+        // Weather
+        managePlugin(
+            "org.jraf.libticker.plugin.weather.WeatherPlugin", PluginConfiguration(
+                "apiKey" to System.getenv("org.jraf.libticker.plugin.weather.WeatherPlugin.apiKey")
+            )
+        )
             .start()
 
+        // Btc
         managePlugin("org.jraf.libticker.plugin.btc.BtcPlugin", null).start()
-        managePlugin("org.jraf.libticker.plugin.twitter.TwitterPlugin", PluginConfiguration().apply {
-            put(
-                "oAuthConsumerKey",
-                System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthConsumerKey")
+
+        // Twitter
+        managePlugin(
+            "org.jraf.libticker.plugin.twitter.TwitterPlugin", PluginConfiguration(
+                "oAuthConsumerKey" to System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthConsumerKey"),
+                "oAuthConsumerSecret" to System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthConsumerSecret"),
+                "oAuthAccessToken" to System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthAccessToken"),
+                "oAuthAccessTokenSecret" to System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthAccessTokenSecret")
             )
-            put(
-                "oAuthConsumerSecret",
-                System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthConsumerSecret")
-            )
-            put(
-                "oAuthAccessToken",
-                System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthAccessToken")
-            )
-            put(
-                "oAuthAccessTokenSecret",
-                System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthAccessTokenSecret")
-            )
-        })
+        )
             .start()
     }
 

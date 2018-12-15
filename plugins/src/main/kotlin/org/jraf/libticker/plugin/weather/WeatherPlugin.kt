@@ -43,10 +43,10 @@ class WeatherPlugin : PeriodicPlugin() {
 
     override fun init(messageQueue: MessageQueue, configuration: PluginConfiguration?) {
         super.init(messageQueue, configuration)
-        formattingLocale = configuration?.optString("formattingLocale", null).let {
+        formattingLocale = configuration?.getString("formattingLocale").let {
             if (it == null) Locale.getDefault() else Locale.forLanguageTag(it)
         }
-        forecastIoClient = ForecastIoClient(configuration!!.getString("apiKey"))
+        forecastIoClient = ForecastIoClient(configuration!!.getString("apiKey")!!)
     }
 
     override fun queueMessage() {

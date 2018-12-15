@@ -39,10 +39,6 @@ publishing {
 dependencies {
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
-
-    // Json
-    api "org.json:json:$versions.json"
-
 }
 
 // Use "./gradlew publishToMavenLocal" to deploy the artifacts to your local maven repository
