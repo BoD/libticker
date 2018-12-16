@@ -30,7 +30,7 @@ td {
     <#if plugin.descriptor.configurationDescriptor??>
     Configuration:
 <table>
-    <#list plugin.descriptor.configurationDescriptor.configurationItemDescriptors as confItem>
+    <#list plugin.descriptor.configurationDescriptor.itemDescriptors as confItem>
     <tr>
         <td>${confItem.displayName}</td>
         <td>${plugin.configuration.get(confItem.key)}</td>
@@ -58,24 +58,34 @@ td {
     <h3>${descriptor.displayName}</h3>
     <p>Id: <b>${descriptor.className}</b></p>
     <p>
+    <form action="/action" method="post" enctype="application/x-www-form-urlencoded">
+        <input type="hidden" name="action" value="manage"/>
+        <input type="hidden" name="className" value="${descriptor.className}"/>
+
         <#if descriptor.configurationDescriptor??>
         Configuration:
-    <table>
-        <#list descriptor.configurationDescriptor.configurationItemDescriptors as confItem>
-        <tr>
-            <td>${confItem.displayName}</td>
-            <td>${confItem.type}</td>
-            <td>${confItem.required?string("Required", "Optional")}</td>
-            <td>${confItem.defaultValue!""}</td>
-            <td>${confItem.moreInfo!""}</td>
-        </tr>
+
+        <table>
+            <#list descriptor.configurationDescriptor.itemDescriptors as confItem>
+            <tr>
+                <td>${confItem.displayName}</td>
+                <td>${confItem.type}</td>
+                <td>${confItem.required?string("Required", "Optional")}</td>
+                <td>${confItem.defaultValue!""}</td>
+                <td>${confItem.moreInfo!""}</td>
+                <td><input type="text" name="conf_${confItem.key}"/></td>
+            </tr>
+        </
+        #list>
+        </table>
+
+        <#else>
+        (Not configurable)
     </
-    #list>
-    </table>
-    <#else>
-    (Not configurable)
-</#if>
-</p>
+    #if>
+    <input type="submit" value="Add"/>
+    </form>
+    </p>
 </div>
 <br/>
 </#list>

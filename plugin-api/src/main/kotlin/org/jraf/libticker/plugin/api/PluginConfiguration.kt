@@ -93,6 +93,14 @@ class PluginConfiguration(vararg keyValues: Pair<String, Any>) {
         return res.value
     }
 
+    /**
+     * @throws IllegalArgumentException if the given [key] doesn't map to a Boolean
+     */
+    fun get(key: String): Any? {
+        val res = (items[key] ?: return null) ?: throw IllegalArgumentException("$key is not a Boolean")
+        return res.value
+    }
+
     fun containsKey(key: String): Boolean = items.containsKey(key)
 
     fun remove(key: String) {

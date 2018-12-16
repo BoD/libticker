@@ -72,11 +72,28 @@ class HttpConf(private val pluginManager: PluginManager, private val configurati
                 route("/action") {
                     post {
                         val parameters = call.receiveParameters()
-                        if (parameters["action"] == "unmanage" && parameters["idx"]?.toIntOrNull() != null) {
-                            pluginManager.unmanagePlugin(pluginManager.managedPlugins[parameters["idx"]!!.toInt()])
-                            call.respondRedirect("/", permanent = false)
-                        } else {
-                            call.respondText("Error")
+                        when (parameters["action"]) {
+                            "unmanage" -> {
+                                val idx = parameters["idx"]
+                                if (idx == null || idx.toIntOrNull() == null) {
+                                    call.respondText("Error")
+                                } else {
+                                    pluginManager.unmanagePlugin(pluginManager.managedPlugins[idx.toInt()])
+                                    call.respondRedirect("/", permanent = false)
+                                }
+                            }
+
+                            "manage" -> {
+                                val className = parameters["className"]
+                                if (className == null) {
+                                    call.respondText("Error")
+                                } else {
+                                    pluginManager.managePlugin(className, null)
+                                    call.respondRedirect("/", permanent = false)
+                                }
+                            }
+
+                            else -> call.respondText("Error")
                         }
                     }
                 }
