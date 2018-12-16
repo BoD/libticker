@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit
 
 fun main() {
     // Logging
-    System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace")
+//    System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace")
 
     val messageQueue = BasicMessageQueue(40)
 
@@ -45,11 +45,9 @@ fun main() {
                 "dateLocale" to "fr"
             )
         )
-            .start()
 
         // FRC
         managePlugin("org.jraf.libticker.plugin.frc.FrcPlugin", null)
-            .start()
 
         // Weather
         managePlugin(
@@ -57,10 +55,9 @@ fun main() {
                 "apiKey" to System.getenv("org.jraf.libticker.plugin.weather.WeatherPlugin.apiKey")
             )
         )
-            .start()
 
         // Btc
-        managePlugin("org.jraf.libticker.plugin.btc.BtcPlugin", null).start()
+        managePlugin("org.jraf.libticker.plugin.btc.BtcPlugin", null)
 
         // Twitter
         managePlugin(
@@ -71,10 +68,30 @@ fun main() {
                 "oAuthAccessTokenSecret" to System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthAccessTokenSecret")
             )
         )
-            .start()
     }
 
-    println(pluginManager.availablePlugins)
+//    pluginManager.managePlugins(
+//        """
+//            {
+//              "org.jraf.libticker.plugin.datetime.DateTimePlugin": {
+//                "dateLocale": "fr"
+//              },
+//              "org.jraf.libticker.plugin.frc.FrcPlugin": null,
+//              "org.jraf.libticker.plugin.weather.WeatherPlugin": {
+//                "apiKey": "b36b7ed631e0c1cb2ff576f8239a59bf"
+//              },
+//              "org.jraf.libticker.plugin.btc.BtcPlugin": null,
+//              "org.jraf.libticker.plugin.twitter.TwitterPlugin": {
+//                "oAuthConsumerKey": "psBROyQ3G4RnmPtJ2D9JoUgTh",
+//                "oAuthConsumerSecret": "LvXd8P56PvWeYWGq4nKR3v6B0U3w4uqTvKEa1M0G3iCWapSCJi",
+//                "oAuthAccessToken": "2552842496-VReK7EkmvT8zwPLIEGeBuITOUi4ui2O3ieFaMwJ",
+//                "oAuthAccessTokenSecret": "k2yZmoviHPqK3yy6tJdMphONIs6rqrexoF7u8rfRQoNMz"
+//              }
+//            }
+//    """
+//    )
+
+    println(pluginManager.getManagedPluginsAsJsonString())
 
     Schedulers.computation().schedulePeriodicallyDirect({
         messageQueue.next?.let(::println)

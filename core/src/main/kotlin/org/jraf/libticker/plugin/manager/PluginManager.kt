@@ -25,6 +25,9 @@
 
 package org.jraf.libticker.plugin.manager
 
+import com.beust.klaxon.JsonObject
+import com.beust.klaxon.Parser
+import com.beust.klaxon.json
 import org.jraf.libticker.message.MessageQueue
 import org.jraf.libticker.plugin.api.Plugin
 import org.jraf.libticker.plugin.api.PluginConfiguration
@@ -35,15 +38,26 @@ import java.util.ServiceLoader
 class PluginManager(private val messageQueue: MessageQueue) {
     private val _managedPlugins = mutableListOf<Plugin>()
 
-    fun managePlugin(pluginClassName: String, configuration: PluginConfiguration?): Plugin {
+    fun managePlugin(pluginClassName: String, configuration: PluginConfiguration?) {
         val plugin = (Class.forName(pluginClassName).newInstance() as Plugin)
         _managedPlugins += plugin
         plugin.init(messageQueue, configuration)
-        return plugin
+        plugin.start()
+    }
+
+    fun managePlugins(jsonString: String) {
+        val parser: Parser = Parser.default()
+        val managePluginsJsonObject = parser.parse(StringBuilder(jsonString)) as JsonObject
+        for (pluginClassName in managePluginsJsonObject.keys) {
+            val configuration = managePluginsJsonObject.obj(pluginClassName)?.let { configurationJsonObject ->
+                PluginConfiguration(*configurationJsonObject.map.map { it.key to it.value!! }.toTypedArray())
+            }
+            managePlugin(pluginClassName, configuration)
+        }
     }
 
     fun unmanagePlugin(plugin: Plugin) {
-        if (!plugin.isRunning) plugin.stop()
+        if (plugin.isRunning) plugin.stop()
         _managedPlugins -= plugin
     }
 
@@ -51,5 +65,13 @@ class PluginManager(private val messageQueue: MessageQueue) {
 
     val availablePlugins: List<PluginDescriptor> by lazy {
         ServiceLoader.load(PluginDescriptorProvider::class.java).map { it.pluginDescriptor }
+    }
+
+    fun getManagedPluginsAsJsonString(): String {
+        return json {
+            obj(_managedPlugins.map { plugin ->
+                plugin.descriptor.className to plugin.configuration?.let { conf -> obj(conf.asMap.map { it.key to it.value }) }
+            })
+        }.toJsonString(true)
     }
 }
