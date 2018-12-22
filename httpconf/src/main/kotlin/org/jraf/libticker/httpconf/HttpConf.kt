@@ -42,9 +42,15 @@ import io.ktor.routing.route
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import io.ktor.util.toMap
+import org.jraf.libticker.plugin.api.PluginConfiguration
+import org.jraf.libticker.plugin.api.PluginConfigurationItemType
 import org.jraf.libticker.plugin.manager.PluginManager
 
-class HttpConf(private val pluginManager: PluginManager, private val configuration: Configuration = Configuration()) {
+class HttpConf(
+    private val pluginManager: PluginManager,
+    private val configuration: Configuration = Configuration()
+) {
     fun start() {
         embeddedServer(Netty, configuration.port) {
             install(DefaultHeaders)
@@ -88,7 +94,12 @@ class HttpConf(private val pluginManager: PluginManager, private val configurati
                                 if (className == null) {
                                     call.respondText("Error")
                                 } else {
-                                    pluginManager.managePlugin(className, null)
+                                    val confItemsAsStrings = parameters.toMap()
+                                        .filterKeys { key -> key.startsWith("conf_") }
+                                        .mapKeys { entry -> entry.key.substringAfter("conf_") }
+                                        .mapValues { entry -> entry.value.first() }
+                                    val configuration = mapToPluginConfiguration(className, confItemsAsStrings)
+                                    pluginManager.managePlugin(className, configuration)
                                     call.respondRedirect("/", permanent = false)
                                 }
                             }
@@ -98,7 +109,21 @@ class HttpConf(private val pluginManager: PluginManager, private val configurati
                     }
                 }
             }
-
         }.start(wait = false)
+    }
+
+    private fun mapToPluginConfiguration(className: String, map: Map<String, String>): PluginConfiguration? {
+        val pluginDescriptor = pluginManager.availablePlugins.first { it.className == className }
+        val configurationDescriptor = pluginDescriptor.configurationDescriptor ?: return null
+        val res = PluginConfiguration()
+        map.forEach { (key, value) ->
+            val itemDescriptor = configurationDescriptor.itemDescriptors.first { it.key == key }
+            when (itemDescriptor.type) {
+                PluginConfigurationItemType.STRING -> res.put(key, value)
+                PluginConfigurationItemType.NUMBER -> res.put(key, value.toDouble())
+                PluginConfigurationItemType.BOOLEAN -> res.put(key, value.toBoolean())
+            }
+        }
+        return res
     }
 }
