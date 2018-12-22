@@ -84,7 +84,7 @@ class HttpConf(
                                 if (idx == null || idx.toIntOrNull() == null) {
                                     call.respondText("Error")
                                 } else {
-                                    pluginManager.unmanagePlugin(pluginManager.managedPlugins[idx.toInt()])
+                                    pluginManager.unmanagePlugin(pluginManager.managedPlugins[idx.toInt()], true)
                                     call.respondRedirect("/", permanent = false)
                                 }
                             }
@@ -99,7 +99,7 @@ class HttpConf(
                                         .mapKeys { entry -> entry.key.substringAfter("conf_") }
                                         .mapValues { entry -> entry.value.first() }
                                     val configuration = mapToPluginConfiguration(className, confItemsAsStrings)
-                                    pluginManager.managePlugin(className, configuration)
+                                    pluginManager.managePlugin(className, configuration, true)
                                     call.respondRedirect("/", permanent = false)
                                 }
                             }

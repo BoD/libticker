@@ -2,6 +2,7 @@
     <head>
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
         <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 
         <title>${configuration.appName} ${configuration.appVersion} configuration</title>
@@ -16,27 +17,36 @@ body {
 }
 
 table {
+    margin: 4px 0 0 0;
     border-collapse: collapse;
     color: rgba(0,0,0,.54);
     width: 100%;
     font-size: 14px;
 }
 
-td:not(:last-child){
+table, td {
+    border: 1px solid rgba(0,0,0,.54);
+}
+
+td:not(:last-child) {
     white-space: nowrap;
 }
 
-td:last-child{
+td:last-child {
     width: 100%;
-}
-
-table, td {
-    border: 1px solid rgba(0,0,0,.54);
-    margin: 4px 0 0 0;
 }
 
 td {
     padding: 8px
+}
+
+.no-border {
+    border: 0px none;
+    background: #fffde7
+}
+
+td:not(:last-child).no-border {
+    padding-right: 0;
 }
 
 form {
@@ -60,6 +70,11 @@ form {
 
 h3 {
     margin: 0;
+    margin-left: 16px;
+}
+
+h4 {
+    margin-left: 16px;
 }
 
 subtitle1 {
@@ -130,6 +145,14 @@ subtitle1 {
 
             <#if descriptor.configurationDescriptor??>
             Configuration:<br/>
+            <#if descriptor.configurationDescriptor.moreInfo??>
+            <table class="no-border">
+                <tr>
+                    <td class="no-border"><i class="material-icons md-dark md-24">info</i></td>
+                    <td class="no-border">${descriptor.configurationDescriptor.moreInfo}</td>
+                </tr>
+            </table>
+            </#if>
 
                 <#list descriptor.configurationDescriptor.itemDescriptors as confItem>
 

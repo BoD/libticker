@@ -37,7 +37,8 @@ data class PluginDescriptor(
 )
 
 data class PluginConfigurationDescriptor(
-    val itemDescriptors: List<PluginConfigurationItemDescriptor>
+    val itemDescriptors: List<PluginConfigurationItemDescriptor>,
+    val moreInfo: String? = null
 )
 
 data class PluginConfigurationItemDescriptor(

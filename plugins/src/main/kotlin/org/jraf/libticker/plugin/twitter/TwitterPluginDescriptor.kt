@@ -57,7 +57,10 @@ object TwitterPluginDescriptor {
                     type = PluginConfigurationItemType.STRING,
                     displayName = "OAuth access token secret"
                 )
-            )
+            ),
+            moreInfo = """To get the oAuth keys, please visit
+                | <a href="https://developer.twitter.com/en/apps" target="_blank">https://developer.twitter.com/en/apps</a>
+                | and register your application.""".trimMargin()
         )
     )
 }

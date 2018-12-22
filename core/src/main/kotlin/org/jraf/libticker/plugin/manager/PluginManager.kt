@@ -28,6 +28,8 @@ package org.jraf.libticker.plugin.manager
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import com.beust.klaxon.json
+import io.reactivex.Flowable
+import io.reactivex.processors.PublishProcessor
 import org.jraf.libticker.message.MessageQueue
 import org.jraf.libticker.plugin.api.Plugin
 import org.jraf.libticker.plugin.api.PluginConfiguration
@@ -37,15 +39,22 @@ import java.util.ServiceLoader
 
 class PluginManager(private val messageQueue: MessageQueue) {
     private val _managedPlugins = mutableListOf<Plugin>()
+    private val _managedPluginsChanged = PublishProcessor.create<String>().toSerialized()
+    val managedPluginsChanged: Flowable<String> = _managedPluginsChanged.hide()
 
-    fun managePlugin(pluginClassName: String, configuration: PluginConfiguration?) {
+    fun managePlugin(
+        pluginClassName: String,
+        configuration: PluginConfiguration?,
+        notifyListeners: Boolean = false
+    ) {
         val plugin = (Class.forName(pluginClassName).newInstance() as Plugin)
         _managedPlugins += plugin
         plugin.init(messageQueue, configuration)
         plugin.start()
+        if (notifyListeners) notifyListeners()
     }
 
-    fun managePlugins(jsonString: String) {
+    fun managePlugins(jsonString: String, notifyListeners: Boolean = false) {
         val parser: Parser = Parser.default()
         val managePluginsJsonObject = parser.parse(StringBuilder(jsonString)) as JsonObject
         for (pluginClassName in managePluginsJsonObject.keys) {
@@ -54,11 +63,17 @@ class PluginManager(private val messageQueue: MessageQueue) {
             }
             managePlugin(pluginClassName, configuration)
         }
+        if (notifyListeners) notifyListeners()
     }
 
-    fun unmanagePlugin(plugin: Plugin) {
+    fun unmanagePlugin(plugin: Plugin, notifyListeners: Boolean = false) {
         if (plugin.isRunning) plugin.stop()
         _managedPlugins -= plugin
+        if (notifyListeners) notifyListeners()
+    }
+
+    private fun notifyListeners() {
+        _managedPluginsChanged.onNext(getManagedPluginsAsJsonString())
     }
 
     val managedPlugins: List<Plugin> = _managedPlugins
