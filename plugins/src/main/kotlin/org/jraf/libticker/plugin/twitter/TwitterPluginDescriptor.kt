@@ -25,9 +25,9 @@
 
 package org.jraf.libticker.plugin.twitter
 
+import org.jraf.libticker.plugin.api.PluginConfigurationDescriptor
 import org.jraf.libticker.plugin.api.PluginConfigurationItemDescriptor
 import org.jraf.libticker.plugin.api.PluginConfigurationItemType
-import org.jraf.libticker.plugin.api.PluginConfigurationDescriptor
 import org.jraf.libticker.plugin.api.PluginDescriptor
 import org.jraf.libticker.plugin.api.PluginDescriptorProvider
 

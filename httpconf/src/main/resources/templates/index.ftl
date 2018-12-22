@@ -4,6 +4,8 @@
         <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
         <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 
+        <title>${configuration.appName} ${configuration.appVersion} configuration</title>
+
         <style>
 
 body {
@@ -16,11 +18,20 @@ body {
 table {
     border-collapse: collapse;
     color: rgba(0,0,0,.54);
+    width: 100%;
+    font-size: 14px;
+}
+
+td:not(:last-child){
+    white-space: nowrap;
+}
+
+td:last-child{
+    width: 100%;
 }
 
 table, td {
     border: 1px solid rgba(0,0,0,.54);
-    width: 100%;
     margin: 4px 0 0 0;
 }
 
@@ -58,7 +69,7 @@ subtitle1 {
         </style>
     </head>
     <body>
-    <h3>${configuration.appName} ${configuration.appVersion} configuration page</h3>
+    <h3>${configuration.appName} ${configuration.appVersion} configuration</h3>
     <h4>Running plugins</h4>
     <#if managedPlugins?size != 0>
     <#list managedPlugins as plugin>
@@ -72,19 +83,19 @@ subtitle1 {
         <div class="mdl-card__supporting-text">
             <#if plugin.descriptor.configurationDescriptor??>
     Configuration:
+            <div style="overflow-x:auto;">
 <table>
     <#list plugin.descriptor.configurationDescriptor.itemDescriptors as confItem>
     <tr>
         <td>${confItem.displayName}</td>
         <td>${plugin.configuration.get(confItem.key)}</td>
     </tr>
-</
-            #list>
+</#list>
 </table>
+            </div>
             <#else>
 (Not configurable)
-        </
-        #if>
+        </#if>
     </div>
     <form action="/action" method="post" enctype="application/x-www-form-urlencoded">
     <input type="hidden" name="action" value="unmanage"/>
@@ -118,25 +129,26 @@ subtitle1 {
             <input type="hidden" name="className" value="${descriptor.className}"/>
 
             <#if descriptor.configurationDescriptor??>
-            Configuration:
+            Configuration:<br/>
 
-            <table>
                 <#list descriptor.configurationDescriptor.itemDescriptors as confItem>
-                <tr>
-                    <td>${confItem.displayName}</td>
-                    <td>${confItem.type}</td>
-                    <td>${confItem.required?string("Required", "Optional")}</td>
-                    <td>${confItem.moreInfo!""}</td>
-                    <td><input type="text" name="conf_${confItem.key}" value="${confItem.defaultValue!""}"/></td>
-                </tr>
-            </
-            #list>
-            </table>
+
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input"
+                           type="text"
+                    <#if confItem.type == "NUMBER">pattern="-?[0-9]*(\.[0-9]+)?"</#if>
+                           name="conf_${confItem.key}"
+                           id="conf_${confItem.key}"
+                           value="${confItem.defaultValue!}">
+                    <label class="mdl-textfield__label" for="conf_${confItem.key}">${confItem.displayName}${confItem.required?string("", " (optional)")}</label>
+                    <#if confItem.type == "NUMBER"><span class="mdl-textfield__error">Must be a number</span></#if>
+                </div>
+                ${confItem.moreInfo!""}
+            </#list>
 
             <#else>
             (Not configurable)
-        </
-        #if>
+        </#if>
 </div>
 <div class="mdl-card__actions mdl-card--border">
     <input type="submit" value="Add" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"/>
