@@ -101,7 +101,9 @@ fun main() {
         messageQueue.next?.let(::println)
     }, 0, 5, TimeUnit.SECONDS)
 
-    HttpConf(pluginManager).start()
+    val httpConf = HttpConf(pluginManager)
+    httpConf.start()
+    println(httpConf.getUrl())
 
     Object().let {
         synchronized(it) {

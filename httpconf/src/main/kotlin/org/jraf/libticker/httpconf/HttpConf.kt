@@ -47,6 +47,7 @@ import org.jraf.libticker.plugin.api.PluginConfiguration
 import org.jraf.libticker.plugin.api.PluginConfigurationItemType
 import org.jraf.libticker.plugin.manager.PluginManager
 
+
 class HttpConf(
     private val pluginManager: PluginManager,
     private val configuration: Configuration = Configuration()
@@ -125,5 +126,9 @@ class HttpConf(
             }
         }
         return res
+    }
+
+    fun getUrl(): String {
+        return "http://${getLocalHostLanAddress()}:${configuration.port}/"
     }
 }
