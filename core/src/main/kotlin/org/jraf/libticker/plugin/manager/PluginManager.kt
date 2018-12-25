@@ -72,6 +72,18 @@ class PluginManager(private val messageQueue: MessageQueue) {
         if (notifyListeners) notifyListeners()
     }
 
+    fun startAllManagedPlugins() {
+        for (plugin in _managedPlugins) {
+            if (!plugin.isRunning) plugin.start()
+        }
+    }
+
+    fun stopAllManagedPlugins() {
+        for (plugin in _managedPlugins) {
+            if (plugin.isRunning) plugin.stop()
+        }
+    }
+
     private fun notifyListeners() {
         _managedPluginsChanged.onNext(getManagedPluginsAsJsonString())
     }

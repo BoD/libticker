@@ -26,6 +26,7 @@
 package org.jraf.libticker.sample
 
 import io.reactivex.schedulers.Schedulers
+import org.jraf.libticker.httpconf.Configuration
 import org.jraf.libticker.httpconf.HttpConf
 import org.jraf.libticker.message.BasicMessageQueue
 import org.jraf.libticker.plugin.api.PluginConfiguration
@@ -101,7 +102,7 @@ fun main() {
         messageQueue.next?.let(::println)
     }, 0, 5, TimeUnit.SECONDS)
 
-    val httpConf = HttpConf(pluginManager)
+    val httpConf = HttpConf(pluginManager, Configuration(port = 8043))
     httpConf.start()
     println(httpConf.getUrl())
 

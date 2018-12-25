@@ -42,10 +42,7 @@ dependencies {
     
     // Ktor
     implementation "io.ktor:ktor-server-netty:$versions.ktor"
-    implementation "io.ktor:ktor-freemarker:$versions.ktor"
-    
-    // Slf4j
-    implementation "org.slf4j:slf4j-simple:$versions.slf4j"
+    implementation "io.ktor:ktor-html-builder:$versions.ktor"
 
     // JUnit
     testImplementation "junit:junit:$versions.junit"
