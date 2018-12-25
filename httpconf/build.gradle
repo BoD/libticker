@@ -45,7 +45,7 @@ dependencies {
     implementation "io.ktor:ktor-html-builder:$versions.ktor"
 
     // JUnit
-    testImplementation "junit:junit:$versions.junit"
+    testImplementation "junit:junit:$versions.testing.junit"
 
     // Plugin api
     implementation project(':core')

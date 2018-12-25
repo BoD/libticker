@@ -39,7 +39,7 @@ versions.with {
     twitter4j = '4.0.7'
     forecastIo = '1.6.0'
     sunriseSunset = '1.1.1'
-    klaxon = '4.0.6'
+    klaxon = '5.0.1'
     slf4j = '1.7.25'
     libFrc = '1.8.2'
     ktor = '1.0.1'

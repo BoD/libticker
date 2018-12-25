@@ -4,5 +4,6 @@ RepositoryHandler.metaClass.addRepos = {
         mavenLocal()
         google()
         jcenter()
+        mavenCentral()
     }
 }

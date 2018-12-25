@@ -41,7 +41,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
 
     // JUnit
-    testImplementation "junit:junit:$versions.junit"
+    testImplementation "junit:junit:$versions.testing.junit"
 
     // Rx
     implementation "io.reactivex.rxjava2:rxjava:$versions.rxJava"
