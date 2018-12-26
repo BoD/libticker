@@ -377,6 +377,6 @@ subtitle1 {
     }
 
     fun getUrl(): String {
-        return "http://${getLocalHostLanAddress()}:${configuration.port}/"
+        return "http://${getLocalHostLanAddress()!!.hostAddress}:${configuration.port}/"
     }
 }
