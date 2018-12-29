@@ -70,7 +70,7 @@ object TwitterPluginDescriptor {
                     moreInfo = """Words to search (for instance: <i>olympics</i>), or a list name in the form <b>list:userName/listName</b> (for instance: <i>list:bod/news</i>)"""
                 )
             ),
-            moreInfo = """To get the oAuth keys, please visit
+            moreInfo = """To get the OAuth keys, please visit
                 | <a href="https://developer.twitter.com/en/apps" target="_blank">https://developer.twitter.com/en/apps</a>
                 | and register your application.""".trimMargin()
         )

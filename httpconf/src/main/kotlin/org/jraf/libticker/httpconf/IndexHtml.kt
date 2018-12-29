@@ -38,6 +38,7 @@ import kotlinx.html.h4
 import kotlinx.html.h5
 import kotlinx.html.head
 import kotlinx.html.hr
+import kotlinx.html.i
 import kotlinx.html.id
 import kotlinx.html.input
 import kotlinx.html.label
@@ -120,7 +121,7 @@ form {
 }
 
 .card.mdl-card {
-    width: 640px;
+    width: 720px;
     min-height: 0;
 }
 
@@ -140,10 +141,6 @@ h3 {
 
 h4 {
     margin-left: 16px;
-}
-
-subtitle1 {
-    color:
 }
 
 .empty {
@@ -254,30 +251,53 @@ subtitle1 {
                         if (configurationDescriptor == null) {
                             +"(Not configurable)"
                         } else {
-                            for (confItem in configurationDescriptor.itemDescriptors) {
-                                div(classes = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label") {
-                                    input(
-                                        classes = "mdl-textfield__input",
-                                        type = InputType.text,
-                                        name = "conf_${confItem.key}"
-                                    ) {
-                                        id = "conf_${confItem.key}"
-                                        value = confItem.defaultValue ?: ""
-                                        if (confItem.type == PluginConfigurationItemType.NUMBER) {
-                                            pattern = "-?[0-9]*(\\.[0-9]+)?"
+                            // More info
+                            configurationDescriptor.moreInfo?.let { moreInfo ->
+                                table(classes = "no-border") {
+                                    tr {
+                                        td(classes = "no-border") {
+                                            i(classes = "material-icons md-dark md-24") { +"info" }
                                         }
-                                    }
-                                    label(classes = "mdl-textfield__label") {
-                                        htmlFor = "conf_${confItem.key}"
-                                        +(confItem.displayName + if (!confItem.required) " (optional)" else "")
-                                    }
-                                    if (confItem.type == PluginConfigurationItemType.NUMBER) {
-                                        span(classes = "mdl-textfield__error") {
-                                            +"Must be a number"
+                                        td(classes = "no-border") {
+                                            unsafe { raw(moreInfo) }
                                         }
                                     }
                                 }
-                                confItem.moreInfo?.let { moreInfo -> +moreInfo }
+                            }
+                            div {
+                                style = "overflow-x: auto; white-space: nowrap;"
+
+                                for ((confItemIdx, confItem) in configurationDescriptor.itemDescriptors.withIndex()) {
+                                    div(classes = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label") {
+                                        input(
+                                            classes = "mdl-textfield__input",
+                                            type = InputType.text,
+                                            name = "conf_${confItem.key}"
+                                        ) {
+                                            id = "conf_${confItem.key}"
+                                            value = confItem.defaultValue ?: ""
+                                            if (confItem.type == PluginConfigurationItemType.NUMBER) {
+                                                pattern = "-?[0-9]*(\\.[0-9]+)?"
+                                            }
+                                        }
+                                        label(classes = "mdl-textfield__label") {
+                                            htmlFor = "conf_${confItem.key}"
+                                            +(confItem.displayName + if (!confItem.required) " (optional)" else "")
+                                        }
+                                        if (confItem.type == PluginConfigurationItemType.NUMBER) {
+                                            span(classes = "mdl-textfield__error") {
+                                                +"Must be a number"
+                                            }
+                                        }
+                                    }
+                                    confItem.moreInfo?.let { moreInfo ->
+                                        unsafe {
+                                            raw(moreInfo)
+                                        }
+                                    }
+
+                                    if (confItemIdx != configurationDescriptor.itemDescriptors.lastIndex) br()
+                                }
                             }
                         }
                     }
