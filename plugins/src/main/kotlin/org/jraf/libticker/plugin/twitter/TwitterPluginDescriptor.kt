@@ -32,30 +32,42 @@ import org.jraf.libticker.plugin.api.PluginDescriptor
 import org.jraf.libticker.plugin.api.PluginDescriptorProvider
 
 object TwitterPluginDescriptor {
+    const val KEY_OAUTH_CONSUMER_KEY = "oAuthConsumerKey"
+    const val KEY_OAUTH_CONSUMER_SECRET = "oAuthConsumerSecret"
+    const val KEY_OAUTH_ACCESS_TOKEN = "oAuthAccessToken"
+    const val KEY_OAUTH_ACCESS_TOKEN_SECRET = "oAuthAccessTokenSecret"
+    const val KEY_SEARCH = "search"
+
     val DESCRIPTOR = PluginDescriptor(
         className = "${this::class.java.`package`.name}.TwitterPlugin",
         displayName = "Twitter",
         configurationDescriptor = PluginConfigurationDescriptor(
             listOf(
                 PluginConfigurationItemDescriptor(
-                    key = "oAuthConsumerKey",
+                    key = KEY_OAUTH_CONSUMER_KEY,
                     type = PluginConfigurationItemType.STRING,
                     displayName = "OAuth consumer key"
                 ),
                 PluginConfigurationItemDescriptor(
-                    key = "oAuthConsumerSecret",
+                    key = KEY_OAUTH_CONSUMER_SECRET,
                     type = PluginConfigurationItemType.STRING,
                     displayName = "OAuth consumer secret"
                 ),
                 PluginConfigurationItemDescriptor(
-                    key = "oAuthAccessToken",
+                    key = KEY_OAUTH_ACCESS_TOKEN,
                     type = PluginConfigurationItemType.STRING,
                     displayName = "OAuth access token"
                 ),
                 PluginConfigurationItemDescriptor(
-                    key = "oAuthAccessTokenSecret",
+                    key = KEY_OAUTH_ACCESS_TOKEN_SECRET,
                     type = PluginConfigurationItemType.STRING,
                     displayName = "OAuth access token secret"
+                ),
+                PluginConfigurationItemDescriptor(
+                    key = KEY_SEARCH,
+                    type = PluginConfigurationItemType.STRING,
+                    displayName = "Search",
+                    moreInfo = """Words to search (for instance: <i>olympics</i>), or a list name in the form <b>list:userName/listName</b> (for instance: <i>list:bod/news</i>)"""
                 )
             ),
             moreInfo = """To get the oAuth keys, please visit

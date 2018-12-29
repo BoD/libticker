@@ -31,6 +31,7 @@ import org.jraf.libticker.httpconf.HttpConf
 import org.jraf.libticker.message.BasicMessageQueue
 import org.jraf.libticker.plugin.api.PluginConfiguration
 import org.jraf.libticker.plugin.manager.PluginManager
+import org.jraf.libticker.plugin.twitter.TwitterPluginDescriptor
 import java.util.concurrent.TimeUnit
 
 fun main() {
@@ -63,10 +64,11 @@ fun main() {
         // Twitter
         managePlugin(
             "org.jraf.libticker.plugin.twitter.TwitterPlugin", PluginConfiguration(
-                "oAuthConsumerKey" to System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthConsumerKey"),
-                "oAuthConsumerSecret" to System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthConsumerSecret"),
-                "oAuthAccessToken" to System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthAccessToken"),
-                "oAuthAccessTokenSecret" to System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthAccessTokenSecret")
+                TwitterPluginDescriptor.KEY_OAUTH_CONSUMER_KEY to System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthConsumerKey"),
+                TwitterPluginDescriptor.KEY_OAUTH_CONSUMER_SECRET to System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthConsumerSecret"),
+                TwitterPluginDescriptor.KEY_OAUTH_ACCESS_TOKEN to System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthAccessToken"),
+                TwitterPluginDescriptor.KEY_OAUTH_ACCESS_TOKEN_SECRET to System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthAccessTokenSecret"),
+                TwitterPluginDescriptor.KEY_SEARCH to "list:bod/news"
             )
         )
     }

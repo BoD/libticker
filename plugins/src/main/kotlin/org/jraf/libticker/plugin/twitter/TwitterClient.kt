@@ -28,6 +28,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import org.slf4j.LoggerFactory
 import twitter4j.Paging
+import twitter4j.Query
 import twitter4j.Status
 import twitter4j.Twitter
 import twitter4j.TwitterFactory
@@ -39,7 +40,8 @@ internal class TwitterClient(
     oAuthConsumerKey: String,
     oAuthConsumerSecret: String,
     oAuthAccessToken: String,
-    oAuthAccessTokenSecret: String
+    oAuthAccessTokenSecret: String,
+    private val search: Search
 ) {
     companion object {
         private var LOGGER = LoggerFactory.getLogger(TwitterClient::class.java)
@@ -85,9 +87,17 @@ internal class TwitterClient(
 
         override fun run() {
             try {
-                LOGGER.debug("Checking for new tweets")
-                val statusList = twitter.getUserListStatuses("bod", "news", Paging(1, RETRIEVE_COUNT))
-//                val statusList = twitter.search().search(Query("eurovision")).tweets
+                LOGGER.debug("Checking for new tweets using $search")
+                val statusList = when (search) {
+                    is ListSearch -> twitter.getUserListStatuses(
+                        search.userName,
+                        search.listName,
+                        Paging(1, RETRIEVE_COUNT)
+                    )
+
+                    is WordsSearch -> twitter.search().search(Query(search.words)).tweets
+                }
+
                 if (statusList.isEmpty()) {
                     LOGGER.debug("No tweets")
                     return
