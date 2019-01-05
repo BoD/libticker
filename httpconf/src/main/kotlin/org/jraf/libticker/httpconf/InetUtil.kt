@@ -25,6 +25,7 @@
 
 package org.jraf.libticker.httpconf
 
+import java.net.Inet6Address
 import java.net.InetAddress
 import java.net.NetworkInterface
 
@@ -58,7 +59,7 @@ internal fun getLocalHostLanAddress(): InetAddress? {
             val inetAddrs = iface.inetAddresses
             while (inetAddrs.hasMoreElements()) {
                 val inetAddr = inetAddrs.nextElement() as InetAddress
-                if (!inetAddr.isLoopbackAddress) {
+                if (!inetAddr.isLoopbackAddress && inetAddr !is Inet6Address) {
                     if (inetAddr.isSiteLocalAddress) {
                         // Found non-loopback site-local address. Return it immediately...
                         return inetAddr
