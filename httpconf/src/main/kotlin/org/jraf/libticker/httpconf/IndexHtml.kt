@@ -27,7 +27,6 @@ package org.jraf.libticker.httpconf
 
 import kotlinx.html.FormEncType
 import kotlinx.html.FormMethod
-import kotlinx.html.HTML
 import kotlinx.html.InputType
 import kotlinx.html.body
 import kotlinx.html.br
@@ -45,6 +44,7 @@ import kotlinx.html.label
 import kotlinx.html.link
 import kotlinx.html.script
 import kotlinx.html.span
+import kotlinx.html.stream.appendHTML
 import kotlinx.html.style
 import kotlinx.html.table
 import kotlinx.html.td
@@ -57,24 +57,26 @@ import org.jraf.libticker.plugin.manager.PluginManager
 fun indexHtml(
     pluginManager: PluginManager,
     configuration: Configuration
-): HTML.() -> Unit = {
-    head {
-        link(
-            rel = "stylesheet",
-            href = "https://fonts.googleapis.com/icon?family=Material+Icons"
-        )
-        link(
-            rel = "stylesheet",
-            href = "https://code.getmdl.io/1.3.0/material.indigo-pink.min.css"
-        )
-        script(src = "https://code.getmdl.io/1.3.0/material.min.js") {
-            defer = true
-        }
-        title("${configuration.appName} ${configuration.appVersion} configuration")
-        style {
-            unsafe {
-                raw(
-                    """
+): String {
+    return StringBuilder().apply {
+        appendHTML().apply {
+            head {
+                link(
+                    rel = "stylesheet",
+                    href = "https://fonts.googleapis.com/icon?family=Material+Icons"
+                )
+                link(
+                    rel = "stylesheet",
+                    href = "https://code.getmdl.io/1.3.0/material.indigo-pink.min.css"
+                )
+                script(src = "https://code.getmdl.io/1.3.0/material.min.js") {
+                    defer = true
+                }
+                title("${configuration.appName} ${configuration.appVersion} configuration")
+                style {
+                    unsafe {
+                        raw(
+                            """
 
 body {
     padding: 16px;
@@ -148,172 +150,174 @@ h4 {
 }
 
                                 """.trimIndent()
-                )
-            }
-        }
-    }
-
-    body {
-        h3 { +"${configuration.appName} ${configuration.appVersion} configuration" }
-        h4 { +"Running plugins" }
-        if (pluginManager.managedPlugins.isEmpty()) {
-            span(classes = "empty") {
-                +"(No running plugins)"
-            }
-        } else {
-            for ((idx, plugin) in pluginManager.managedPlugins.withIndex()) {
-                div(classes = "card mdl-card mdl-shadow--2dp") {
-                    // Title
-                    div(classes = "mdl-card__title mdl-card--border") {
-                        h5 {
-                            div(classes = "mdl-card__title-text") { +plugin.descriptor.displayName }
-                            div(classes = "mdl-card__subtitle-text") { +plugin.descriptor.className }
-                        }
+                        )
                     }
+                }
+            }
 
-                    // Configuration
-                    div(classes = "mdl-card__supporting-text") {
-                        val configurationDescriptor = plugin.descriptor.configurationDescriptor
-                        if (configurationDescriptor == null) {
-                            +"(Not configurable)"
-                        } else {
-                            +"Configuration:"
-                            div {
-                                style = "overflow-x: auto;"
-                                table {
-                                    for (confItem in configurationDescriptor.itemDescriptors) {
-                                        tr {
-                                            td {
-                                                +confItem.displayName
-                                            }
-                                            td {
-                                                +plugin.configuration!![confItem.key].toString()
+            body {
+                h3 { +"${configuration.appName} ${configuration.appVersion} configuration" }
+                h4 { +"Running plugins" }
+                if (pluginManager.managedPlugins.isEmpty()) {
+                    span(classes = "empty") {
+                        +"(No running plugins)"
+                    }
+                } else {
+                    for ((idx, plugin) in pluginManager.managedPlugins.withIndex()) {
+                        div(classes = "card mdl-card mdl-shadow--2dp") {
+                            // Title
+                            div(classes = "mdl-card__title mdl-card--border") {
+                                h5 {
+                                    div(classes = "mdl-card__title-text") { +plugin.descriptor.displayName }
+                                    div(classes = "mdl-card__subtitle-text") { +plugin.descriptor.className }
+                                }
+                            }
+
+                            // Configuration
+                            div(classes = "mdl-card__supporting-text") {
+                                val configurationDescriptor = plugin.descriptor.configurationDescriptor
+                                if (configurationDescriptor == null) {
+                                    +"(Not configurable)"
+                                } else {
+                                    +"Configuration:"
+                                    div {
+                                        style = "overflow-x: auto;"
+                                        table {
+                                            for (confItem in configurationDescriptor.itemDescriptors) {
+                                                tr {
+                                                    td {
+                                                        +confItem.displayName
+                                                    }
+                                                    td {
+                                                        +plugin.configuration!![confItem.key].toString()
+                                                    }
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
-                        }
-                    }
-                    form(
-                        action = "/action",
-                        method = FormMethod.post,
-                        encType = FormEncType.applicationXWwwFormUrlEncoded
-                    ) {
-                        input(type = InputType.hidden, name = "action") {
-                            value = "unmanage"
-                        }
-                        input(type = InputType.hidden, name = "idx") {
-                            value = "$idx"
-                        }
-
-                        // Actions
-                        div(classes = "mdl-card__actions mdl-card--border") {
-                            input(
-                                type = InputType.submit,
-                                classes = "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent"
+                            form(
+                                action = "/action",
+                                method = FormMethod.post,
+                                encType = FormEncType.applicationXWwwFormUrlEncoded
                             ) {
-                                value = "Remove"
-                            }
-                        }
-                    }
-                }
-                if (idx != pluginManager.managedPlugins.lastIndex) br()
-            }
-        }
-        br()
-        hr()
-        h4 { +"Available plugins" }
-        for ((idx, descriptor) in pluginManager.availablePlugins.withIndex()) {
-            div(classes = "card mdl-card mdl-shadow--2dp") {
-                // Title
-                div(classes = "mdl-card__title mdl-card--border") {
-                    h5 {
-                        div(classes = "mdl-card__title-text") { +descriptor.displayName }
-                        div(classes = "mdl-card__subtitle-text") { +descriptor.className }
-                    }
-                }
+                                input(type = InputType.hidden, name = "action") {
+                                    value = "unmanage"
+                                }
+                                input(type = InputType.hidden, name = "idx") {
+                                    value = "$idx"
+                                }
 
-                // Configuration
-                form(
-                    action = "/action",
-                    method = FormMethod.post,
-                    encType = FormEncType.applicationXWwwFormUrlEncoded
-                ) {
-                    div(classes = "mdl-card__supporting-text") {
-                        input(type = InputType.hidden, name = "action") {
-                            value = "manage"
-                        }
-                        input(type = InputType.hidden, name = "className") {
-                            value = descriptor.className
-                        }
-                        val configurationDescriptor = descriptor.configurationDescriptor
-                        if (configurationDescriptor == null) {
-                            +"(Not configurable)"
-                        } else {
-                            // More info
-                            configurationDescriptor.moreInfo?.let { moreInfo ->
-                                table(classes = "no-border") {
-                                    tr {
-                                        td(classes = "no-border") {
-                                            i(classes = "material-icons md-dark md-24") { +"info" }
-                                        }
-                                        td(classes = "no-border") {
-                                            unsafe { raw(moreInfo) }
-                                        }
+                                // Actions
+                                div(classes = "mdl-card__actions mdl-card--border") {
+                                    input(
+                                        type = InputType.submit,
+                                        classes = "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent"
+                                    ) {
+                                        value = "Remove"
                                     }
                                 }
                             }
-                            div {
-                                style = "overflow-x: auto; white-space: nowrap;"
-
-                                for ((confItemIdx, confItem) in configurationDescriptor.itemDescriptors.withIndex()) {
-                                    div(classes = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label") {
-                                        input(
-                                            classes = "mdl-textfield__input",
-                                            type = InputType.text,
-                                            name = "conf_${confItem.key}"
-                                        ) {
-                                            id = "conf_${confItem.key}"
-                                            value = confItem.defaultValue ?: ""
-                                            if (confItem.type == PluginConfigurationItemType.NUMBER) {
-                                                pattern = "-?[0-9]*(\\.[0-9]+)?"
-                                            }
-                                        }
-                                        label(classes = "mdl-textfield__label") {
-                                            htmlFor = "conf_${confItem.key}"
-                                            +(confItem.displayName + if (!confItem.required) " (optional)" else "")
-                                        }
-                                        if (confItem.type == PluginConfigurationItemType.NUMBER) {
-                                            span(classes = "mdl-textfield__error") {
-                                                +"Must be a number"
-                                            }
-                                        }
-                                    }
-                                    confItem.moreInfo?.let { moreInfo ->
-                                        unsafe {
-                                            raw(moreInfo)
-                                        }
-                                    }
-
-                                    if (confItemIdx != configurationDescriptor.itemDescriptors.lastIndex) br()
-                                }
+                        }
+                        if (idx != pluginManager.managedPlugins.lastIndex) br()
+                    }
+                }
+                br()
+                hr()
+                h4 { +"Available plugins" }
+                for ((idx, descriptor) in pluginManager.availablePlugins.withIndex()) {
+                    div(classes = "card mdl-card mdl-shadow--2dp") {
+                        // Title
+                        div(classes = "mdl-card__title mdl-card--border") {
+                            h5 {
+                                div(classes = "mdl-card__title-text") { +descriptor.displayName }
+                                div(classes = "mdl-card__subtitle-text") { +descriptor.className }
                             }
                         }
-                    }
 
-                    // Actions
-                    div(classes = "mdl-card__actions mdl-card--border") {
-                        input(
-                            type = InputType.submit,
-                            classes = "mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"
+                        // Configuration
+                        form(
+                            action = "/action",
+                            method = FormMethod.post,
+                            encType = FormEncType.applicationXWwwFormUrlEncoded
                         ) {
-                            value = "Add"
+                            div(classes = "mdl-card__supporting-text") {
+                                input(type = InputType.hidden, name = "action") {
+                                    value = "manage"
+                                }
+                                input(type = InputType.hidden, name = "className") {
+                                    value = descriptor.className
+                                }
+                                val configurationDescriptor = descriptor.configurationDescriptor
+                                if (configurationDescriptor == null) {
+                                    +"(Not configurable)"
+                                } else {
+                                    // More info
+                                    configurationDescriptor.moreInfo?.let { moreInfo ->
+                                        table(classes = "no-border") {
+                                            tr {
+                                                td(classes = "no-border") {
+                                                    i(classes = "material-icons md-dark md-24") { +"info" }
+                                                }
+                                                td(classes = "no-border") {
+                                                    unsafe { raw(moreInfo) }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    div {
+                                        style = "overflow-x: auto; white-space: nowrap;"
+
+                                        for ((confItemIdx, confItem) in configurationDescriptor.itemDescriptors.withIndex()) {
+                                            div(classes = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label") {
+                                                input(
+                                                    classes = "mdl-textfield__input",
+                                                    type = InputType.text,
+                                                    name = "conf_${confItem.key}"
+                                                ) {
+                                                    id = "conf_${confItem.key}"
+                                                    value = confItem.defaultValue ?: ""
+                                                    if (confItem.type == PluginConfigurationItemType.NUMBER) {
+                                                        pattern = "-?[0-9]*(\\.[0-9]+)?"
+                                                    }
+                                                }
+                                                label(classes = "mdl-textfield__label") {
+                                                    htmlFor = "conf_${confItem.key}"
+                                                    +(confItem.displayName + if (!confItem.required) " (optional)" else "")
+                                                }
+                                                if (confItem.type == PluginConfigurationItemType.NUMBER) {
+                                                    span(classes = "mdl-textfield__error") {
+                                                        +"Must be a number"
+                                                    }
+                                                }
+                                            }
+                                            confItem.moreInfo?.let { moreInfo ->
+                                                unsafe {
+                                                    raw(moreInfo)
+                                                }
+                                            }
+
+                                            if (confItemIdx != configurationDescriptor.itemDescriptors.lastIndex) br()
+                                        }
+                                    }
+                                }
+                            }
+
+                            // Actions
+                            div(classes = "mdl-card__actions mdl-card--border") {
+                                input(
+                                    type = InputType.submit,
+                                    classes = "mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"
+                                ) {
+                                    value = "Add"
+                                }
+                            }
                         }
                     }
+                    if (idx != pluginManager.availablePlugins.lastIndex) br()
                 }
             }
-            if (idx != pluginManager.availablePlugins.lastIndex) br()
         }
-    }
+    }.toString()
 }

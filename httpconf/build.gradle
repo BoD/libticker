@@ -40,9 +40,11 @@ dependencies {
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
     
-    // Ktor
-    implementation "io.ktor:ktor-server-netty:$versions.ktor"
-    implementation "io.ktor:ktor-html-builder:$versions.ktor"
+    // Nanohttpd
+    implementation "org.nanohttpd:nanohttpd:$versions.nanohttpd"
+    
+    // Kotlinx Html
+    implementation "org.jetbrains.kotlinx:kotlinx-html-jvm:$versions.kotlinxHtml"
 
     // JUnit
     testImplementation "junit:junit:$versions.testing.junit"

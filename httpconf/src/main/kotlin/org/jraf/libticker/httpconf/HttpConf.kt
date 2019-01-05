@@ -25,77 +25,68 @@
 
 package org.jraf.libticker.httpconf
 
-import io.ktor.application.call
-import io.ktor.application.install
-import io.ktor.features.CallLogging
-import io.ktor.html.respondHtml
-import io.ktor.request.receiveParameters
-import io.ktor.response.respondRedirect
-import io.ktor.response.respondText
-import io.ktor.routing.get
-import io.ktor.routing.post
-import io.ktor.routing.route
-import io.ktor.routing.routing
-import io.ktor.server.engine.embeddedServer
-import io.ktor.server.netty.Netty
-import io.ktor.util.toMap
+import fi.iki.elonen.NanoHTTPD
 import org.jraf.libticker.plugin.api.PluginConfiguration
 import org.jraf.libticker.plugin.api.PluginConfigurationItemType
 import org.jraf.libticker.plugin.manager.PluginManager
-import java.util.concurrent.TimeUnit
+
 
 class HttpConf(
     private val pluginManager: PluginManager,
     private val configuration: Configuration = Configuration()
 ) {
     private val server by lazy {
-        embeddedServer(Netty, configuration.port) {
-            // XXX Commented because doesn't work on Android
-            // install(DefaultHeaders)
-            install(CallLogging)
+        object : NanoHTTPD(configuration.port) {
+            override fun serve(session: IHTTPSession): NanoHTTPD.Response {
+                return when (session.uri) {
+                    "/" -> newFixedLengthResponse(indexHtml(pluginManager, configuration))
 
-            routing {
-                route("/") {
-                    get {
-                        call.respondHtml(block = indexHtml(pluginManager, configuration))
-                    }
-                }
-
-                route("/action") {
-                    post {
-                        val parameters = call.receiveParameters()
+                    "/action" -> {
+                        session.parseBody(mutableMapOf<String, String>())
+                        val parameters = session.parameters.mapValues { it.value.first() }
                         when (parameters["action"]) {
                             "unmanage" -> {
                                 val idx = parameters["idx"]
                                 if (idx == null || idx.toIntOrNull() == null) {
-                                    call.respondText("Error")
+                                    badRequest()
                                 } else {
                                     pluginManager.unmanagePlugin(pluginManager.managedPlugins[idx.toInt()], true)
-                                    call.respondRedirect("/", permanent = false)
+                                    redirect("/")
                                 }
                             }
 
                             "manage" -> {
                                 val className = parameters["className"]
                                 if (className == null) {
-                                    call.respondText("Error")
+                                    badRequest()
                                 } else {
-                                    val confItemsAsStrings = parameters.toMap()
+                                    val confItemsAsStrings = parameters
                                         .filterKeys { key -> key.startsWith("conf_") }
                                         .mapKeys { entry -> entry.key.substringAfter("conf_") }
-                                        .mapValues { entry -> entry.value.first() }
                                     val configuration = mapToPluginConfiguration(className, confItemsAsStrings)
                                     pluginManager.managePlugin(className, configuration, true)
-                                    call.respondRedirect("/", permanent = false)
+                                    redirect("/")
                                 }
                             }
 
-                            else -> call.respondText("Error")
+                            else -> badRequest()
                         }
                     }
+
+                    else -> badRequest()
                 }
             }
         }
+    }
+
+    private fun badRequest() = NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.BAD_REQUEST, null, null)
+
+    private fun redirect(location: String) = NanoHTTPD.newFixedLengthResponse(
+        NanoHTTPD.Response.Status.REDIRECT,
+        null,
+        null
+    ).apply {
+        addHeader("Location", location)
     }
 
     private fun mapToPluginConfiguration(className: String, map: Map<String, String>): PluginConfiguration? {
@@ -114,11 +105,11 @@ class HttpConf(
     }
 
     fun start() {
-        server.start(wait = false)
+        server.start()
     }
 
     fun stop() {
-        server.stop(0, 0, TimeUnit.SECONDS)
+        server.stop()
     }
 
     fun getUrl(): String {

@@ -42,7 +42,8 @@ versions.with {
     klaxon = '5.0.1'
     slf4j = '1.7.25'
     libFrc = '1.8.2'
-    ktor = '1.0.1'
+    nanohttpd = '2.3.1'
+    kotlinxHtml = "0.6.10"
 }
 
 ext.versions = versions
