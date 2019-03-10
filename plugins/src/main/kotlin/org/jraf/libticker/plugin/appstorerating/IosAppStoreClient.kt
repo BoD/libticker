@@ -25,18 +25,20 @@
 
 package org.jraf.libticker.plugin.appstorerating
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.net.URL
 
-class PlayStoreClient {
+class IosAppStoreClient {
     suspend fun retrieveRating(appId: String): Float {
-        var text = URL(URL_APP_PAGE.format(appId)).readText()
+        var text = withContext(Dispatchers.IO) { URL(URL_APP_PAGE.format(appId)).readText() }
         text = text.substringAfter(DELIM_0).substringBefore(DELIM_1)
         return text.toFloat()
     }
 
     companion object {
-        private const val URL_APP_PAGE = "https://play.google.com/store/apps/details?id=%1\$s&hl=en_US"
-        private const val DELIM_0 = "<meta itemprop=\"ratingValue\" content=\""
-        private const val DELIM_1 = "\"/>"
+        private const val URL_APP_PAGE = "https://itunes.apple.com/fr/app/%1\$s"
+        private const val DELIM_0 = "\"ratingValue\":"
+        private const val DELIM_1 = ","
     }
 }

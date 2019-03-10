@@ -36,12 +36,21 @@ class AppStoreRatingPlugin : PeriodicPlugin() {
 
     override val periodMs = TimeUnit.MINUTES.toMillis(7)
 
-    private val playStoreClient = PlayStoreClient()
+    private val androidPlayStoreClient = AndroidPlayStoreClient()
+    private val iosAppStoreClient = IosAppStoreClient()
 
     override fun queueMessage() {
         GlobalScope.launch {
             val appId = configuration!!.getString(AppStoreRatingPluginDescriptor.KEY_APP_ID)!!
-            val rating = playStoreClient.retrieveRating(appId)
+            val rating = when (configuration!!.getString(AppStoreRatingPluginDescriptor.KEY_STORE)!!) {
+                AppStoreRatingPluginDescriptor.KEY_STORE_ANDROID_PLAY_STORE ->
+                    androidPlayStoreClient.retrieveRating(appId)
+
+                AppStoreRatingPluginDescriptor.KEY_STORE_IOS_APP_STORE ->
+                    iosAppStoreClient.retrieveRating(appId)
+
+                else -> throw IllegalArgumentException("Unknown value for configuration parameter '${AppStoreRatingPluginDescriptor.KEY_STORE}'")
+            }
             messageQueue *= Message(
                 text = "Current rating for $appId: $rating",
                 html = formatHtmlRating(
@@ -154,5 +163,5 @@ body {
 """.trimIndent()
     }
 
-    private fun String.maxWidth(width: Int) = substring(0, width.coerceAtMost(length - 1))
+    private fun String.maxWidth(width: Int) = substring(0, width.coerceAtMost(length))
 }

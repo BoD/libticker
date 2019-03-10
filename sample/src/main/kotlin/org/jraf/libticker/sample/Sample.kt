@@ -81,6 +81,13 @@ fun main() {
                 AppStoreRatingPluginDescriptor.KEY_TITLE to "HelloMundo (Android)"
             )
         )
+        managePlugin(
+            "org.jraf.libticker.plugin.appstorerating.AppStoreRatingPlugin", PluginConfiguration(
+                AppStoreRatingPluginDescriptor.KEY_APP_ID to "id1214811644",
+                AppStoreRatingPluginDescriptor.KEY_STORE to AppStoreRatingPluginDescriptor.KEY_STORE_IOS_APP_STORE,
+                AppStoreRatingPluginDescriptor.KEY_TITLE to "Qonto (iOS)"
+            )
+        )
     }
 
 //    val pluginManager = PluginManager(messageQueue).apply {
