@@ -29,9 +29,14 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.jraf.libticker.message.Message
 import org.jraf.libticker.plugin.base.PeriodicPlugin
+import org.slf4j.LoggerFactory
 import java.util.concurrent.TimeUnit
 
 class AppStoreRatingPlugin : PeriodicPlugin() {
+    companion object {
+        private var LOGGER = LoggerFactory.getLogger(AppStoreRatingPlugin::class.java)
+    }
+
     override val descriptor = AppStoreRatingPluginDescriptor.DESCRIPTOR
 
     override val periodMs = TimeUnit.MINUTES.toMillis(7)
@@ -41,23 +46,27 @@ class AppStoreRatingPlugin : PeriodicPlugin() {
 
     override fun queueMessage() {
         GlobalScope.launch {
-            val appId = configuration!!.getString(AppStoreRatingPluginDescriptor.KEY_APP_ID)!!
-            val rating = when (configuration!!.getString(AppStoreRatingPluginDescriptor.KEY_STORE)!!) {
-                AppStoreRatingPluginDescriptor.KEY_STORE_ANDROID_PLAY_STORE ->
-                    androidPlayStoreClient.retrieveRating(appId)
+            try {
+                val appId = configuration!!.getString(AppStoreRatingPluginDescriptor.KEY_APP_ID)!!
+                val rating = when (configuration!!.getString(AppStoreRatingPluginDescriptor.KEY_STORE)!!) {
+                    AppStoreRatingPluginDescriptor.KEY_STORE_ANDROID_PLAY_STORE ->
+                        androidPlayStoreClient.retrieveRating(appId)
 
-                AppStoreRatingPluginDescriptor.KEY_STORE_IOS_APP_STORE ->
-                    iosAppStoreClient.retrieveRating(appId)
+                    AppStoreRatingPluginDescriptor.KEY_STORE_IOS_APP_STORE ->
+                        iosAppStoreClient.retrieveRating(appId)
 
-                else -> throw IllegalArgumentException("Unknown value for configuration parameter '${AppStoreRatingPluginDescriptor.KEY_STORE}'")
-            }
-            messageQueue *= Message(
-                text = "Current rating for $appId: $rating",
-                html = formatHtmlRating(
-                    rating,
-                    configuration!!.getString(AppStoreRatingPluginDescriptor.KEY_TITLE)!!
+                    else -> throw IllegalArgumentException("Unknown value for configuration parameter '${AppStoreRatingPluginDescriptor.KEY_STORE}'")
+                }
+                messageQueue *= Message(
+                    text = "Current rating for $appId: $rating",
+                    html = formatHtmlRating(
+                        rating,
+                        configuration!!.getString(AppStoreRatingPluginDescriptor.KEY_TITLE)!!
+                    )
                 )
-            )
+            } catch (t: Throwable) {
+                LOGGER.warn("Could not retrieve rating", t)
+            }
         }
     }
 
@@ -110,23 +119,23 @@ body {
 }
 
 #title {
-  font-size: 22px;
+  font-size: 28px;
   font-weight: bold;
 }
 
 #score {
-  width: 160px;
-  height: 160px;
+  width: 200px;
+  height: 200px;
   margin: 0 auto;
   border-radius: 32px;
   padding: 16px;
   background-image: linear-gradient(#d5e5a3, #A4C639, #A4C639);
-  font-size: 96px;
+  font-size: 120px;
   text-align: center;
-  line-height: 160px;
+  line-height: 200px;
 
   box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.5);
-  text-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
+  text-shadow: 0px 0px 16px rgba(0, 0, 0, 0.5);
 }
 
 .star-container {
