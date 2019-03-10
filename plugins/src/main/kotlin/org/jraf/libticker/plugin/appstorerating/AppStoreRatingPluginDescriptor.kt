@@ -56,12 +56,15 @@ object AppStoreRatingPluginDescriptor {
                 PluginConfigurationItemDescriptor(
                     key = KEY_APP_ID,
                     type = PluginConfigurationItemType.StringType,
-                    displayName = "App Id (e.g. com.example.myapp)"
+                    displayName = "App Id",
+                    moreInfo = "e.g. com.example.myapp (Android) or id402167427 (iOS)"
+
                 ),
                 PluginConfigurationItemDescriptor(
                     key = KEY_TITLE,
                     type = PluginConfigurationItemType.StringType,
-                    displayName = "Title (e.g. the app's name)"
+                    displayName = "Title",
+                    moreInfo = "e.g. the app's name"
                 )
             )
         )
