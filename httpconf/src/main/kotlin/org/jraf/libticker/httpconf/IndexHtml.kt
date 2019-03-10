@@ -42,7 +42,9 @@ import kotlinx.html.id
 import kotlinx.html.input
 import kotlinx.html.label
 import kotlinx.html.link
+import kotlinx.html.option
 import kotlinx.html.script
+import kotlinx.html.select
 import kotlinx.html.span
 import kotlinx.html.stream.appendHTML
 import kotlinx.html.style
@@ -271,15 +273,30 @@ h4 {
 
                                         for ((confItemIdx, confItem) in configurationDescriptor.itemDescriptors.withIndex()) {
                                             div(classes = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label") {
-                                                input(
-                                                    classes = "mdl-textfield__input",
-                                                    type = InputType.text,
-                                                    name = "conf_${confItem.key}"
-                                                ) {
-                                                    id = "conf_${confItem.key}"
-                                                    value = confItem.defaultValue ?: ""
-                                                    if (confItem.type is PluginConfigurationItemType.NumberType) {
-                                                        pattern = "-?[0-9]*(\\.[0-9]+)?"
+                                                if (confItem.type is PluginConfigurationItemType.ChoiceType) {
+                                                    select(classes = "mdl-textfield__input") {
+                                                        name = "conf_${confItem.key}"
+                                                        id = "conf_${confItem.key}"
+                                                        style = "-webkit-appearance: none; -moz-appearance : none;"
+
+                                                        for (choice in (confItem.type as PluginConfigurationItemType.ChoiceType).choices) {
+                                                            option {
+                                                                value = choice
+                                                                +choice
+                                                            }
+                                                        }
+                                                    }
+                                                } else {
+                                                    input(
+                                                        classes = "mdl-textfield__input",
+                                                        type = InputType.text,
+                                                        name = "conf_${confItem.key}"
+                                                    ) {
+                                                        id = "conf_${confItem.key}"
+                                                        value = confItem.defaultValue ?: ""
+                                                        if (confItem.type is PluginConfigurationItemType.NumberType) {
+                                                            pattern = "-?[0-9]*(\\.[0-9]+)?"
+                                                        }
                                                     }
                                                 }
                                                 label(classes = "mdl-textfield__label") {
