@@ -34,8 +34,7 @@ import java.util.concurrent.TimeUnit
 class AppStoreRatingPlugin : PeriodicPlugin() {
     override val descriptor = AppStoreRatingPluginDescriptor.DESCRIPTOR
 
-    //    override val periodMs = TimeUnit.MINUTES.toMillis(1)
-    override val periodMs = TimeUnit.SECONDS.toMillis(30)
+    override val periodMs = TimeUnit.MINUTES.toMillis(7)
 
     private val playStoreClient = PlayStoreClient()
 
