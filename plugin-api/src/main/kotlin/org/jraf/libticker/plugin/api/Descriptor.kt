@@ -50,8 +50,9 @@ data class PluginConfigurationItemDescriptor(
     val required: Boolean = true
 )
 
-enum class PluginConfigurationItemType {
-    STRING,
-    NUMBER,
-    BOOLEAN
+sealed class PluginConfigurationItemType {
+    object StringType : PluginConfigurationItemType()
+    object NumberType : PluginConfigurationItemType()
+    object BooleanType : PluginConfigurationItemType()
+    class ChoiceType(vararg val choices: String) : PluginConfigurationItemType()
 }

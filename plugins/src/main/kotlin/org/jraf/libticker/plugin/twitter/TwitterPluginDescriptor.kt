@@ -45,27 +45,27 @@ object TwitterPluginDescriptor {
             listOf(
                 PluginConfigurationItemDescriptor(
                     key = KEY_OAUTH_CONSUMER_KEY,
-                    type = PluginConfigurationItemType.STRING,
+                    type = PluginConfigurationItemType.StringType,
                     displayName = "OAuth consumer key"
                 ),
                 PluginConfigurationItemDescriptor(
                     key = KEY_OAUTH_CONSUMER_SECRET,
-                    type = PluginConfigurationItemType.STRING,
+                    type = PluginConfigurationItemType.StringType,
                     displayName = "OAuth consumer secret"
                 ),
                 PluginConfigurationItemDescriptor(
                     key = KEY_OAUTH_ACCESS_TOKEN,
-                    type = PluginConfigurationItemType.STRING,
+                    type = PluginConfigurationItemType.StringType,
                     displayName = "OAuth access token"
                 ),
                 PluginConfigurationItemDescriptor(
                     key = KEY_OAUTH_ACCESS_TOKEN_SECRET,
-                    type = PluginConfigurationItemType.STRING,
+                    type = PluginConfigurationItemType.StringType,
                     displayName = "OAuth access token secret"
                 ),
                 PluginConfigurationItemDescriptor(
                     key = KEY_SEARCH,
-                    type = PluginConfigurationItemType.STRING,
+                    type = PluginConfigurationItemType.StringType,
                     displayName = "Search",
                     moreInfo = """Words to search (for instance: <i>olympics</i>), or a list name in the form <b>list:userName/listName</b> (for instance: <i>list:bod/news</i>)"""
                 )

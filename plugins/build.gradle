@@ -39,6 +39,7 @@ publishing {
 dependencies {
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutines"
 
     // JUnit
     testImplementation "junit:junit:$versions.testing.junit"

@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2018-present Benoit 'BoD' Lubek (BoD@JRAF.org)
+ * Copyright (C) 2019-present Benoit 'BoD' Lubek (BoD@JRAF.org)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jraf.libticker.plugin.datetime
+package org.jraf.libticker.plugin.appstorerating
 
 import org.jraf.libticker.plugin.api.PluginConfigurationDescriptor
 import org.jraf.libticker.plugin.api.PluginConfigurationItemDescriptor
@@ -31,23 +31,43 @@ import org.jraf.libticker.plugin.api.PluginConfigurationItemType
 import org.jraf.libticker.plugin.api.PluginDescriptor
 import org.jraf.libticker.plugin.api.PluginDescriptorProvider
 
-object DateTimePluginDescriptor {
+object AppStoreRatingPluginDescriptor {
+    const val KEY_STORE = "store"
+    const val KEY_APP_ID = "appId"
+    const val KEY_TITLE = "title"
+
+    const val KEY_STORE_ANDROID_PLAY_STORE = "Android Play Store"
+    const val KEY_STORE_IOS_APP_STORE = "iOS App Store"
+
     val DESCRIPTOR = PluginDescriptor(
-        className = "${this::class.java.`package`.name}.DateTimePlugin",
-        displayName = "Date and time",
+        className = "${this::class.java.`package`.name}.AppStoreRatingPlugin",
+        displayName = "Android and iOS app stores ratings",
         configurationDescriptor = PluginConfigurationDescriptor(
             listOf(
                 PluginConfigurationItemDescriptor(
-                    key = "dateLocale",
+                    key = KEY_STORE,
+                    type = PluginConfigurationItemType.ChoiceType(
+                        KEY_STORE_ANDROID_PLAY_STORE,
+                        KEY_STORE_IOS_APP_STORE
+                    ),
+                    displayName = "Store",
+                    defaultValue = KEY_STORE_ANDROID_PLAY_STORE
+                ),
+                PluginConfigurationItemDescriptor(
+                    key = KEY_APP_ID,
                     type = PluginConfigurationItemType.StringType,
-                    displayName = "Date locale",
-                    defaultValue = "en"
+                    displayName = "App Id (e.g. com.example.myapp)"
+                ),
+                PluginConfigurationItemDescriptor(
+                    key = KEY_TITLE,
+                    type = PluginConfigurationItemType.StringType,
+                    displayName = "Title (e.g. the app's name)"
                 )
             )
         )
     )
 }
 
-class DateTimePluginDescriptorProvider : PluginDescriptorProvider {
-    override val pluginDescriptor = DateTimePluginDescriptor.DESCRIPTOR
+class AppStoreRatingPluginDescriptorProvider : PluginDescriptorProvider {
+    override val pluginDescriptor = AppStoreRatingPluginDescriptor.DESCRIPTOR
 }

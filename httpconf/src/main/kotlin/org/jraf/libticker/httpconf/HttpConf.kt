@@ -96,9 +96,12 @@ class HttpConf(
         map.forEach { (key, value) ->
             val itemDescriptor = configurationDescriptor.itemDescriptors.first { it.key == key }
             when (itemDescriptor.type) {
-                PluginConfigurationItemType.STRING -> res.put(key, value)
-                PluginConfigurationItemType.NUMBER -> res.put(key, value.toDouble())
-                PluginConfigurationItemType.BOOLEAN -> res.put(key, value.toBoolean())
+                is PluginConfigurationItemType.StringType, is PluginConfigurationItemType.ChoiceType -> res.put(
+                    key,
+                    value
+                )
+                is PluginConfigurationItemType.NumberType -> res.put(key, value.toDouble())
+                is PluginConfigurationItemType.BooleanType -> res.put(key, value.toBoolean())
             }
         }
         return res

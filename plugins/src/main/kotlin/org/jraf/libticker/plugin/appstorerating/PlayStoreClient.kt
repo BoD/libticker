@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2018 Benoit 'BoD' Lubek (BoD@JRAF.org)
+ * Copyright (C) 2019-present Benoit 'BoD' Lubek (BoD@JRAF.org)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,31 +23,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jraf.libticker.message
+package org.jraf.libticker.plugin.appstorerating
 
-data class Message(
-    /**
-     * Plain text of this message.
-     */
-    val text: String,
+import java.net.URL
 
-    /**
-     * A formatted version of the text (may contain simple HTML markup).
-     */
-    val textFormatted: String = text,
+class PlayStoreClient {
+    suspend fun retrieveRating(appId: String): Float {
+        var text = URL(URL_APP_PAGE.format(appId)).readText()
+        text = text.substringAfter(DELIM_0).substringBefore(DELIM_1)
+        return text.toFloat()
+    }
 
-    /**
-     * An HTML version of this message (may be null), to be displayed on a browser/web view.
-     */
-    val html: String? = null,
-
-    /**
-     * Optional URI to the source of this message.
-     */
-    val uri: String? = null,
-
-    /**
-     * Optional URI to an image.
-     */
-    val imageUri: String? = null
-)
+    companion object {
+        private const val URL_APP_PAGE = "https://play.google.com/store/apps/details?id=%1\$s&hl=en_US"
+        private const val DELIM_0 = "<meta itemprop=\"ratingValue\" content=\""
+        private const val DELIM_1 = "\"/>"
+    }
+}

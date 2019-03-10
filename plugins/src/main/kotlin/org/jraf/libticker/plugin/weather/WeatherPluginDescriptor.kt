@@ -25,9 +25,9 @@
 
 package org.jraf.libticker.plugin.weather
 
+import org.jraf.libticker.plugin.api.PluginConfigurationDescriptor
 import org.jraf.libticker.plugin.api.PluginConfigurationItemDescriptor
 import org.jraf.libticker.plugin.api.PluginConfigurationItemType
-import org.jraf.libticker.plugin.api.PluginConfigurationDescriptor
 import org.jraf.libticker.plugin.api.PluginDescriptor
 import org.jraf.libticker.plugin.api.PluginDescriptorProvider
 
@@ -39,7 +39,7 @@ object WeatherPluginDescriptor {
             listOf(
                 PluginConfigurationItemDescriptor(
                     key = "apiKey",
-                    type = PluginConfigurationItemType.STRING,
+                    type = PluginConfigurationItemType.StringType,
                     displayName = "Forecast.io API key"
                 )
             )

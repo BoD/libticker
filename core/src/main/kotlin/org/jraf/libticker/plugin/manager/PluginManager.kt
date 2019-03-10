@@ -25,6 +25,7 @@
 
 package org.jraf.libticker.plugin.manager
 
+import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import com.beust.klaxon.json
@@ -56,9 +57,11 @@ class PluginManager(private val messageQueue: MessageQueue) {
 
     fun managePlugins(jsonString: String, notifyListeners: Boolean = false) {
         val parser: Parser = Parser.default()
-        val managePluginsJsonObject = parser.parse(StringBuilder(jsonString)) as JsonObject
-        for (pluginClassName in managePluginsJsonObject.keys) {
-            val configuration = managePluginsJsonObject.obj(pluginClassName)?.let { configurationJsonObject ->
+        val managePluginsJsonArray = parser.parse(StringBuilder(jsonString)) as JsonArray<*>
+        for (pluginJsonObject in managePluginsJsonArray) {
+            if (pluginJsonObject !is JsonObject) continue
+            val pluginClassName = pluginJsonObject.string(JSON_CLASS_NAME)!!
+            val configuration = pluginJsonObject.obj(JSON_CONFIGURATION)?.let { configurationJsonObject ->
                 PluginConfiguration(*configurationJsonObject.map.map { it.key to it.value!! }.toTypedArray())
             }
             managePlugin(pluginClassName, configuration)
@@ -96,9 +99,17 @@ class PluginManager(private val messageQueue: MessageQueue) {
 
     fun getManagedPluginsAsJsonString(): String {
         return json {
-            obj(_managedPlugins.map { plugin ->
-                plugin.descriptor.className to plugin.configuration?.let { conf -> obj(conf.asMap.map { it.key to it.value }) }
+            array(_managedPlugins.map { plugin ->
+                obj(
+                    JSON_CLASS_NAME to plugin.descriptor.className,
+                    JSON_CONFIGURATION to plugin.configuration?.let { conf -> obj(conf.asMap.map { it.key to it.value }) }
+                )
             })
         }.toJsonString(true)
+    }
+
+    companion object {
+        private const val JSON_CLASS_NAME = "className"
+        private const val JSON_CONFIGURATION = "configuration"
     }
 }

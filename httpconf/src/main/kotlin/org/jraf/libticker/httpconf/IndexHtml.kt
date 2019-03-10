@@ -278,7 +278,7 @@ h4 {
                                                 ) {
                                                     id = "conf_${confItem.key}"
                                                     value = confItem.defaultValue ?: ""
-                                                    if (confItem.type == PluginConfigurationItemType.NUMBER) {
+                                                    if (confItem.type is PluginConfigurationItemType.NumberType) {
                                                         pattern = "-?[0-9]*(\\.[0-9]+)?"
                                                     }
                                                 }
@@ -286,7 +286,7 @@ h4 {
                                                     htmlFor = "conf_${confItem.key}"
                                                     +(confItem.displayName + if (!confItem.required) " (optional)" else "")
                                                 }
-                                                if (confItem.type == PluginConfigurationItemType.NUMBER) {
+                                                if (confItem.type is PluginConfigurationItemType.NumberType) {
                                                     span(classes = "mdl-textfield__error") {
                                                         +"Must be a number"
                                                     }

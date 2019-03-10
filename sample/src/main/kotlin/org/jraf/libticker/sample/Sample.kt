@@ -30,6 +30,7 @@ import org.jraf.libticker.httpconf.Configuration
 import org.jraf.libticker.httpconf.HttpConf
 import org.jraf.libticker.message.BasicMessageQueue
 import org.jraf.libticker.plugin.api.PluginConfiguration
+import org.jraf.libticker.plugin.appstorerating.AppStoreRatingPluginDescriptor
 import org.jraf.libticker.plugin.manager.PluginManager
 import org.jraf.libticker.plugin.twitter.TwitterPluginDescriptor
 import java.util.concurrent.TimeUnit
@@ -71,28 +72,63 @@ fun main() {
                 TwitterPluginDescriptor.KEY_SEARCH to "list:bod/news"
             )
         )
+
+        // App store rating
+        managePlugin(
+            "org.jraf.libticker.plugin.appstorerating.AppStoreRatingPlugin", PluginConfiguration(
+                AppStoreRatingPluginDescriptor.KEY_APP_ID to "org.jraf.android.latoureiffel",
+                AppStoreRatingPluginDescriptor.KEY_STORE to AppStoreRatingPluginDescriptor.KEY_STORE_ANDROID_PLAY_STORE,
+                AppStoreRatingPluginDescriptor.KEY_TITLE to "HelloMundo (Android)"
+            )
+        )
     }
 
-//    pluginManager.managePlugins(
-//        """
-//            {
-//              "org.jraf.libticker.plugin.datetime.DateTimePlugin": {
-//                "dateLocale": "fr"
-//              },
-//              "org.jraf.libticker.plugin.frc.FrcPlugin": null,
-//              "org.jraf.libticker.plugin.weather.WeatherPlugin": {
-//                "apiKey": "xxx"
-//              },
-//              "org.jraf.libticker.plugin.btc.BtcPlugin": null,
-//              "org.jraf.libticker.plugin.twitter.TwitterPlugin": {
-//                "oAuthConsumerKey": "xxx",
-//                "oAuthConsumerSecret": "xxx",
-//                "oAuthAccessToken": "xxx",
-//                "oAuthAccessTokenSecret": "xxx"
-//              }
-//            }
-//    """
-//    )
+//    val pluginManager = PluginManager(messageQueue).apply {
+//        managePlugins(
+//            """
+//[{
+//  "className": "org.jraf.libticker.plugin.datetime.DateTimePlugin",
+//  "configuration": {
+//    "dateLocale": "fr"
+//  }
+//}, {
+//  "className": "org.jraf.libticker.plugin.frc.FrcPlugin",
+//  "configuration": null
+//}, {
+//  "className": "org.jraf.libticker.plugin.weather.WeatherPlugin",
+//  "configuration": {
+//    "apiKey": "xxx"
+//  }
+//}, {
+//  "className": "org.jraf.libticker.plugin.btc.BtcPlugin",
+//  "configuration": null
+//}, {
+//  "className": "org.jraf.libticker.plugin.twitter.TwitterPlugin",
+//  "configuration": {
+//    "oAuthConsumerKey": "xxx",
+//    "oAuthConsumerSecret": "xxx",
+//    "oAuthAccessToken": "xxx",
+//    "oAuthAccessTokenSecret": "xxx",
+//    "search": "list:bod/news"
+//  }
+//}, {
+//  "className": "org.jraf.libticker.plugin.appstorerating.AppStoreRatingPlugin",
+//  "configuration": {
+//    "appId": "org.jraf.android.latoureiffel",
+//    "store": "Android Play Store",
+//    "title": "HelloMundo (Android)"
+//  }
+//}, {
+//  "className": "org.jraf.libticker.plugin.appstorerating.AppStoreRatingPlugin",
+//  "configuration": {
+//    "appId": "org.jraf.android.bikey",
+//    "store": "Android Play Store",
+//    "title": "Bikey (Android)"
+//  }
+//}]
+//"""
+//        )
+//    }
 
     println(pluginManager.getManagedPluginsAsJsonString())
 
