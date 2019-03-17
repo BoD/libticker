@@ -46,7 +46,7 @@ internal class TwitterClient(
     companion object {
         private var LOGGER = LoggerFactory.getLogger(TwitterClient::class.java)
 
-        private val CHECK_PERIOD_MS = TimeUnit.MINUTES.toMillis(3)
+        private val CHECK_PERIOD_MS = TimeUnit.MINUTES.toMillis(5)
         private const val RETRIEVE_COUNT = 30
 
         private val STATUS_COMPARATOR = Comparator<Status> { o1, o2 -> o1.createdAt.compareTo(o2.createdAt) }

@@ -32,15 +32,33 @@ import org.jraf.libticker.plugin.api.PluginDescriptor
 import org.jraf.libticker.plugin.api.PluginDescriptorProvider
 
 object WeatherPluginDescriptor {
+    const val KEY_API_KEY = "apiKey"
+    const val KEY_FORMATTING_LOCALE = "formattingLocale"
+    const val KEY_PERIOD = "period"
+
     val DESCRIPTOR = PluginDescriptor(
         className = "${this::class.java.`package`.name}.WeatherPlugin",
         displayName = "Weather",
         configurationDescriptor = PluginConfigurationDescriptor(
             listOf(
                 PluginConfigurationItemDescriptor(
-                    key = "apiKey",
+                    key = KEY_API_KEY,
                     type = PluginConfigurationItemType.StringType,
                     displayName = "Forecast.io API key"
+                ),
+                PluginConfigurationItemDescriptor(
+                    key = KEY_FORMATTING_LOCALE,
+                    type = PluginConfigurationItemType.StringType,
+                    displayName = "Date locale",
+                    defaultValue = "en",
+                    required = false
+                ),
+                PluginConfigurationItemDescriptor(
+                    key = KEY_PERIOD,
+                    type = PluginConfigurationItemType.NumberType,
+                    displayName = "Period",
+                    moreInfo = "in minutes",
+                    defaultValue = "10"
                 )
             )
         )

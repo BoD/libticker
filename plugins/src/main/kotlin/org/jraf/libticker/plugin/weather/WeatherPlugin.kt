@@ -30,23 +30,26 @@ import org.jraf.libticker.message.Message
 import org.jraf.libticker.message.MessageQueue
 import org.jraf.libticker.plugin.api.PluginConfiguration
 import org.jraf.libticker.plugin.base.PeriodicPlugin
+import org.jraf.libticker.plugin.weather.WeatherPluginDescriptor.KEY_API_KEY
+import org.jraf.libticker.plugin.weather.WeatherPluginDescriptor.KEY_FORMATTING_LOCALE
+import org.jraf.libticker.plugin.weather.WeatherPluginDescriptor.KEY_PERIOD
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 class WeatherPlugin : PeriodicPlugin() {
     override val descriptor = WeatherPluginDescriptor.DESCRIPTOR
 
-    override val periodMs = TimeUnit.MINUTES.toMillis(7)
+    override val periodMs get() = TimeUnit.MINUTES.toMillis(configuration.getNumber(KEY_PERIOD).toLong())
 
     private lateinit var forecastIoClient: ForecastIoClient
     private lateinit var formattingLocale: Locale
 
-    override fun init(messageQueue: MessageQueue, configuration: PluginConfiguration?) {
+    override fun init(messageQueue: MessageQueue, configuration: PluginConfiguration) {
         super.init(messageQueue, configuration)
-        formattingLocale = configuration?.getString("formattingLocale").let {
+        formattingLocale = configuration.getStringOrNull(KEY_FORMATTING_LOCALE).let {
             if (it == null) Locale.getDefault() else Locale.forLanguageTag(it)
         }
-        forecastIoClient = ForecastIoClient(configuration!!.getString("apiKey")!!)
+        forecastIoClient = ForecastIoClient(configuration.getString(KEY_API_KEY))
     }
 
     override fun queueMessage() {

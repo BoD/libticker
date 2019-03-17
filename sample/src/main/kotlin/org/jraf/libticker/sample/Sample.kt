@@ -31,8 +31,12 @@ import org.jraf.libticker.httpconf.HttpConf
 import org.jraf.libticker.message.BasicMessageQueue
 import org.jraf.libticker.plugin.api.PluginConfiguration
 import org.jraf.libticker.plugin.appstorerating.AppStoreRatingPluginDescriptor
+import org.jraf.libticker.plugin.btc.BtcPluginDescriptor
+import org.jraf.libticker.plugin.datetime.DateTimePluginDescriptor
+import org.jraf.libticker.plugin.frc.FrcPluginDescriptor
 import org.jraf.libticker.plugin.manager.PluginManager
 import org.jraf.libticker.plugin.twitter.TwitterPluginDescriptor
+import org.jraf.libticker.plugin.weather.WeatherPluginDescriptor
 import java.util.concurrent.TimeUnit
 
 fun main() {
@@ -45,22 +49,31 @@ fun main() {
         // Date time
         managePlugin(
             "org.jraf.libticker.plugin.datetime.DateTimePlugin", PluginConfiguration(
-                "dateLocale" to "fr"
+                DateTimePluginDescriptor.KEY_DATE_LOCALE to "fr"
             )
         )
 
         // FRC
-        managePlugin("org.jraf.libticker.plugin.frc.FrcPlugin", null)
+        managePlugin(
+            "org.jraf.libticker.plugin.frc.FrcPlugin", PluginConfiguration(
+                FrcPluginDescriptor.KEY_PERIOD to 5
+            )
+        )
 
         // Weather
         managePlugin(
             "org.jraf.libticker.plugin.weather.WeatherPlugin", PluginConfiguration(
-                "apiKey" to System.getenv("org.jraf.libticker.plugin.weather.WeatherPlugin.apiKey")
+                WeatherPluginDescriptor.KEY_API_KEY to System.getenv("org.jraf.libticker.plugin.weather.WeatherPlugin.apiKey"),
+                WeatherPluginDescriptor.KEY_PERIOD to 5
             )
         )
 
         // Btc
-        managePlugin("org.jraf.libticker.plugin.btc.BtcPlugin", null)
+        managePlugin(
+            "org.jraf.libticker.plugin.btc.BtcPlugin", PluginConfiguration(
+                BtcPluginDescriptor.KEY_PERIOD to 5
+            )
+        )
 
         // Twitter
         managePlugin(
@@ -78,14 +91,16 @@ fun main() {
             "org.jraf.libticker.plugin.appstorerating.AppStoreRatingPlugin", PluginConfiguration(
                 AppStoreRatingPluginDescriptor.KEY_APP_ID to "org.jraf.android.latoureiffel",
                 AppStoreRatingPluginDescriptor.KEY_STORE to AppStoreRatingPluginDescriptor.KEY_STORE_ANDROID_PLAY_STORE,
-                AppStoreRatingPluginDescriptor.KEY_TITLE to "HelloMundo (Android)"
+                AppStoreRatingPluginDescriptor.KEY_TITLE to "HelloMundo (Android)",
+                AppStoreRatingPluginDescriptor.KEY_PERIOD to 5
             )
         )
         managePlugin(
             "org.jraf.libticker.plugin.appstorerating.AppStoreRatingPlugin", PluginConfiguration(
                 AppStoreRatingPluginDescriptor.KEY_APP_ID to "id1214811644",
                 AppStoreRatingPluginDescriptor.KEY_STORE to AppStoreRatingPluginDescriptor.KEY_STORE_IOS_APP_STORE,
-                AppStoreRatingPluginDescriptor.KEY_TITLE to "Qonto (iOS)"
+                AppStoreRatingPluginDescriptor.KEY_TITLE to "Qonto (iOS)",
+                AppStoreRatingPluginDescriptor.KEY_PERIOD to 5
             )
         )
     }

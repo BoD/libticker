@@ -35,6 +35,7 @@ object AppStoreRatingPluginDescriptor {
     const val KEY_STORE = "store"
     const val KEY_APP_ID = "appId"
     const val KEY_TITLE = "title"
+    const val KEY_PERIOD = "period"
 
     const val KEY_STORE_ANDROID_PLAY_STORE = "Android Play Store"
     const val KEY_STORE_IOS_APP_STORE = "iOS App Store"
@@ -65,6 +66,13 @@ object AppStoreRatingPluginDescriptor {
                     type = PluginConfigurationItemType.StringType,
                     displayName = "Title",
                     moreInfo = "e.g. the app's name"
+                ),
+                PluginConfigurationItemDescriptor(
+                    key = KEY_PERIOD,
+                    type = PluginConfigurationItemType.NumberType,
+                    displayName = "Period",
+                    moreInfo = "in minutes",
+                    defaultValue = "10"
                 )
             )
         )

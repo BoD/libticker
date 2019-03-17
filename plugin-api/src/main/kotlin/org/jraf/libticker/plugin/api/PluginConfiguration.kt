@@ -67,38 +67,64 @@ class PluginConfiguration(vararg keyValues: Pair<String, Any>) {
     }
 
     /**
+     * @throws IllegalArgumentException if the given [key] can't be found or doesn't map to a String
+     */
+    fun getString(key: String): String {
+        val res = (items[key] ?: throw IllegalArgumentException("'$key' not found")) as? ItemValue.StringItemValue
+            ?: throw IllegalArgumentException("'$key' is not a String")
+        return res.value
+    }
+
+    /**
      * @throws IllegalArgumentException if the given [key] doesn't map to a String
      */
-    fun getString(key: String): String? {
+    fun getStringOrNull(key: String): String? {
         val res = (items[key] ?: return null) as? ItemValue.StringItemValue
-            ?: throw IllegalArgumentException("$key is not a String")
+            ?: throw IllegalArgumentException("'$key' is not a String")
+        return res.value
+    }
+
+    /**
+     * @throws IllegalArgumentException if the given [key] can't be found or doesn't map to a Number
+     */
+    fun getNumber(key: String): Number {
+        val res = (items[key] ?: throw IllegalArgumentException("'$key' not found")) as? ItemValue.NumberItemValue
+            ?: throw IllegalArgumentException("'$key' is not a Number")
         return res.value
     }
 
     /**
      * @throws IllegalArgumentException if the given [key] doesn't map to a Number
      */
-    fun getNumber(key: String): Number? {
+    fun getNumberOrNull(key: String): Number? {
         val res = (items[key] ?: return null) as? ItemValue.NumberItemValue
-            ?: throw IllegalArgumentException("$key is not a Number")
+            ?: throw IllegalArgumentException("'$key' is not a Number")
+        return res.value
+    }
+
+    /**
+     * @throws IllegalArgumentException if the given [key] can't be found or doesn't map to a Boolean
+     */
+    fun getBoolean(key: String): Boolean {
+        val res = (items[key] ?: throw IllegalArgumentException("'$key' not found")) as? ItemValue.BooleanItemValue
+            ?: throw IllegalArgumentException("'$key' is not a Boolean")
         return res.value
     }
 
     /**
      * @throws IllegalArgumentException if the given [key] doesn't map to a Boolean
      */
-    fun getBoolean(key: String): Boolean? {
+    fun getBooleanOrNull(key: String): Boolean? {
         val res = (items[key] ?: return null) as? ItemValue.BooleanItemValue
-            ?: throw IllegalArgumentException("$key is not a Boolean")
+            ?: throw IllegalArgumentException("'$key' is not a Boolean")
         return res.value
     }
 
     /**
-     * @throws IllegalArgumentException if the given [key] doesn't map to a Boolean
+     * @throws IllegalArgumentException if the given [key] can't be found
      */
-    operator fun get(key: String): Any? {
-        val res = (items[key] ?: return null) ?: throw IllegalArgumentException("$key is not a Boolean")
-        return res.value
+    operator fun get(key: String): Any {
+        return items[key]?.value ?: throw IllegalArgumentException("'$key' not found")
     }
 
     fun containsKey(key: String): Boolean = items.containsKey(key)

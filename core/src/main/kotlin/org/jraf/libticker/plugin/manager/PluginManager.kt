@@ -45,7 +45,7 @@ class PluginManager(private val messageQueue: MessageQueue) {
 
     fun managePlugin(
         pluginClassName: String,
-        configuration: PluginConfiguration?,
+        configuration: PluginConfiguration,
         notifyListeners: Boolean = false
     ) {
         val plugin = (Class.forName(pluginClassName).newInstance() as Plugin)
@@ -63,7 +63,7 @@ class PluginManager(private val messageQueue: MessageQueue) {
             val pluginClassName = pluginJsonObject.string(JSON_CLASS_NAME)!!
             val configuration = pluginJsonObject.obj(JSON_CONFIGURATION)?.let { configurationJsonObject ->
                 PluginConfiguration(*configurationJsonObject.map.map { it.key to it.value!! }.toTypedArray())
-            }
+            } ?: PluginConfiguration()
             managePlugin(pluginClassName, configuration)
         }
         if (notifyListeners) notifyListeners()

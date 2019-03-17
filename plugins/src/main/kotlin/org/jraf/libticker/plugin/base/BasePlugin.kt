@@ -31,15 +31,15 @@ import org.jraf.libticker.plugin.api.PluginConfiguration
 
 abstract class BasePlugin : Plugin {
     lateinit var messageQueue: MessageQueue
-    private var _configuration: PluginConfiguration? = null
+    private lateinit var _configuration: PluginConfiguration
     private var _isRunning: Boolean = false
 
-    override fun init(messageQueue: MessageQueue, configuration: PluginConfiguration?) {
+    override fun init(messageQueue: MessageQueue, configuration: PluginConfiguration) {
         this.messageQueue = messageQueue
         _configuration = configuration
     }
 
-    override val configuration: PluginConfiguration?
+    override val configuration: PluginConfiguration
         get() = _configuration
 
     override fun start() {

@@ -191,7 +191,7 @@ h4 {
                                                         +confItem.displayName
                                                     }
                                                     td {
-                                                        +plugin.configuration!![confItem.key].toString()
+                                                        +plugin.configuration[confItem.key].toString()
                                                     }
                                                 }
                                             }

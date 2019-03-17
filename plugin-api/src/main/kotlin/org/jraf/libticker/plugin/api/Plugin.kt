@@ -30,9 +30,9 @@ import org.jraf.libticker.message.MessageQueue
 interface Plugin {
     val descriptor: PluginDescriptor
 
-    fun init(messageQueue: MessageQueue, configuration: PluginConfiguration?)
+    fun init(messageQueue: MessageQueue, configuration: PluginConfiguration)
 
-    val configuration: PluginConfiguration?
+    val configuration: PluginConfiguration
 
     fun start()
 

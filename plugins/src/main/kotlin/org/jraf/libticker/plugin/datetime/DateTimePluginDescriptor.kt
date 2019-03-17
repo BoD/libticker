@@ -32,16 +32,19 @@ import org.jraf.libticker.plugin.api.PluginDescriptor
 import org.jraf.libticker.plugin.api.PluginDescriptorProvider
 
 object DateTimePluginDescriptor {
+    const val KEY_DATE_LOCALE = "dateLocale"
+
     val DESCRIPTOR = PluginDescriptor(
         className = "${this::class.java.`package`.name}.DateTimePlugin",
         displayName = "Date and time",
         configurationDescriptor = PluginConfigurationDescriptor(
             listOf(
                 PluginConfigurationItemDescriptor(
-                    key = "dateLocale",
+                    key = KEY_DATE_LOCALE,
                     type = PluginConfigurationItemType.StringType,
                     displayName = "Date locale",
-                    defaultValue = "en"
+                    defaultValue = "en",
+                    required = false
                 )
             )
         )

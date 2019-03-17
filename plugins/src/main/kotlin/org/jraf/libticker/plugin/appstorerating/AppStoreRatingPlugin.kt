@@ -28,6 +28,12 @@ package org.jraf.libticker.plugin.appstorerating
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.jraf.libticker.message.Message
+import org.jraf.libticker.plugin.appstorerating.AppStoreRatingPluginDescriptor.KEY_APP_ID
+import org.jraf.libticker.plugin.appstorerating.AppStoreRatingPluginDescriptor.KEY_PERIOD
+import org.jraf.libticker.plugin.appstorerating.AppStoreRatingPluginDescriptor.KEY_STORE
+import org.jraf.libticker.plugin.appstorerating.AppStoreRatingPluginDescriptor.KEY_STORE_ANDROID_PLAY_STORE
+import org.jraf.libticker.plugin.appstorerating.AppStoreRatingPluginDescriptor.KEY_STORE_IOS_APP_STORE
+import org.jraf.libticker.plugin.appstorerating.AppStoreRatingPluginDescriptor.KEY_TITLE
 import org.jraf.libticker.plugin.base.PeriodicPlugin
 import org.slf4j.LoggerFactory
 import java.util.concurrent.TimeUnit
@@ -39,7 +45,7 @@ class AppStoreRatingPlugin : PeriodicPlugin() {
 
     override val descriptor = AppStoreRatingPluginDescriptor.DESCRIPTOR
 
-    override val periodMs = TimeUnit.MINUTES.toMillis(7)
+    override val periodMs get() = TimeUnit.MINUTES.toMillis(configuration.getNumber(KEY_PERIOD).toLong())
 
     private val androidPlayStoreClient = AndroidPlayStoreClient()
     private val iosAppStoreClient = IosAppStoreClient()
@@ -47,12 +53,12 @@ class AppStoreRatingPlugin : PeriodicPlugin() {
     override fun queueMessage() {
         GlobalScope.launch {
             try {
-                val appId = configuration!!.getString(AppStoreRatingPluginDescriptor.KEY_APP_ID)!!
-                val rating = when (configuration!!.getString(AppStoreRatingPluginDescriptor.KEY_STORE)!!) {
-                    AppStoreRatingPluginDescriptor.KEY_STORE_ANDROID_PLAY_STORE ->
+                val appId = configuration.getString(KEY_APP_ID)
+                val rating = when (configuration.getString(KEY_STORE)) {
+                    KEY_STORE_ANDROID_PLAY_STORE ->
                         androidPlayStoreClient.retrieveRating(appId)
 
-                    AppStoreRatingPluginDescriptor.KEY_STORE_IOS_APP_STORE ->
+                    KEY_STORE_IOS_APP_STORE ->
                         iosAppStoreClient.retrieveRating(appId)
 
                     else -> throw IllegalArgumentException("Unknown value for configuration parameter '${AppStoreRatingPluginDescriptor.KEY_STORE}'")
@@ -61,7 +67,7 @@ class AppStoreRatingPlugin : PeriodicPlugin() {
                     text = "Current rating for $appId: $rating",
                     html = formatHtmlRating(
                         rating,
-                        configuration!!.getString(AppStoreRatingPluginDescriptor.KEY_TITLE)!!
+                        configuration.getString(KEY_TITLE)
                     )
                 )
             } catch (t: Throwable) {

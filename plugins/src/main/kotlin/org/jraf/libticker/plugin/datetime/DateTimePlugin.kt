@@ -49,9 +49,9 @@ class DateTimePlugin : PeriodicPlugin() {
     private val dateFormat by lazy { DateFormat.getDateInstance(DateFormat.FULL, dateLocale) }
 
 
-    override fun init(messageQueue: MessageQueue, configuration: PluginConfiguration?) {
+    override fun init(messageQueue: MessageQueue, configuration: PluginConfiguration) {
         super.init(messageQueue, configuration)
-        dateLocale = configuration?.getString("dateLocale").let {
+        dateLocale = configuration.getStringOrNull(DateTimePluginDescriptor.KEY_DATE_LOCALE).let {
             if (it == null) Locale.getDefault() else Locale.forLanguageTag(it)
         }
     }

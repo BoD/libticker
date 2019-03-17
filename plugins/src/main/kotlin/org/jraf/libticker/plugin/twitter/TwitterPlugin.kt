@@ -29,6 +29,11 @@ import org.jraf.libticker.message.Message
 import org.jraf.libticker.message.MessageQueue
 import org.jraf.libticker.plugin.api.PluginConfiguration
 import org.jraf.libticker.plugin.base.BasePlugin
+import org.jraf.libticker.plugin.twitter.TwitterPluginDescriptor.KEY_OAUTH_ACCESS_TOKEN
+import org.jraf.libticker.plugin.twitter.TwitterPluginDescriptor.KEY_OAUTH_ACCESS_TOKEN_SECRET
+import org.jraf.libticker.plugin.twitter.TwitterPluginDescriptor.KEY_OAUTH_CONSUMER_KEY
+import org.jraf.libticker.plugin.twitter.TwitterPluginDescriptor.KEY_OAUTH_CONSUMER_SECRET
+import org.jraf.libticker.plugin.twitter.TwitterPluginDescriptor.KEY_SEARCH
 import twitter4j.Status
 import java.util.ResourceBundle
 import java.util.regex.Pattern
@@ -42,14 +47,14 @@ class TwitterPlugin : BasePlugin() {
         ResourceBundle.getBundle(javaClass.name)
     }
 
-    override fun init(messageQueue: MessageQueue, configuration: PluginConfiguration?) {
-        super.init(messageQueue, configuration!!)
+    override fun init(messageQueue: MessageQueue, configuration: PluginConfiguration) {
+        super.init(messageQueue, configuration)
         twitterClient = TwitterClient(
-            configuration.getString(TwitterPluginDescriptor.KEY_OAUTH_CONSUMER_KEY)!!,
-            configuration.getString(TwitterPluginDescriptor.KEY_OAUTH_CONSUMER_SECRET)!!,
-            configuration.getString(TwitterPluginDescriptor.KEY_OAUTH_ACCESS_TOKEN)!!,
-            configuration.getString(TwitterPluginDescriptor.KEY_OAUTH_ACCESS_TOKEN_SECRET)!!,
-            Search.parse(configuration.getString(TwitterPluginDescriptor.KEY_SEARCH)!!)
+            configuration.getString(KEY_OAUTH_CONSUMER_KEY),
+            configuration.getString(KEY_OAUTH_CONSUMER_SECRET),
+            configuration.getString(KEY_OAUTH_ACCESS_TOKEN),
+            configuration.getString(KEY_OAUTH_ACCESS_TOKEN_SECRET),
+            Search.parse(configuration.getString(KEY_SEARCH))
         )
     }
 

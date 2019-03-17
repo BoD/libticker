@@ -25,13 +25,29 @@
 
 package org.jraf.libticker.plugin.frc
 
+import org.jraf.libticker.plugin.api.PluginConfigurationDescriptor
+import org.jraf.libticker.plugin.api.PluginConfigurationItemDescriptor
+import org.jraf.libticker.plugin.api.PluginConfigurationItemType
 import org.jraf.libticker.plugin.api.PluginDescriptor
 import org.jraf.libticker.plugin.api.PluginDescriptorProvider
 
 object FrcPluginDescriptor {
+    const val KEY_PERIOD = "period"
+
     val DESCRIPTOR = PluginDescriptor(
         className = "${this::class.java.`package`.name}.FrcPlugin",
-        displayName = "French Revolutionary Calendar"
+        displayName = "French Revolutionary Calendar",
+        configurationDescriptor = PluginConfigurationDescriptor(
+            listOf(
+                PluginConfigurationItemDescriptor(
+                    key = KEY_PERIOD,
+                    type = PluginConfigurationItemType.NumberType,
+                    displayName = "Period",
+                    moreInfo = "in minutes",
+                    defaultValue = "10"
+                )
+            )
+        )
     )
 }
 

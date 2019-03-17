@@ -48,7 +48,10 @@ class BasicMessageQueue(private val size: Int) : MessageQueue {
 
     @Synchronized
     override fun add(vararg messages: Message) {
-        messageList.addAll(messages)
+        // Do not re-add messages that are already in the list
+        for (message in messages) {
+            if (!messageList.contains(message)) messageList += message
+        }
 
         // Discard old items if any
         var elementsToDiscard = 0
@@ -65,6 +68,9 @@ class BasicMessageQueue(private val size: Int) : MessageQueue {
 
     @Synchronized
     override fun addUrgent(vararg messages: Message) {
-        urgentMessageQueue.addAll(messages)
+        // Do not re-queue messages that are already in the list
+        for (message in messages) {
+            if (!urgentMessageQueue.contains(message)) urgentMessageQueue += message
+        }
     }
 }

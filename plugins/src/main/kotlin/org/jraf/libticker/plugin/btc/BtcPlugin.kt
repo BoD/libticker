@@ -28,6 +28,7 @@ import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import org.jraf.libticker.message.Message
 import org.jraf.libticker.plugin.base.PeriodicPlugin
+import org.jraf.libticker.plugin.btc.BtcPluginDescriptor.KEY_PERIOD
 import org.slf4j.LoggerFactory
 import java.net.HttpURLConnection
 import java.net.URL
@@ -47,7 +48,7 @@ class BtcPlugin : PeriodicPlugin() {
 
     override val descriptor = BtcPluginDescriptor.DESCRIPTOR
 
-    override val periodMs = TimeUnit.MINUTES.toMillis(6)
+    override val periodMs get() = TimeUnit.MINUTES.toMillis(configuration.getNumber(KEY_PERIOD).toLong())
 
     override fun queueMessage() {
         try {

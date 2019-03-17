@@ -89,9 +89,9 @@ class HttpConf(
         addHeader("Location", location)
     }
 
-    private fun mapToPluginConfiguration(className: String, map: Map<String, String>): PluginConfiguration? {
+    private fun mapToPluginConfiguration(className: String, map: Map<String, String>): PluginConfiguration {
         val pluginDescriptor = pluginManager.availablePlugins.first { it.className == className }
-        val configurationDescriptor = pluginDescriptor.configurationDescriptor ?: return null
+        val configurationDescriptor = pluginDescriptor.configurationDescriptor ?: return PluginConfiguration()
         val res = PluginConfiguration()
         map.forEach { (key, value) ->
             val itemDescriptor = configurationDescriptor.itemDescriptors.first { it.key == key }
