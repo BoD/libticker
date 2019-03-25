@@ -77,7 +77,8 @@ class AppStoreRatingPlugin : PeriodicPlugin() {
     }
 
     private fun formatHtmlRating(rating: Float, title: String): String {
-        val ratingStr = "${rating.toInt()}<small>.${rating.toString()
+        val roundedRating = "%.2f".format(rating).toFloat()
+        val ratingStr = "${roundedRating.toInt()}<small>.${roundedRating.toString()
             .substringAfter(".")
             .maxWidth(2)}</small>"
 
@@ -86,12 +87,12 @@ class AppStoreRatingPlugin : PeriodicPlugin() {
         val starFraction =
             "<div class=\"star-container star-transparent\"><div class=\"star-container star\" style=\"width: %1\$d%%;\"></div></div>\n"
         val stars = StringBuilder()
-        for (i in 1..rating.toInt()) {
+        for (i in 1..roundedRating.toInt()) {
             stars.append(star)
         }
-        val percent = ((rating - rating.toInt()) * 100).toInt()
+        val percent = ((roundedRating - roundedRating.toInt()) * 100).toInt()
         stars.append(starFraction.format(percent))
-        for (i in 1 until 5 - rating.toInt()) {
+        for (i in 1 until 5 - roundedRating.toInt()) {
             stars.append(starTransparent)
         }
 
