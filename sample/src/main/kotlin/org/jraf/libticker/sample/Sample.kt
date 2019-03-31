@@ -159,7 +159,7 @@ fun main() {
     }
 
     Schedulers.computation().schedulePeriodicallyDirect({
-        messageQueue.next?.let(::println)
+        messageQueue.getNext()?.let(::println)
     }, 0, 5, TimeUnit.SECONDS)
 
     val httpConf = HttpConf(pluginManager, Configuration(port = 8043))

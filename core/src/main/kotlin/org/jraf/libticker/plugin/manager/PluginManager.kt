@@ -72,6 +72,7 @@ class PluginManager(private val messageQueue: MessageQueue) {
     fun unmanagePlugin(plugin: Plugin, notifyListeners: Boolean = false) {
         if (plugin.isRunning) plugin.stop()
         _managedPlugins -= plugin
+        messageQueue.unset(plugin)
         if (notifyListeners) notifyListeners()
     }
 

@@ -63,7 +63,7 @@ class AppStoreRatingPlugin : PeriodicPlugin() {
 
                     else -> throw IllegalArgumentException("Unknown value for configuration parameter '${AppStoreRatingPluginDescriptor.KEY_STORE}'")
                 }
-                messageQueue *= Message(
+                messageQueue[this@AppStoreRatingPlugin] = Message(
                     text = "Current rating for $appId: $rating",
                     html = formatHtmlRating(
                         rating,

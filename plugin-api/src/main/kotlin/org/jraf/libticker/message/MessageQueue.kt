@@ -25,11 +25,17 @@
 
 package org.jraf.libticker.message
 
+import org.jraf.libticker.plugin.api.Plugin
+
 interface MessageQueue {
     fun add(vararg messages: Message)
     fun addUrgent(vararg messages: Message)
-    val next: Message?
+    fun set(plugin: Plugin, vararg message: Message)
+    fun unset(plugin: Plugin)
+
+    fun getNext(): Message?
 
     operator fun plusAssign(message: Message) = add(message)
     operator fun timesAssign(message: Message) = addUrgent(message)
+    operator fun set(plugin: Plugin, message: Message) = set(plugin, *arrayOf(message))
 }

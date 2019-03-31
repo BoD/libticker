@@ -61,7 +61,7 @@ class BtcPlugin : PeriodicPlugin() {
                 .normalize()
                 .map { it.roundToInt() }
 
-            messageQueue += Message(
+            messageQueue[this] = Message(
                 text = resourceBundle.getString("btc_value_plain").format(currentValue),
                 textFormatted = resourceBundle.getString("btc_value_formatted").format(currentValue),
                 imageUri = URL_CHART.format(pastValues.joinToString(","))

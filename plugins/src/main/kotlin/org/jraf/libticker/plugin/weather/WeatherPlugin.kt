@@ -80,7 +80,8 @@ class WeatherPlugin : PeriodicPlugin() {
                 resourceBundle.getString("weather_max_formatted")
                     .format(formattingLocale, weatherResult.todayMaxTemperature)
 
-            messageQueue.addUrgent(
+            messageQueue.set(
+                this,
                 Message(weatherNowPlain, weatherNowFormatted),
                 Message(weatherMinPlain, weatherMinFormatted),
                 Message(weatherMaxPlain, weatherMaxFormatted)

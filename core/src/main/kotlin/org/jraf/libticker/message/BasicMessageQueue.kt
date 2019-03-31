@@ -25,26 +25,46 @@
 
 package org.jraf.libticker.message
 
+import org.jraf.libticker.plugin.api.Plugin
 import java.util.ArrayDeque
 import java.util.ArrayList
 
-class BasicMessageQueue(private val size: Int) : MessageQueue {
+class BasicMessageQueue(private val size: Int = 100, private val messagesFromMessageList: Int = 4) : MessageQueue {
     private val messageList: ArrayList<Message> = ArrayList(size * 2)
-    private var messageListCurrentIndex = 0
+    private var messageListIndex = 0
     private val urgentMessageQueue: ArrayDeque<Message> = ArrayDeque(size * 2)
+    private val messagesByPlugin = LinkedHashMap<Plugin, List<Message>>()
+    private var messagesByPluginPluginIndex = 0
+    private var messagesByPluginMessageIndex = 0
+    private var globalIndex = 0
 
-    override val next: Message?
-        @Synchronized get() {
-            // Try the urgent queue first
-            if (!urgentMessageQueue.isEmpty()) return urgentMessageQueue.pop()
+    @Synchronized
+    override fun getNext(): Message? {
+        // Try the urgent queue first
+        if (!urgentMessageQueue.isEmpty()) return urgentMessageQueue.pop()
 
-            // Try the normal list
-            if (messageList.isEmpty()) return null
-            val res = messageList[messageListCurrentIndex]
-            messageListCurrentIndex = (messageListCurrentIndex + 1) % messageList.size
+        // Use the plugin list
+        if (globalIndex % (messagesFromMessageList + 1) == 0 || messageList.isEmpty()) {
+            if (messagesByPlugin.isEmpty()) return null
+            val messageListForPluginIndex = messagesByPlugin.values.toList()[messagesByPluginPluginIndex]
+            val res = messageListForPluginIndex[messagesByPluginMessageIndex]
+            messagesByPluginMessageIndex++
+            if (messagesByPluginMessageIndex == messageListForPluginIndex.size) {
+                messagesByPluginMessageIndex = 0
+                messagesByPluginPluginIndex = (messagesByPluginPluginIndex + 1) % messagesByPlugin.size
+                globalIndex++
+            }
             return res
         }
 
+        // Use the normal list
+        if (messageList.isEmpty()) return null
+        val res = messageList[messageListIndex]
+        messageListIndex = (messageListIndex + 1) % messageList.size
+
+        globalIndex++
+        return res
+    }
 
     @Synchronized
     override fun add(vararg messages: Message) {
@@ -61,8 +81,8 @@ class BasicMessageQueue(private val size: Int) : MessageQueue {
         }
 
         // Shift the index if elements were discarded
-        messageListCurrentIndex -= elementsToDiscard
-        if (messageListCurrentIndex < 0) messageListCurrentIndex = 0
+        messageListIndex -= elementsToDiscard
+        if (messageListIndex < 0) messageListIndex = 0
     }
 
 
@@ -72,5 +92,17 @@ class BasicMessageQueue(private val size: Int) : MessageQueue {
         for (message in messages) {
             if (!urgentMessageQueue.contains(message)) urgentMessageQueue += message
         }
+    }
+
+    @Synchronized
+    override fun set(plugin: Plugin, vararg message: Message) {
+        messagesByPlugin[plugin] = message.asList()
+    }
+
+    @Synchronized
+    override fun unset(plugin: Plugin) {
+        messagesByPlugin.remove(plugin)
+        messagesByPluginPluginIndex = 0
+        messagesByPluginMessageIndex = 0
     }
 }
