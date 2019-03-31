@@ -48,6 +48,6 @@ class FrcPlugin : PeriodicPlugin() {
             .format(frcDate.weekdayName, frcDate.dayOfMonth, frcDate.monthName, frcDate.year)
         val frcObjectStr = resourceBundle.getString("frc_object").format(frcDate.objectTypeName, frcDate.objectOfTheDay)
 
-        messageQueue.addUrgent(Message(frcDateStr), Message(frcObjectStr))
+        messageQueue.set(this, Message(frcDateStr), Message(frcObjectStr))
     }
 }
