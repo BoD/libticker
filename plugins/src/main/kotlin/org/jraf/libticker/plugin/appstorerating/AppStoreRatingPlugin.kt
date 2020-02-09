@@ -38,6 +38,7 @@ import org.jraf.libticker.plugin.appstorerating.AppStoreRatingPluginDescriptor.K
 import org.jraf.libticker.plugin.appstorerating.AppStoreRatingPluginDescriptor.KEY_TITLE
 import org.jraf.libticker.plugin.base.PeriodicPlugin
 import org.slf4j.LoggerFactory
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 class AppStoreRatingPlugin : PeriodicPlugin() {
@@ -76,7 +77,7 @@ class AppStoreRatingPlugin : PeriodicPlugin() {
     }
 
     private fun formatHtmlRating(rating: Float, title: String): String {
-        val roundedRating = "%.2f".format(rating).toFloat()
+        val roundedRating = "%.2f".format(Locale.US, rating).toFloat()
         val ratingStr = "${roundedRating.toInt()}<small>.${roundedRating.toString()
             .substringAfter(".")
             .maxWidth(2)}</small>"
