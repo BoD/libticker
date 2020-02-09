@@ -68,6 +68,9 @@ dependencies {
 
     // Slf4j
     implementation "org.slf4j:slf4j-api:$versions.slf4j"
+
+    // klibappstorerating
+    implementation "org.jraf:klibappstorerating:$versions.klibappstorerating"
 }
 
 // Use "./gradlew publishToMavenLocal" to deploy the artifacts to your local maven repository

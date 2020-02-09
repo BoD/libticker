@@ -27,6 +27,8 @@ package org.jraf.libticker.plugin.appstorerating
 
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.jraf.klibappstorerating.AppStore
+import org.jraf.klibappstorerating.KLibAppStoreRating
 import org.jraf.libticker.message.Message
 import org.jraf.libticker.plugin.appstorerating.AppStoreRatingPluginDescriptor.KEY_APP_ID
 import org.jraf.libticker.plugin.appstorerating.AppStoreRatingPluginDescriptor.KEY_PERIOD
@@ -47,19 +49,16 @@ class AppStoreRatingPlugin : PeriodicPlugin() {
 
     override val periodMs get() = TimeUnit.MINUTES.toMillis(configuration.getNumber(KEY_PERIOD).toLong())
 
-    private val androidPlayStoreClient = AndroidPlayStoreClient()
-    private val iosAppStoreClient = IosAppStoreClient()
-
     override fun queueMessage() {
         GlobalScope.launch {
             try {
                 val appId = configuration.getString(KEY_APP_ID)
                 val rating = when (configuration.getString(KEY_STORE)) {
                     KEY_STORE_ANDROID_PLAY_STORE ->
-                        androidPlayStoreClient.retrieveRating(appId)
+                        KLibAppStoreRating.retrieveRating(AppStore.GOOGLE_PLAY_STORE, appId)
 
                     KEY_STORE_IOS_APP_STORE ->
-                        iosAppStoreClient.retrieveRating(appId)
+                        KLibAppStoreRating.retrieveRating(AppStore.APPLE_APP_STORE, appId)
 
                     else -> throw IllegalArgumentException("Unknown value for configuration parameter '${AppStoreRatingPluginDescriptor.KEY_STORE}'")
                 }

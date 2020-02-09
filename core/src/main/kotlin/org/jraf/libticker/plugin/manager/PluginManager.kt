@@ -52,6 +52,7 @@ class PluginManager(private val messageQueue: MessageQueue) {
         _managedPlugins += plugin
         plugin.init(messageQueue, configuration)
         plugin.start()
+
         if (notifyListeners) notifyListeners()
     }
 
@@ -103,7 +104,7 @@ class PluginManager(private val messageQueue: MessageQueue) {
             array(_managedPlugins.map { plugin ->
                 obj(
                     JSON_CLASS_NAME to plugin.descriptor.className,
-                    JSON_CONFIGURATION to plugin.configuration?.let { conf -> obj(conf.asMap.map { it.key to it.value }) }
+                    JSON_CONFIGURATION to obj(plugin.configuration.asMap.map { it.key to it.value })
                 )
             })
         }.toJsonString(true)

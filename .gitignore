@@ -2,6 +2,6 @@ build
 out
 .gradle
 *.iml
-.idea
+.idea/*
 !.idea/copyright
 !.idea/codeStyles
