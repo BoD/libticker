@@ -44,6 +44,7 @@ import org.jraf.libticker.plugin.googlephotos.GooglePhotosPluginDescriptor.KEY_P
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 import kotlin.random.Random
 
@@ -103,7 +104,8 @@ class GooglePhotosPlugin : PeriodicPlugin() {
         for ((index, mediaItem) in photosLibraryClient.searchMediaItems(albumContainingRandomPhoto!!.id).iterateAll()
             .withIndex()) {
             if (index == randomIndexRemainingForAlbum) {
-                if (!mediaItem.mediaMetadata.hasPhoto()) {
+                val mimeType = mediaItem.mimeType.toLowerCase(Locale.US)
+                if (!mimeType.contains("jpg") && !mimeType.contains("jpeg")) {
                     // Ignore videos
                     return null
                 }
@@ -119,7 +121,11 @@ class GooglePhotosPlugin : PeriodicPlugin() {
         val displayHeight = globalConfiguration.getNumberOrNull("displayHeight") ?: 768
         val photoUrl = randomPhoto.baseUrl + "=w$displayWidth-h$displayHeight-c"
         val takenDate = Date(randomPhoto.mediaMetadata.creationTime.seconds * 1000)
-        messageQueue[this] = Message("Taken on ${DATE_FORMATTER.format(takenDate)}", imageUri = photoUrl)
+        messageQueue[this] = Message(
+            text = "Taken on ${DATE_FORMATTER.format(takenDate)}",
+            textFormatted = "Taken on<br>${DATE_FORMATTER.format(takenDate)}",
+            imageUri = photoUrl
+        )
     }
 
     companion object {
