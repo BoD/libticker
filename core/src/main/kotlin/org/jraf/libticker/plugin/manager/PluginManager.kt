@@ -32,8 +32,8 @@ import com.beust.klaxon.json
 import io.reactivex.Flowable
 import io.reactivex.processors.PublishProcessor
 import org.jraf.libticker.message.MessageQueue
+import org.jraf.libticker.plugin.api.Configuration
 import org.jraf.libticker.plugin.api.Plugin
-import org.jraf.libticker.plugin.api.PluginConfiguration
 import org.jraf.libticker.plugin.api.PluginDescriptor
 import org.jraf.libticker.plugin.api.PluginDescriptorProvider
 import java.util.ServiceLoader
@@ -42,15 +42,16 @@ class PluginManager(private val messageQueue: MessageQueue) {
     private val _managedPlugins = mutableListOf<Plugin>()
     private val _managedPluginsChanged = PublishProcessor.create<String>().toSerialized()
     val managedPluginsChanged: Flowable<String> = _managedPluginsChanged.hide()
+    val globalConfiguration: Configuration by lazy { Configuration() }
 
     fun managePlugin(
         pluginClassName: String,
-        configuration: PluginConfiguration,
+        pluginConfiguration: Configuration,
         notifyListeners: Boolean = false
     ) {
         val plugin = (Class.forName(pluginClassName).newInstance() as Plugin)
         _managedPlugins += plugin
-        plugin.init(messageQueue, configuration)
+        plugin.init(messageQueue, pluginConfiguration, globalConfiguration)
         plugin.start()
 
         if (notifyListeners) notifyListeners()
@@ -63,8 +64,8 @@ class PluginManager(private val messageQueue: MessageQueue) {
             if (pluginJsonObject !is JsonObject) continue
             val pluginClassName = pluginJsonObject.string(JSON_CLASS_NAME)!!
             val configuration = pluginJsonObject.obj(JSON_CONFIGURATION)?.let { configurationJsonObject ->
-                PluginConfiguration(*configurationJsonObject.map.map { it.key to it.value!! }.toTypedArray())
-            } ?: PluginConfiguration()
+                Configuration(*configurationJsonObject.map.map { it.key to it.value!! }.toTypedArray())
+            } ?: Configuration()
             managePlugin(pluginClassName, configuration)
         }
         if (notifyListeners) notifyListeners()
@@ -104,7 +105,7 @@ class PluginManager(private val messageQueue: MessageQueue) {
             array(_managedPlugins.map { plugin ->
                 obj(
                     JSON_CLASS_NAME to plugin.descriptor.className,
-                    JSON_CONFIGURATION to obj(plugin.configuration.asMap.map { it.key to it.value })
+                    JSON_CONFIGURATION to obj(plugin.pluginConfiguration.asMap.map { it.key to it.value })
                 )
             })
         }.toJsonString(true)

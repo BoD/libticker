@@ -6,3 +6,4 @@ org.jraf.libticker.plugin.frc.FrcPluginDescriptorProvider
 org.jraf.libticker.plugin.twitter.TwitterPluginDescriptorProvider
 org.jraf.libticker.plugin.weather.WeatherPluginDescriptorProvider
 org.jraf.libticker.plugin.appstorerating.AppStoreRatingPluginDescriptorProvider
+org.jraf.libticker.plugin.googlephotos.GooglePhotosPluginDescriptorProvider

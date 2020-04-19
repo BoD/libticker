@@ -25,7 +25,7 @@
 
 package org.jraf.libticker.httpconf
 
-data class Configuration(
+data class HttpConfSettings(
     val port: Int = 8042,
     val appName: String = "libticker",
     val appVersion: String = "v1.0.0"

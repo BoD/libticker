@@ -46,6 +46,8 @@ versions.with {
     nanohttpd = '2.3.1'
     kotlinxHtml = '0.7.1'
     klibappstorerating = '1.0.0'
+    googlePhotos = '1.5.0'
+    googleApiClient = '1.30.4'
 }
 
 ext.versions = versions

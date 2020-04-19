@@ -27,7 +27,7 @@ package org.jraf.libticker.plugin.datetime
 
 import org.jraf.libticker.message.Message
 import org.jraf.libticker.message.MessageQueue
-import org.jraf.libticker.plugin.api.PluginConfiguration
+import org.jraf.libticker.plugin.api.Configuration
 import org.jraf.libticker.plugin.base.PeriodicPlugin
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -49,9 +49,13 @@ class DateTimePlugin : PeriodicPlugin() {
     private val dateFormat by lazy { DateFormat.getDateInstance(DateFormat.FULL, dateLocale) }
 
 
-    override fun init(messageQueue: MessageQueue, configuration: PluginConfiguration) {
-        super.init(messageQueue, configuration)
-        dateLocale = configuration.getStringOrNull(DateTimePluginDescriptor.KEY_DATE_LOCALE).let {
+    override fun init(
+        messageQueue: MessageQueue,
+        pluginConfiguration: Configuration,
+        globalConfiguration: Configuration
+    ) {
+        super.init(messageQueue, pluginConfiguration, globalConfiguration)
+        dateLocale = pluginConfiguration.getStringOrNull(DateTimePluginDescriptor.KEY_DATE_LOCALE).let {
             if (it == null) Locale.getDefault() else Locale.forLanguageTag(it)
         }
     }

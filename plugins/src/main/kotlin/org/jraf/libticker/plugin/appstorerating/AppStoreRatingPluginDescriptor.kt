@@ -41,7 +41,7 @@ object AppStoreRatingPluginDescriptor {
     const val KEY_STORE_IOS_APP_STORE = "iOS App Store"
 
     val DESCRIPTOR = PluginDescriptor(
-        className = "${this::class.java.`package`.name}.AppStoreRatingPlugin",
+        className = AppStoreRatingPlugin::class.java.name,
         displayName = "Android and iOS app stores ratings",
         configurationDescriptor = PluginConfigurationDescriptor(
             listOf(

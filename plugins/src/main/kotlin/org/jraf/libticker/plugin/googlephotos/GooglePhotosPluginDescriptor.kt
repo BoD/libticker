@@ -23,7 +23,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jraf.libticker.plugin.twitter
+package org.jraf.libticker.plugin.googlephotos
 
 import org.jraf.libticker.plugin.api.PluginConfigurationDescriptor
 import org.jraf.libticker.plugin.api.PluginConfigurationItemDescriptor
@@ -31,52 +31,47 @@ import org.jraf.libticker.plugin.api.PluginConfigurationItemType
 import org.jraf.libticker.plugin.api.PluginDescriptor
 import org.jraf.libticker.plugin.api.PluginDescriptorProvider
 
-object TwitterPluginDescriptor {
-    const val KEY_OAUTH_CONSUMER_KEY = "oAuthConsumerKey"
-    const val KEY_OAUTH_CONSUMER_SECRET = "oAuthConsumerSecret"
-    const val KEY_OAUTH_ACCESS_TOKEN = "oAuthAccessToken"
-    const val KEY_OAUTH_ACCESS_TOKEN_SECRET = "oAuthAccessTokenSecret"
-    const val KEY_SEARCH = "search"
+object GooglePhotosPluginDescriptor {
+    const val KEY_PERIOD = "period"
+    const val KEY_CLIENT_ID = "clientId"
+    const val KEY_CLIENT_SECRET = "clientSecret"
+    const val KEY_REFRESH_TOKEN = "refreshToken"
 
     val DESCRIPTOR = PluginDescriptor(
-        className = TwitterPlugin::class.java.name,
-        displayName = "Twitter",
+        className = GooglePhotosPlugin::class.java.name,
+        displayName = "Google Photos",
         configurationDescriptor = PluginConfigurationDescriptor(
             listOf(
                 PluginConfigurationItemDescriptor(
-                    key = KEY_OAUTH_CONSUMER_KEY,
-                    type = PluginConfigurationItemType.StringType,
-                    displayName = "OAuth consumer key"
+                    key = KEY_PERIOD,
+                    type = PluginConfigurationItemType.NumberType,
+                    displayName = "Period",
+                    moreInfo = "in minutes",
+                    defaultValue = "2"
                 ),
                 PluginConfigurationItemDescriptor(
-                    key = KEY_OAUTH_CONSUMER_SECRET,
+                    key = KEY_CLIENT_ID,
                     type = PluginConfigurationItemType.StringType,
-                    displayName = "OAuth consumer secret"
+                    displayName = "Client id"
                 ),
                 PluginConfigurationItemDescriptor(
-                    key = KEY_OAUTH_ACCESS_TOKEN,
+                    key = KEY_CLIENT_SECRET,
                     type = PluginConfigurationItemType.StringType,
-                    displayName = "OAuth access token"
+                    displayName = "Client secret"
                 ),
                 PluginConfigurationItemDescriptor(
-                    key = KEY_OAUTH_ACCESS_TOKEN_SECRET,
+                    key = KEY_REFRESH_TOKEN,
                     type = PluginConfigurationItemType.StringType,
-                    displayName = "OAuth access token secret"
-                ),
-                PluginConfigurationItemDescriptor(
-                    key = KEY_SEARCH,
-                    type = PluginConfigurationItemType.StringType,
-                    displayName = "Search",
-                    moreInfo = """Words to search (for instance: <i>olympics</i>), or a list name in the form <b>list:userName/listName</b> (for instance: <i>list:bod/news</i>)"""
+                    displayName = "Refresh token"
                 )
             ),
-            moreInfo = """To get the OAuth keys, please visit
-                | <a href="https://developer.twitter.com/en/apps" target="_blank">https://developer.twitter.com/en/apps</a>
-                | and register your application.""".trimMargin()
+            moreInfo = """To get the keys, please visit
+                | <a href="https://developers.google.com/photos/library/guides/get-started" target="_blank">https://developers.google.com/photos/library/guides/get-started</a>.
+                | """.trimMargin()
         )
     )
 }
 
-class TwitterPluginDescriptorProvider : PluginDescriptorProvider {
-    override val pluginDescriptor = TwitterPluginDescriptor.DESCRIPTOR
+class GooglePhotosPluginDescriptorProvider : PluginDescriptorProvider {
+    override val pluginDescriptor = GooglePhotosPluginDescriptor.DESCRIPTOR
 }

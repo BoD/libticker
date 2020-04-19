@@ -26,20 +26,19 @@
 package org.jraf.libticker.httpconf
 
 import fi.iki.elonen.NanoHTTPD
-import org.jraf.libticker.plugin.api.PluginConfiguration
+import org.jraf.libticker.plugin.api.Configuration
 import org.jraf.libticker.plugin.api.PluginConfigurationItemType
 import org.jraf.libticker.plugin.manager.PluginManager
 
-
 class HttpConf(
     private val pluginManager: PluginManager,
-    private val configuration: Configuration = Configuration()
+    private val httpConfSettings: HttpConfSettings = HttpConfSettings()
 ) {
     private val server by lazy {
-        object : NanoHTTPD(configuration.port) {
-            override fun serve(session: IHTTPSession): NanoHTTPD.Response {
+        object : NanoHTTPD(httpConfSettings.port) {
+            override fun serve(session: IHTTPSession): Response {
                 return when (session.uri) {
-                    "/" -> newFixedLengthResponse(indexHtml(pluginManager, configuration))
+                    "/" -> newFixedLengthResponse(indexHtml(pluginManager, httpConfSettings))
 
                     "/action" -> {
                         session.parseBody(mutableMapOf<String, String>())
@@ -89,10 +88,10 @@ class HttpConf(
         addHeader("Location", location)
     }
 
-    private fun mapToPluginConfiguration(className: String, map: Map<String, String>): PluginConfiguration {
+    private fun mapToPluginConfiguration(className: String, map: Map<String, String>): Configuration {
         val pluginDescriptor = pluginManager.availablePlugins.first { it.className == className }
-        val configurationDescriptor = pluginDescriptor.configurationDescriptor ?: return PluginConfiguration()
-        val res = PluginConfiguration()
+        val configurationDescriptor = pluginDescriptor.configurationDescriptor ?: return Configuration()
+        val res = Configuration()
         map.forEach { (key, value) ->
             val itemDescriptor = configurationDescriptor.itemDescriptors.first { it.key == key }
             when (itemDescriptor.type) {
@@ -116,6 +115,6 @@ class HttpConf(
     }
 
     fun getUrl(): String {
-        return "http://${getLocalHostLanAddress()!!.hostAddress}${if (configuration.port == 80) "" else ":${configuration.port}"}/"
+        return "http://${getLocalHostLanAddress()!!.hostAddress}${if (httpConfSettings.port == 80) "" else ":${httpConfSettings.port}"}/"
     }
 }

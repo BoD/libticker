@@ -58,7 +58,7 @@ import org.jraf.libticker.plugin.manager.PluginManager
 
 fun indexHtml(
     pluginManager: PluginManager,
-    configuration: Configuration
+    httpConfSettings: HttpConfSettings
 ): String {
     return StringBuilder().apply {
         appendHTML().apply {
@@ -74,7 +74,7 @@ fun indexHtml(
                 script(src = "https://code.getmdl.io/1.3.0/material.min.js") {
                     defer = true
                 }
-                title("${configuration.appName} ${configuration.appVersion} configuration")
+                title("${httpConfSettings.appName} ${httpConfSettings.appVersion} configuration")
                 style {
                     unsafe {
                         raw(
@@ -158,7 +158,7 @@ h4 {
             }
 
             body {
-                h3 { +"${configuration.appName} ${configuration.appVersion} configuration" }
+                h3 { +"${httpConfSettings.appName} ${httpConfSettings.appVersion} configuration" }
                 h4 { +"Running plugins" }
                 if (pluginManager.managedPlugins.isEmpty()) {
                     span(classes = "empty") {
@@ -191,7 +191,7 @@ h4 {
                                                         +confItem.displayName
                                                     }
                                                     td {
-                                                        +plugin.configuration[confItem.key].toString()
+                                                        +plugin.pluginConfiguration[confItem.key].toString()
                                                     }
                                                 }
                                             }

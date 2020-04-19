@@ -35,7 +35,7 @@ object BtcPluginDescriptor {
     const val KEY_PERIOD = "period"
 
     val DESCRIPTOR = PluginDescriptor(
-        className = "${this::class.java.`package`.name}.BtcPlugin",
+        className = BtcPlugin::class.java.name,
         displayName = "Bitcoin exchange rate",
         configurationDescriptor = PluginConfigurationDescriptor(
             listOf(

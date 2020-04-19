@@ -37,7 +37,7 @@ object WeatherPluginDescriptor {
     const val KEY_PERIOD = "period"
 
     val DESCRIPTOR = PluginDescriptor(
-        className = "${this::class.java.`package`.name}.WeatherPlugin",
+        className = WeatherPlugin::class.java.name,
         displayName = "Weather",
         configurationDescriptor = PluginConfigurationDescriptor(
             listOf(

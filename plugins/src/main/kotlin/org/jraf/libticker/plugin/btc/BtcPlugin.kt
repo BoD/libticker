@@ -48,7 +48,7 @@ class BtcPlugin : PeriodicPlugin() {
 
     override val descriptor = BtcPluginDescriptor.DESCRIPTOR
 
-    override val periodMs get() = TimeUnit.MINUTES.toMillis(configuration.getNumber(KEY_PERIOD).toLong())
+    override val periodMs get() = TimeUnit.MINUTES.toMillis(pluginConfiguration.getNumber(KEY_PERIOD).toLong())
 
     override fun queueMessage() {
         try {

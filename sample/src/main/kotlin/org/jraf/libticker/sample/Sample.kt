@@ -26,14 +26,15 @@
 package org.jraf.libticker.sample
 
 import io.reactivex.schedulers.Schedulers
-import org.jraf.libticker.httpconf.Configuration
 import org.jraf.libticker.httpconf.HttpConf
+import org.jraf.libticker.httpconf.HttpConfSettings
 import org.jraf.libticker.message.BasicMessageQueue
-import org.jraf.libticker.plugin.api.PluginConfiguration
+import org.jraf.libticker.plugin.api.Configuration
 import org.jraf.libticker.plugin.appstorerating.AppStoreRatingPluginDescriptor
 import org.jraf.libticker.plugin.btc.BtcPluginDescriptor
 import org.jraf.libticker.plugin.datetime.DateTimePluginDescriptor
 import org.jraf.libticker.plugin.frc.FrcPluginDescriptor
+import org.jraf.libticker.plugin.googlephotos.GooglePhotosPluginDescriptor
 import org.jraf.libticker.plugin.manager.PluginManager
 import org.jraf.libticker.plugin.twitter.TwitterPluginDescriptor
 import org.jraf.libticker.plugin.weather.WeatherPluginDescriptor
@@ -41,28 +42,28 @@ import java.util.concurrent.TimeUnit
 
 fun main() {
     // Logging
-//    System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace")
+    System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace")
 
     val messageQueue = BasicMessageQueue(40)
 
     val pluginManager = PluginManager(messageQueue).apply {
         // Date time
         managePlugin(
-            "org.jraf.libticker.plugin.datetime.DateTimePlugin", PluginConfiguration(
+            "org.jraf.libticker.plugin.datetime.DateTimePlugin", Configuration(
                 DateTimePluginDescriptor.KEY_DATE_LOCALE to "fr"
             )
         )
 
         // FRC
         managePlugin(
-            "org.jraf.libticker.plugin.frc.FrcPlugin", PluginConfiguration(
+            "org.jraf.libticker.plugin.googlephotos.FrcPlugin", Configuration(
                 FrcPluginDescriptor.KEY_PERIOD to 5
             )
         )
 
         // Weather
         managePlugin(
-            "org.jraf.libticker.plugin.weather.WeatherPlugin", PluginConfiguration(
+            "org.jraf.libticker.plugin.weather.WeatherPlugin", Configuration(
                 WeatherPluginDescriptor.KEY_API_KEY to System.getenv("org.jraf.libticker.plugin.weather.WeatherPlugin.apiKey"),
                 WeatherPluginDescriptor.KEY_PERIOD to 5
             )
@@ -70,14 +71,14 @@ fun main() {
 
         // Btc
         managePlugin(
-            "org.jraf.libticker.plugin.btc.BtcPlugin", PluginConfiguration(
+            "org.jraf.libticker.plugin.btc.BtcPlugin", Configuration(
                 BtcPluginDescriptor.KEY_PERIOD to 5
             )
         )
 
         // Twitter
         managePlugin(
-            "org.jraf.libticker.plugin.twitter.TwitterPlugin", PluginConfiguration(
+            "org.jraf.libticker.plugin.twitter.TwitterPlugin", Configuration(
                 TwitterPluginDescriptor.KEY_OAUTH_CONSUMER_KEY to System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthConsumerKey"),
                 TwitterPluginDescriptor.KEY_OAUTH_CONSUMER_SECRET to System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthConsumerSecret"),
                 TwitterPluginDescriptor.KEY_OAUTH_ACCESS_TOKEN to System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthAccessToken"),
@@ -88,21 +89,27 @@ fun main() {
 
         // App store rating
         managePlugin(
-            "org.jraf.libticker.plugin.appstorerating.AppStoreRatingPlugin", PluginConfiguration(
-                AppStoreRatingPluginDescriptor.KEY_APP_ID to "org.jraf.android.latoureiffel",
+            "org.jraf.libticker.plugin.appstorerating.AppStoreRatingPlugin", Configuration(
+                AppStoreRatingPluginDescriptor.KEY_APP_ID to "eu.qonto.qonto",
                 AppStoreRatingPluginDescriptor.KEY_STORE to AppStoreRatingPluginDescriptor.KEY_STORE_ANDROID_PLAY_STORE,
                 AppStoreRatingPluginDescriptor.KEY_TITLE to "HelloMundo (Android)",
                 AppStoreRatingPluginDescriptor.KEY_PERIOD to 5
             )
         )
+
+        // App store rating
         managePlugin(
-            "org.jraf.libticker.plugin.appstorerating.AppStoreRatingPlugin", PluginConfiguration(
-                AppStoreRatingPluginDescriptor.KEY_APP_ID to "id1214811644",
-                AppStoreRatingPluginDescriptor.KEY_STORE to AppStoreRatingPluginDescriptor.KEY_STORE_IOS_APP_STORE,
-                AppStoreRatingPluginDescriptor.KEY_TITLE to "Qonto (iOS)",
-                AppStoreRatingPluginDescriptor.KEY_PERIOD to 5
+            "org.jraf.libticker.plugin.googlephotos.GooglePhotosPlugin", Configuration(
+                GooglePhotosPluginDescriptor.KEY_PERIOD to 1,
+                GooglePhotosPluginDescriptor.KEY_CLIENT_ID to "200586986744-9c4qkqc87je1mc2h1474dlvm9k3pqpc9.apps.googleusercontent.com",
+                GooglePhotosPluginDescriptor.KEY_CLIENT_SECRET to "xxx",
+                GooglePhotosPluginDescriptor.KEY_REFRESH_TOKEN to "xxx"
             )
         )
+
+        // Global conf
+        globalConfiguration.put("displayWidth", 1024)
+        globalConfiguration.put("displayHeight", 768)
     }
 
 //    val pluginManager = PluginManager(messageQueue).apply {
@@ -114,7 +121,7 @@ fun main() {
 //    "dateLocale": "fr"
 //  }
 //}, {
-//  "className": "org.jraf.libticker.plugin.frc.FrcPlugin",
+//  "className": "org.jraf.libticker.plugin.googlephotos.FrcPlugin",
 //  "configuration": null
 //}, {
 //  "className": "org.jraf.libticker.plugin.weather.WeatherPlugin",
@@ -162,7 +169,7 @@ fun main() {
         messageQueue.getNext()?.let(::println)
     }, 0, 5, TimeUnit.SECONDS)
 
-    val httpConf = HttpConf(pluginManager, Configuration(port = 8043))
+    val httpConf = HttpConf(pluginManager, HttpConfSettings(port = 8043))
     httpConf.start()
     println(httpConf.getUrl())
 

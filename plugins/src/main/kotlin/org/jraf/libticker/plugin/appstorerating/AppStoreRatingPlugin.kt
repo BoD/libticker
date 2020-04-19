@@ -48,13 +48,13 @@ class AppStoreRatingPlugin : PeriodicPlugin() {
 
     override val descriptor = AppStoreRatingPluginDescriptor.DESCRIPTOR
 
-    override val periodMs get() = TimeUnit.MINUTES.toMillis(configuration.getNumber(KEY_PERIOD).toLong())
+    override val periodMs get() = TimeUnit.MINUTES.toMillis(pluginConfiguration.getNumber(KEY_PERIOD).toLong())
 
     override fun queueMessage() {
         GlobalScope.launch {
             try {
-                val appId = configuration.getString(KEY_APP_ID)
-                val rating = when (configuration.getString(KEY_STORE)) {
+                val appId = pluginConfiguration.getString(KEY_APP_ID)
+                val rating = when (pluginConfiguration.getString(KEY_STORE)) {
                     KEY_STORE_ANDROID_PLAY_STORE ->
                         KLibAppStoreRating.retrieveRating(AppStore.GOOGLE_PLAY_STORE, appId)
 
@@ -67,7 +67,7 @@ class AppStoreRatingPlugin : PeriodicPlugin() {
                     text = "Current rating for $appId: $rating",
                     html = formatHtmlRating(
                         rating,
-                        configuration.getString(KEY_TITLE)
+                        pluginConfiguration.getString(KEY_TITLE)
                     )
                 )
             } catch (t: Throwable) {

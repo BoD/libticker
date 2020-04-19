@@ -71,6 +71,10 @@ dependencies {
 
     // klibappstorerating
     implementation "org.jraf:klibappstorerating:$versions.klibappstorerating"
+
+    // Google photos
+    implementation "com.google.photos.library:google-photos-library-client:$versions.googlePhotos"
+    implementation "com.google.api-client:google-api-client:$versions.googleApiClient"
 }
 
 // Use "./gradlew publishToMavenLocal" to deploy the artifacts to your local maven repository

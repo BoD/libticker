@@ -44,8 +44,7 @@ class BasicMessageQueue(private val size: Int = 100, private val messagesFromMes
         if (!urgentMessageQueue.isEmpty()) return urgentMessageQueue.pop()
 
         // Use the plugin list
-        if (globalIndex % (messagesFromMessageList + 1) == 0 || messageList.isEmpty()) {
-            if (messagesByPlugin.isEmpty()) return null
+        if ((globalIndex % (messagesFromMessageList + 1) == 0 || messageList.isEmpty()) && messagesByPlugin.isNotEmpty()) {
             val messageListForPluginIndex = messagesByPlugin.values.toList()[messagesByPluginPluginIndex]
             val res = messageListForPluginIndex[messagesByPluginMessageIndex]
             messagesByPluginMessageIndex++

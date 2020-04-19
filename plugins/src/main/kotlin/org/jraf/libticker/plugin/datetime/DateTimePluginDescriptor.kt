@@ -35,7 +35,7 @@ object DateTimePluginDescriptor {
     const val KEY_DATE_LOCALE = "dateLocale"
 
     val DESCRIPTOR = PluginDescriptor(
-        className = "${this::class.java.`package`.name}.DateTimePlugin",
+        className = DateTimePlugin::class.java.name,
         displayName = "Date and time",
         configurationDescriptor = PluginConfigurationDescriptor(
             listOf(

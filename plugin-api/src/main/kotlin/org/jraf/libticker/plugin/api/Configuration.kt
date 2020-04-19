@@ -25,7 +25,7 @@
 
 package org.jraf.libticker.plugin.api
 
-class PluginConfiguration(vararg keyValues: Pair<String, Any>) {
+class Configuration(vararg keyValues: Pair<String, Any>) {
 
     private sealed class ItemValue<T>(
         val value: T
@@ -56,8 +56,7 @@ class PluginConfiguration(vararg keyValues: Pair<String, Any>) {
     fun put(vararg keyValues: Pair<String, Any>) {
         for (keyValue in keyValues) {
             val key = keyValue.first
-            val value = keyValue.second
-            when (value) {
+            when (val value = keyValue.second) {
                 is String -> put(key, value)
                 is Number -> put(key, value)
                 is Boolean -> put(key, value)

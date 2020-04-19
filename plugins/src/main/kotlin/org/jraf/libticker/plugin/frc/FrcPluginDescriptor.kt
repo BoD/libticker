@@ -30,6 +30,7 @@ import org.jraf.libticker.plugin.api.PluginConfigurationItemDescriptor
 import org.jraf.libticker.plugin.api.PluginConfigurationItemType
 import org.jraf.libticker.plugin.api.PluginDescriptor
 import org.jraf.libticker.plugin.api.PluginDescriptorProvider
+import org.jraf.libticker.plugin.googlephotos.GooglePhotosPluginDescriptor
 
 object FrcPluginDescriptor {
     const val KEY_PERIOD = "period"
@@ -52,5 +53,5 @@ object FrcPluginDescriptor {
 }
 
 class FrcPluginDescriptorProvider : PluginDescriptorProvider {
-    override val pluginDescriptor = FrcPluginDescriptor.DESCRIPTOR
+    override val pluginDescriptor = GooglePhotosPluginDescriptor.DESCRIPTOR
 }

@@ -26,21 +26,27 @@
 package org.jraf.libticker.plugin.base
 
 import org.jraf.libticker.message.MessageQueue
+import org.jraf.libticker.plugin.api.Configuration
 import org.jraf.libticker.plugin.api.Plugin
-import org.jraf.libticker.plugin.api.PluginConfiguration
 
 abstract class BasePlugin : Plugin {
     lateinit var messageQueue: MessageQueue
-    private lateinit var _configuration: PluginConfiguration
+    private lateinit var _pluginConfiguration: Configuration
+    private lateinit var _globalConfiguration: Configuration
     private var _isRunning: Boolean = false
 
-    override fun init(messageQueue: MessageQueue, configuration: PluginConfiguration) {
+    override fun init(
+        messageQueue: MessageQueue,
+        pluginConfiguration: Configuration,
+        globalConfiguration: Configuration
+    ) {
         this.messageQueue = messageQueue
-        _configuration = configuration
+        _pluginConfiguration = pluginConfiguration
+        _globalConfiguration = globalConfiguration
     }
 
-    override val configuration: PluginConfiguration
-        get() = _configuration
+    override val pluginConfiguration: Configuration get() = _pluginConfiguration
+    override val globalConfiguration: Configuration get() = _globalConfiguration
 
     override fun start() {
         _isRunning = true

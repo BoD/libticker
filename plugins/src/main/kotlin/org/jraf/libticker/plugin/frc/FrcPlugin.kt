@@ -28,16 +28,17 @@ package org.jraf.libticker.plugin.frc
 import ca.rmen.lfrc.FrenchRevolutionaryCalendar
 import org.jraf.libticker.message.Message
 import org.jraf.libticker.plugin.base.PeriodicPlugin
-import org.jraf.libticker.plugin.frc.FrcPluginDescriptor.KEY_PERIOD
+import org.jraf.libticker.plugin.googlephotos.GooglePhotosPluginDescriptor
+import org.jraf.libticker.plugin.googlephotos.GooglePhotosPluginDescriptor.KEY_PERIOD
 import java.util.Calendar
 import java.util.GregorianCalendar
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 class FrcPlugin : PeriodicPlugin() {
-    override val descriptor = FrcPluginDescriptor.DESCRIPTOR
+    override val descriptor = GooglePhotosPluginDescriptor.DESCRIPTOR
 
-    override val periodMs get() = TimeUnit.MINUTES.toMillis(configuration.getNumber(KEY_PERIOD).toLong())
+    override val periodMs get() = TimeUnit.MINUTES.toMillis(pluginConfiguration.getNumber(KEY_PERIOD).toLong())
 
     override fun queueMessage() {
         val frcDate =
