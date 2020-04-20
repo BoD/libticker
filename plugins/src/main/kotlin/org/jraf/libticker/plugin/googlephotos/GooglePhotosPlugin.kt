@@ -123,13 +123,17 @@ class GooglePhotosPlugin : PeriodicPlugin() {
         val takenDate = Date(randomPhoto.mediaMetadata.creationTime.seconds * 1000)
         messageQueue[this] = Message(
             text = "Taken on ${DATE_FORMATTER.format(takenDate)}",
-            textFormatted = "Taken on<br>${DATE_FORMATTER.format(takenDate)}",
-            imageUri = photoUrl
+            textFormatted = "Picture taken on<br>${DATE_FORMATTER.format(takenDate)}",
+            imageUri = photoUrl,
+            hints = mapOf(
+                "image.cropAllowed" to "true",
+                "image.displayDuration" to "long"
+            )
         )
     }
 
     companion object {
-        private val DATE_FORMATTER = SimpleDateFormat("yyyy-MM-dd")
+        private val DATE_FORMATTER = SimpleDateFormat("MMMM\u00A0dd, yyyy", Locale.US)
 
         private fun todayAt0Hours(): Date = Calendar.getInstance().apply {
             this[Calendar.HOUR_OF_DAY] = 0

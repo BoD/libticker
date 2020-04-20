@@ -49,5 +49,10 @@ data class Message(
     /**
      * Optional URI to an image.
      */
-    val imageUri: String? = null
+    val imageUri: String? = null,
+
+    /**
+     * Hints that can be optionally used to display this message.
+     */
+    val hints: Map<String, String> = mapOf()
 )

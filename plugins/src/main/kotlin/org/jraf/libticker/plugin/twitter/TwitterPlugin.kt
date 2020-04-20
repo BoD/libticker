@@ -92,7 +92,8 @@ class TwitterPlugin : BasePlugin() {
                         text = textPlain,
                         textFormatted = textFormatted,
                         uri = "https://twitter.com/$screenName/status/${status.id}",
-                        imageUri = status.mediaEntities.firstOrNull { it.type == "photo" }?.mediaURLHttps
+                        imageUri = status.mediaEntities.firstOrNull { it.type == "photo" }?.mediaURLHttps,
+                        hints = mapOf("image.cropAllowed" to "true")
                     )
                 }
             }
