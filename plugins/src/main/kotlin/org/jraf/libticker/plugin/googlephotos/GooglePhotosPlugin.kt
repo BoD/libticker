@@ -41,12 +41,15 @@ import org.jraf.libticker.message.MessageQueue
 import org.jraf.libticker.plugin.api.Configuration
 import org.jraf.libticker.plugin.base.PeriodicPlugin
 import org.jraf.libticker.plugin.googlephotos.GooglePhotosPluginDescriptor.KEY_PERIOD
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 import kotlin.random.Random
+
 
 class GooglePhotosPlugin : PeriodicPlugin() {
     override val descriptor = GooglePhotosPluginDescriptor.DESCRIPTOR
@@ -85,7 +88,11 @@ class GooglePhotosPlugin : PeriodicPlugin() {
         return allAlbums
     }
 
-    private fun getRandomPhoto(): MediaItem? {
+    private fun getRandomPhoto(retryCount: Int = 0): MediaItem? {
+        if (retryCount >= 3) {
+            LOGGER.warn("Could not get a random photo after $retryCount retries")
+            return null
+        }
         val albumList = getOrFetchAllAlbums()
         val totalMediaCount = albumList.sumBy { it.mediaItemsCount.toInt() }
         val randomIndex = Random.nextInt(totalMediaCount)
@@ -107,7 +114,8 @@ class GooglePhotosPlugin : PeriodicPlugin() {
                 val mimeType = mediaItem.mimeType.toLowerCase(Locale.US)
                 if (!mimeType.contains("jpg") && !mimeType.contains("jpeg")) {
                     // Ignore videos
-                    return null
+                    LOGGER.info("Random media is not a photo: try another one")
+                    return getRandomPhoto(retryCount + 1)
                 }
                 return mediaItem
             }
@@ -116,7 +124,12 @@ class GooglePhotosPlugin : PeriodicPlugin() {
     }
 
     override fun queueMessage() {
-        val randomPhoto = getRandomPhoto() ?: return
+        val randomPhoto = try {
+            getRandomPhoto()
+        } catch (t: Throwable) {
+            LOGGER.warn("Could not fetch a random photo: give up", t)
+            return
+        } ?: return
         val displayWidth = globalConfiguration.getNumberOrNull("displayWidth") ?: 1024
         val displayHeight = globalConfiguration.getNumberOrNull("displayHeight") ?: 768
         val photoUrl = randomPhoto.baseUrl + "=w$displayWidth-h$displayHeight-c"
@@ -133,6 +146,8 @@ class GooglePhotosPlugin : PeriodicPlugin() {
     }
 
     companion object {
+        private val LOGGER: Logger = LoggerFactory.getLogger(GooglePhotosPlugin::class.java)
+
         private val DATE_FORMATTER = SimpleDateFormat("MMMM\u00A0dd, yyyy", Locale.US)
 
         private fun todayAt0Hours(): Date = Calendar.getInstance().apply {
