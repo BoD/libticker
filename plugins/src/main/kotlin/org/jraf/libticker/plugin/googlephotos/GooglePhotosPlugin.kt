@@ -140,7 +140,8 @@ class GooglePhotosPlugin : PeriodicPlugin() {
             imageUri = photoUrl,
             hints = mapOf(
                 "image.cropAllowed" to "true",
-                "image.displayDuration" to "long"
+                "image.displayDuration" to "long",
+                "text.showOnTopOfImage" to "true",
             )
         )
     }

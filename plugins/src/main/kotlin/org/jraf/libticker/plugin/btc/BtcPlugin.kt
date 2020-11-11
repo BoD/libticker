@@ -72,8 +72,8 @@ class BtcPlugin : PeriodicPlugin() {
     }
 
     private fun Iterable<Float>.normalize(): Iterable<Float> {
-        val min = min()!!
-        val max = max()!!
+        val min = minOrNull()!!
+        val max = maxOrNull()!!
         return map { (100F / (max - min)) * (it - min) }
     }
 
