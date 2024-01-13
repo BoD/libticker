@@ -56,7 +56,7 @@ fun main() {
 
         // FRC
         managePlugin(
-            "org.jraf.libticker.plugin.googlephotos.FrcPlugin", Configuration(
+            "org.jraf.libticker.plugin.frc.FrcPlugin", Configuration(
                 FrcPluginDescriptor.KEY_PERIOD to 5
             )
         )
@@ -97,7 +97,7 @@ fun main() {
             )
         )
 
-        // App store rating
+        // Google photos
         managePlugin(
             "org.jraf.libticker.plugin.googlephotos.GooglePhotosPlugin", Configuration(
                 GooglePhotosPluginDescriptor.KEY_PERIOD to 1,

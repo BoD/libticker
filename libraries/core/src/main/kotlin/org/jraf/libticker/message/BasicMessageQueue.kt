@@ -27,7 +27,6 @@ package org.jraf.libticker.message
 
 import org.jraf.libticker.plugin.api.Plugin
 import java.util.ArrayDeque
-import java.util.ArrayList
 
 class BasicMessageQueue(private val size: Int = 100, private val messagesFromMessageList: Int = 4) : MessageQueue {
     private val messageList: ArrayList<Message> = ArrayList(size * 2)
