@@ -9,11 +9,11 @@ application {
 
 dependencies {
     // Slf4j
-    implementation("org.slf4j:slf4j-simple:1.7.30")
+    implementation("org.slf4j:slf4j-simple:_")
 
     // Rx
-    implementation("io.reactivex.rxjava2:rxjava:2.2.20")
-    implementation("io.reactivex.rxjava2:rxkotlin:2.4.0")
+    implementation(ReactiveX.rxJava2)
+    implementation(ReactiveX.rxJava2.rxKotlin)
 
     // Core
     implementation(project(":libticker-core"))

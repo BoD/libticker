@@ -31,10 +31,10 @@ publishing {
 
 dependencies {
     // Nanohttpd
-    implementation("org.nanohttpd:nanohttpd:2.3.1")
+    implementation("org.nanohttpd:nanohttpd:_")
 
     // Kotlinx Html
-    implementation("org.jetbrains.kotlinx:kotlinx-html:0.9.1")
+    implementation(KotlinX.html)
 
     // Core
     implementation(project(":libticker-core"))

@@ -36,7 +36,6 @@ import org.jraf.libticker.plugin.datetime.DateTimePluginDescriptor
 import org.jraf.libticker.plugin.frc.FrcPluginDescriptor
 import org.jraf.libticker.plugin.googlephotos.GooglePhotosPluginDescriptor
 import org.jraf.libticker.plugin.manager.PluginManager
-import org.jraf.libticker.plugin.twitter.TwitterPluginDescriptor
 import org.jraf.libticker.plugin.weather.WeatherPluginDescriptor
 import java.util.concurrent.TimeUnit
 
@@ -73,17 +72,6 @@ fun main() {
         managePlugin(
             "org.jraf.libticker.plugin.btc.BtcPlugin", Configuration(
                 BtcPluginDescriptor.KEY_PERIOD to 5
-            )
-        )
-
-        // Twitter
-        managePlugin(
-            "org.jraf.libticker.plugin.twitter.TwitterPlugin", Configuration(
-                TwitterPluginDescriptor.KEY_OAUTH_CONSUMER_KEY to System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthConsumerKey"),
-                TwitterPluginDescriptor.KEY_OAUTH_CONSUMER_SECRET to System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthConsumerSecret"),
-                TwitterPluginDescriptor.KEY_OAUTH_ACCESS_TOKEN to System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthAccessToken"),
-                TwitterPluginDescriptor.KEY_OAUTH_ACCESS_TOKEN_SECRET to System.getenv("org.jraf.libticker.plugin.twitter.TwitterPlugin.oAuthAccessTokenSecret"),
-                TwitterPluginDescriptor.KEY_SEARCH to "list:bod/news"
             )
         )
 

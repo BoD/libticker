@@ -34,36 +34,36 @@ dependencies {
     implementation(project(":libticker-plugin-api"))
 
     // Slf4j
-    implementation("org.slf4j:slf4j-api:1.7.30")
+    implementation("org.slf4j:slf4j-api:_")
 
     // Rx
-    implementation("io.reactivex.rxjava2:rxjava:2.2.20")
-    implementation("io.reactivex.rxjava2:rxkotlin:2.4.0")
+    implementation(ReactiveX.rxJava2)
+    implementation(ReactiveX.rxJava2.rxKotlin)
 
     // Coroutines
     implementation(KotlinX.coroutines.jdk9)
 
     // Twitter4J
-    implementation("org.twitter4j:twitter4j-core:4.0.7")
+    implementation("org.twitter4j:twitter4j-core:_")
 
     // ForecasIO
-    implementation("com.github.dvdme:ForecastIOLib:1.6.0")
+    implementation("com.github.dvdme:ForecastIOLib:_")
 
     // Sunrise sunset
-    implementation("ca.rmen:lib-sunrise-sunset:1.1.1")
+    implementation("ca.rmen:lib-sunrise-sunset:_")
 
     // FRC
-    implementation("ca.rmen:lib-french-revolutionary-calendar:1.8.2")
+    implementation("ca.rmen:lib-french-revolutionary-calendar:_")
 
     // Klaxon
-    implementation("com.beust:klaxon:5.4")
+    implementation("com.beust:klaxon:_")
 
     // klibappstorerating
-    implementation("org.jraf:klibappstorerating:1.1.1")
+    implementation("org.jraf:klibappstorerating:_")
 
     // Google photos
-    implementation("com.google.photos.library:google-photos-library-client:1.6.0")
-    implementation("com.google.api-client:google-api-client:1.31.0")
+    implementation("com.google.photos.library:google-photos-library-client:_")
+    implementation("com.google.api-client:google-api-client:_")
 }
 
 // Run `./gradlew publishToMavenLocal` to publish to the local maven repo

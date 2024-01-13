@@ -31,11 +31,11 @@ publishing {
 
 dependencies {
     // Rx
-    implementation("io.reactivex.rxjava2:rxjava:2.2.20")
-    implementation("io.reactivex.rxjava2:rxkotlin:2.4.0")
+    implementation(ReactiveX.rxJava2)
+    implementation(ReactiveX.rxJava2.rxKotlin)
 
     // Klaxon
-    implementation("com.beust:klaxon:5.4")
+    implementation("com.beust:klaxon:_")
 
     // Plugin api
     api(project(":libticker-plugin-api"))

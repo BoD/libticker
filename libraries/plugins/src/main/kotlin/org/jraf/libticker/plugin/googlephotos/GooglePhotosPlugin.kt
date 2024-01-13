@@ -29,7 +29,7 @@ import com.google.api.client.auth.oauth2.AuthorizationCodeResponseUrl
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest
 import com.google.api.client.http.javanet.NetHttpTransport
-import com.google.api.client.json.jackson2.JacksonFactory
+import com.google.api.client.json.gson.GsonFactory
 import com.google.api.gax.core.FixedCredentialsProvider
 import com.google.auth.oauth2.UserCredentials
 import com.google.photos.library.v1.PhotosLibraryClient
@@ -179,7 +179,7 @@ fun main() {
     val authorizationCode = AuthorizationCodeResponseUrl(redirectedUrl).code
     val googleTokenResponse = GoogleAuthorizationCodeTokenRequest(
         NetHttpTransport(),
-        JacksonFactory(),
+        GsonFactory(),
         clientId,
         clientSecret,
         authorizationCode,
