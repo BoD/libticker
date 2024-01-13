@@ -126,6 +126,10 @@ class Configuration(vararg keyValues: Pair<String, Any>) {
         return items[key]?.value ?: throw IllegalArgumentException("'$key' not found")
     }
 
+    fun getOrNull(key: String): Any? {
+        return items[key]?.value
+    }
+
     fun containsKey(key: String): Boolean = items.containsKey(key)
 
     fun remove(key: String) {

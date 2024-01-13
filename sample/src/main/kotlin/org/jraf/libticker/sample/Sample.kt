@@ -64,7 +64,9 @@ fun main() {
         managePlugin(
             "org.jraf.libticker.plugin.weather.WeatherPlugin", Configuration(
                 WeatherPluginDescriptor.KEY_API_KEY to System.getenv("org.jraf.libticker.plugin.weather.WeatherPlugin.apiKey"),
-                WeatherPluginDescriptor.KEY_PERIOD to 5
+                WeatherPluginDescriptor.KEY_PERIOD to 5,
+                WeatherPluginDescriptor.KEY_FORMATTING_LOCALE to "fr",
+
             )
         )
 
