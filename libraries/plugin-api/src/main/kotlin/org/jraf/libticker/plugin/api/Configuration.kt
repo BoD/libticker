@@ -30,9 +30,9 @@ class Configuration(vararg keyValues: Pair<String, Any>) {
     private sealed class ItemValue<T>(
         val value: T
     ) {
-        internal class StringItemValue(value: String) : ItemValue<String>(value)
-        internal class NumberItemValue(value: Number) : ItemValue<Number>(value)
-        internal class BooleanItemValue(value: Boolean) : ItemValue<Boolean>(value)
+        class StringItemValue(value: String) : ItemValue<String>(value)
+        class NumberItemValue(value: Number) : ItemValue<Number>(value)
+        class BooleanItemValue(value: Boolean) : ItemValue<Boolean>(value)
     }
 
     private val items = mutableMapOf<String, ItemValue<*>>()

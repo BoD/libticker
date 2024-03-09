@@ -92,8 +92,8 @@ fun main() {
             "org.jraf.libticker.plugin.googlephotos.GooglePhotosPlugin", Configuration(
                 GooglePhotosPluginDescriptor.KEY_PERIOD to 1,
                 GooglePhotosPluginDescriptor.KEY_CLIENT_ID to "200586986744-9c4qkqc87je1mc2h1474dlvm9k3pqpc9.apps.googleusercontent.com",
-                GooglePhotosPluginDescriptor.KEY_CLIENT_SECRET to "xxx",
-                GooglePhotosPluginDescriptor.KEY_REFRESH_TOKEN to "xxx"
+                GooglePhotosPluginDescriptor.KEY_CLIENT_SECRET to System.getenv("org.jraf.libticker.plugin.googlephotos.GooglePhotosPlugin.clientSecret"),
+                GooglePhotosPluginDescriptor.KEY_REFRESH_TOKEN to System.getenv("org.jraf.libticker.plugin.googlephotos.GooglePhotosPlugin.refreshToken"),
             )
         )
 

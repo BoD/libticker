@@ -25,12 +25,16 @@
 
 package org.jraf.libticker.plugin.manager
 
-import com.beust.klaxon.JsonArray
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Parser
-import com.beust.klaxon.json
 import io.reactivex.Flowable
 import io.reactivex.processors.PublishProcessor
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import org.jraf.libticker.message.MessageQueue
 import org.jraf.libticker.plugin.api.Configuration
 import org.jraf.libticker.plugin.api.Plugin
@@ -58,13 +62,12 @@ class PluginManager(private val messageQueue: MessageQueue) {
     }
 
     fun managePlugins(jsonString: String, notifyListeners: Boolean = false) {
-        val parser: Parser = Parser.default()
-        val managePluginsJsonArray = parser.parse(StringBuilder(jsonString)) as JsonArray<*>
+        val managePluginsJsonArray = Json.parseToJsonElement(jsonString).jsonArray
         for (pluginJsonObject in managePluginsJsonArray) {
-            if (pluginJsonObject !is JsonObject) continue
-            val pluginClassName = pluginJsonObject.string(JSON_CLASS_NAME)!!
-            val configuration = pluginJsonObject.obj(JSON_CONFIGURATION)?.let { configurationJsonObject ->
-                Configuration(*configurationJsonObject.map.map { it.key to it.value!! }.toTypedArray())
+            pluginJsonObject as JsonObject
+            val pluginClassName = pluginJsonObject.get(JSON_CLASS_NAME)!!.jsonPrimitive.content
+            val configuration = pluginJsonObject.get(JSON_CONFIGURATION)?.jsonObject?.let { configurationJsonObject ->
+                Configuration(*configurationJsonObject.entries.map { it.key to it.value }.toTypedArray())
             } ?: Configuration()
             managePlugin(pluginClassName, configuration)
         }
@@ -101,14 +104,28 @@ class PluginManager(private val messageQueue: MessageQueue) {
     }
 
     fun getManagedPluginsAsJsonString(): String {
-        return json {
-            array(_managedPlugins.map { plugin ->
-                obj(
-                    JSON_CLASS_NAME to plugin.descriptor.className,
-                    JSON_CONFIGURATION to obj(plugin.pluginConfiguration.asMap.map { it.key to it.value })
-                )
-            })
-        }.toJsonString(true)
+        return Json.encodeToString(
+            JsonArray(
+                _managedPlugins.map { plugin ->
+                    JsonObject(
+                        mapOf(
+                            JSON_CLASS_NAME to JsonPrimitive(plugin.descriptor.className),
+                            JSON_CONFIGURATION to JsonObject(
+                                plugin.pluginConfiguration.asMap.mapValues {
+                                    val value = it.value
+                                    when (value) {
+                                        is Number -> JsonPrimitive(value)
+                                        is Boolean -> JsonPrimitive(value)
+                                        is String -> JsonPrimitive(value)
+                                        else -> error("Unsupported type: ${value::class.simpleName}")
+                                    }
+                                }
+                            )
+                        )
+                    )
+                }
+            )
+        )
     }
 
     companion object {

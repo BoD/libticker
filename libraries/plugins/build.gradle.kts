@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm")
+    kotlin("plugin.serialization")
     id("maven-publish")
     id("org.jetbrains.dokka")
 }
@@ -43,20 +44,14 @@ dependencies {
     // Coroutines
     implementation(KotlinX.coroutines.jdk9)
 
-    // Twitter4J
-    implementation("org.twitter4j:twitter4j-core:_")
-
-    // ForecasIO
-    implementation("com.github.dvdme:ForecastIOLib:_")
-
     // Sunrise sunset
     implementation("ca.rmen:lib-sunrise-sunset:_")
 
     // FRC
     implementation("ca.rmen:lib-french-revolutionary-calendar:_")
 
-    // Klaxon
-    implementation("com.beust:klaxon:_")
+    // Json
+    implementation(KotlinX.serialization.json)
 
     // klibappstorerating
     implementation("org.jraf:klibappstorerating:_")
@@ -64,6 +59,7 @@ dependencies {
     // Google photos
     implementation("com.google.photos.library:google-photos-library-client:_")
     implementation("com.google.api-client:google-api-client:_")
+    implementation("io.grpc:grpc-core:_")
 }
 
 // Run `./gradlew publishToMavenLocal` to publish to the local maven repo

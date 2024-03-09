@@ -34,8 +34,8 @@ dependencies {
     implementation(ReactiveX.rxJava2)
     implementation(ReactiveX.rxJava2.rxKotlin)
 
-    // Klaxon
-    implementation("com.beust:klaxon:_")
+    // Json
+    implementation(KotlinX.serialization.json)
 
     // Plugin api
     api(project(":libticker-plugin-api"))

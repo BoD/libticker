@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2018 Benoit 'BoD' Lubek (BoD@JRAF.org)
+ * Copyright (C) 2024-present Benoit 'BoD' Lubek (BoD@JRAF.org)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,18 +22,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.libticker.plugin.weather
 
-enum class WeatherCondition(val symbol: String) {
-    UNKNOWN("?"),
-    CLEAR_DAY("☀"),
-    CLEAR_NIGHT("\uD83C\uDF19"),
-    RAIN("☂"),
-    SNOW("☃"),
-    SLEET("☃"),
-    WIND("\uD83D\uDCA8"),
-    FOG("\uD83C\uDF2B"),
-    CLOUDY("☁"),
-    PARTLY_CLOUDY_DAY("\uD83C\uDF24"),
-    PARTLY_CLOUDY_NIGHT("☁\uD83C\uDF19"),
-}
+package org.jraf.libticker.plugin.weather.weatherkit
+
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class JsonWeatherResult(
+    val currentWeather: JsonCurrentWeather,
+    val forecastDaily: JsonForecastDaily,
+)
+
+@Serializable
+data class JsonCurrentWeather(
+    val temperature: Float,
+    val conditionCode: String,
+    val daylight: Boolean,
+)
+
+@Serializable
+data class JsonForecastDaily(
+    val days: List<JsonDay>,
+)
+
+@Serializable
+data class JsonDay(
+    val temperatureMin: Float,
+    val temperatureMax: Float,
+)

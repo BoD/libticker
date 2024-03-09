@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2018 Benoit 'BoD' Lubek (BoD@JRAF.org)
+ * Copyright (C) 2024-present Benoit 'BoD' Lubek (BoD@JRAF.org)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,18 +22,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.libticker.plugin.weather
 
-enum class WeatherCondition(val symbol: String) {
-    UNKNOWN("?"),
-    CLEAR_DAY("☀"),
-    CLEAR_NIGHT("\uD83C\uDF19"),
-    RAIN("☂"),
-    SNOW("☃"),
-    SLEET("☃"),
-    WIND("\uD83D\uDCA8"),
-    FOG("\uD83C\uDF2B"),
-    CLOUDY("☁"),
-    PARTLY_CLOUDY_DAY("\uD83C\uDF24"),
-    PARTLY_CLOUDY_NIGHT("☁\uD83C\uDF19"),
+package org.jraf.libticker.plugin.util
+
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromStream
+import java.net.HttpURLConnection
+import java.net.URL
+
+private val json = Json { ignoreUnknownKeys = true }
+
+internal inline fun <reified T> fetch(url: String, vararg headers: Pair<String, String>): T {
+    val connection = URL(url).openConnection() as HttpURLConnection
+    for (header in headers) {
+        connection.setRequestProperty(header.first, header.second)
+    }
+    return try {
+        @OptIn(ExperimentalSerializationApi::class)
+        json.decodeFromStream(connection.inputStream)
+    } finally {
+        connection.disconnect()
+    }
 }

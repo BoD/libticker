@@ -25,11 +25,11 @@
 
 package org.jraf.libticker.plugin.weather.location
 
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Parser
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.double
+import kotlinx.serialization.json.jsonPrimitive
+import org.jraf.libticker.plugin.util.fetch
 import org.slf4j.LoggerFactory
-import java.net.HttpURLConnection
-import java.net.URL
 
 internal class IpApiClient {
     companion object {
@@ -53,13 +53,10 @@ internal class IpApiClient {
         }
 
     private fun callIpApi(): Location {
-        val connection = URL(URL_API).openConnection() as HttpURLConnection
-        return try {
-            val jsonStr = connection.inputStream.bufferedReader().readText()
-            val rootJson: JsonObject = Parser.default().parse(StringBuilder(jsonStr)) as JsonObject
-            Location(rootJson.float("lat")!!.toDouble(), rootJson.float("lon")!!.toDouble())
-        } finally {
-            connection.disconnect()
-        }
+        val rootJson: JsonObject = fetch(URL_API)
+        return Location(
+            rootJson["lat"]!!.jsonPrimitive.double,
+            rootJson["lon"]!!.jsonPrimitive.double
+        )
     }
 }

@@ -24,21 +24,23 @@
  */
 package org.jraf.libticker.plugin.btc
 
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Parser
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.float
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import org.jraf.libticker.message.Message
 import org.jraf.libticker.plugin.base.PeriodicPlugin
 import org.jraf.libticker.plugin.btc.BtcPluginDescriptor.KEY_PERIOD
+import org.jraf.libticker.plugin.util.fetch
 import org.slf4j.LoggerFactory
-import java.net.HttpURLConnection
-import java.net.URL
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
 
 class BtcPlugin : PeriodicPlugin() {
 
     companion object {
-        private var LOGGER = LoggerFactory.getLogger(BtcPlugin::class.java)
+        private val LOGGER = LoggerFactory.getLogger(BtcPlugin::class.java)
 
         private const val URL_CURRENT_VALUE = "https://blockchain.info/ticker"
         private const val URL_PAST_VALUES = "https://api.blockchain.info/charts/market-price?timespan=30days"
@@ -52,12 +54,12 @@ class BtcPlugin : PeriodicPlugin() {
 
     override fun queueMessage() {
         try {
-            val currentValueJson = fetch(URL_CURRENT_VALUE)
-            val currentValue = currentValueJson.obj("EUR")!!.float("15m")!!.toInt()
+            val currentValueJson: JsonObject = fetch(URL_CURRENT_VALUE)
+            val currentValue = currentValueJson["EUR"]!!.jsonObject["15m"]!!.jsonPrimitive.float.toInt()
 
-            val pastValuesJson = fetch(URL_PAST_VALUES)
-            val pastValues = pastValuesJson.array<JsonObject>("values")!!
-                .map { it.float("y")!! }
+            val pastValuesJson: JsonObject = fetch(URL_PAST_VALUES)
+            val pastValues = pastValuesJson.jsonObject["values"]!!.jsonArray
+                .map { it.jsonObject["y"]!!.jsonPrimitive.float }
                 .normalize()
                 .map { it.roundToInt() }
 
@@ -75,15 +77,5 @@ class BtcPlugin : PeriodicPlugin() {
         val min = minOrNull()!!
         val max = maxOrNull()!!
         return map { (100F / (max - min)) * (it - min) }
-    }
-
-    private fun fetch(url: String): JsonObject {
-        val connection = URL(url).openConnection() as HttpURLConnection
-        return try {
-            val jsonStr = connection.inputStream.bufferedReader().readText()
-            Parser.default().parse(StringBuilder(jsonStr)) as JsonObject
-        } finally {
-            connection.disconnect()
-        }
     }
 }
