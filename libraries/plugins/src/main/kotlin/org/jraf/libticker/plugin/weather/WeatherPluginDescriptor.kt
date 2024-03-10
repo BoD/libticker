@@ -32,7 +32,7 @@ import org.jraf.libticker.plugin.api.PluginDescriptor
 import org.jraf.libticker.plugin.api.PluginDescriptorProvider
 
 object WeatherPluginDescriptor {
-    const val KEY_API_KEY = "apiKey"
+    const val KEY_JWT_TOKEN = "apiKey"
     const val KEY_FORMATTING_LOCALE = "formattingLocale"
     const val KEY_PERIOD = "period"
 
@@ -42,9 +42,9 @@ object WeatherPluginDescriptor {
         configurationDescriptor = PluginConfigurationDescriptor(
             listOf(
                 PluginConfigurationItemDescriptor(
-                    key = KEY_API_KEY,
+                    key = KEY_JWT_TOKEN,
                     type = PluginConfigurationItemType.StringType,
-                    displayName = "Forecast.io API key"
+                    displayName = "WeatherKit JWT Token"
                 ),
                 PluginConfigurationItemDescriptor(
                     key = KEY_FORMATTING_LOCALE,

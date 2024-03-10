@@ -60,7 +60,7 @@ class Configuration(vararg keyValues: Pair<String, Any>) {
                 is String -> put(key, value)
                 is Number -> put(key, value)
                 is Boolean -> put(key, value)
-                else -> throw IllegalArgumentException("'$value' must be either a String, a Number or a Boolean")
+                else -> throw IllegalArgumentException("'$value' must be either a String, a Number or a Boolean - got ${value::class.simpleName}")
             }
         }
     }

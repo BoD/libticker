@@ -31,7 +31,7 @@ import kotlinx.serialization.json.jsonPrimitive
 import org.jraf.libticker.plugin.util.fetch
 import org.slf4j.LoggerFactory
 
-internal class IpApiClient {
+class IpApiClient {
     companion object {
         private var LOGGER = LoggerFactory.getLogger(IpApiClient::class.java)
 

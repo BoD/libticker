@@ -29,8 +29,8 @@ import org.jraf.libticker.message.Message
 import org.jraf.libticker.message.MessageQueue
 import org.jraf.libticker.plugin.api.Configuration
 import org.jraf.libticker.plugin.base.PeriodicPlugin
-import org.jraf.libticker.plugin.weather.WeatherPluginDescriptor.KEY_API_KEY
 import org.jraf.libticker.plugin.weather.WeatherPluginDescriptor.KEY_FORMATTING_LOCALE
+import org.jraf.libticker.plugin.weather.WeatherPluginDescriptor.KEY_JWT_TOKEN
 import org.jraf.libticker.plugin.weather.WeatherPluginDescriptor.KEY_PERIOD
 import org.jraf.libticker.plugin.weather.location.IpApiClient
 import org.jraf.libticker.plugin.weather.weatherkit.WeatherKitClient
@@ -60,7 +60,7 @@ class WeatherPlugin : PeriodicPlugin() {
         formattingLocale = pluginConfiguration.getStringOrNull(KEY_FORMATTING_LOCALE).let {
             if (it == null) Locale.getDefault() else Locale.forLanguageTag(it)
         }
-        weatherKitClient = WeatherKitClient(pluginConfiguration.getString(KEY_API_KEY))
+        weatherKitClient = WeatherKitClient(pluginConfiguration.getString(KEY_JWT_TOKEN))
         ipApiClient = IpApiClient()
     }
 
@@ -100,9 +100,9 @@ class WeatherPlugin : PeriodicPlugin() {
 
                 messageQueue.set(
                     this,
-                    Message(weatherNowPlain, weatherNowFormatted),
-                    Message(weatherMinPlain, weatherMinFormatted),
-                    Message(weatherMaxPlain, weatherMaxFormatted)
+                    Message(text = weatherNowPlain, textFormatted = weatherNowFormatted),
+                    Message(text = weatherMinPlain, textFormatted = weatherMinFormatted),
+                    Message(text = weatherMaxPlain, textFormatted = weatherMaxFormatted)
                 )
             }
     }

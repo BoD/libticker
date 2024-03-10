@@ -36,7 +36,7 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 class WeatherKitClient(
-    private val apiKey: String
+    private val jwtToken: String
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(WeatherKitClient::class.java)
@@ -54,11 +54,12 @@ class WeatherKitClient(
             val url =
                 "https://weatherkit.apple.com/api/v1/weather/fr/$latitude/$longitude?dataSets=currentWeather,forecastDaily&dailyStart=$localTodayAtMidnightInUtc&dailyEnd=$localTodayAt235959InUtc"
             LOGGER.debug("Fetching weather from $url")
-            fetch(url, "Authorization" to "Bearer $apiKey")
+            fetch(url, "Authorization" to "Bearer $jwtToken")
         } catch (e: Exception) {
             LOGGER.warn("Could not fetch weather", e)
             return null
         }
+        LOGGER.debug("jsonWeatherResult: {}", jsonWeatherResult)
         return WeatherResult(
             currentTemperature = jsonWeatherResult.currentWeather.temperature,
             todayMinTemperature = jsonWeatherResult.forecastDaily.days[0].temperatureMin,
@@ -73,6 +74,7 @@ class WeatherKitClient(
                 "Foggy" -> WeatherCondition.FOG
                 "Cloudy" -> WeatherCondition.CLOUDY
                 "PartlyCloudy" -> if (jsonWeatherResult.currentWeather.daylight) WeatherCondition.PARTLY_CLOUDY_DAY else WeatherCondition.PARTLY_CLOUDY_NIGHT
+                "MostlyCloudy" -> if (jsonWeatherResult.currentWeather.daylight) WeatherCondition.MOSTLY_CLOUDY_DAY else WeatherCondition.MOSTLY_CLOUDY_NIGHT
                 else -> WeatherCondition.UNKNOWN
             }
         )

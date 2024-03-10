@@ -30,9 +30,8 @@ publishing {
 }
 
 dependencies {
-    // Rx
-    implementation(ReactiveX.rxJava2)
-    implementation(ReactiveX.rxJava2.rxKotlin)
+    // Coroutines
+    implementation(KotlinX.coroutines.jdk8)
 
     // Json
     implementation(KotlinX.serialization.json)

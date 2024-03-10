@@ -34,6 +34,8 @@ enum class WeatherCondition(val symbol: String) {
     WIND("\uD83D\uDCA8"),
     FOG("\uD83C\uDF2B"),
     CLOUDY("☁"),
-    PARTLY_CLOUDY_DAY("\uD83C\uDF24"),
+    PARTLY_CLOUDY_DAY("\uD83C\uDF24\uFE0F"),
     PARTLY_CLOUDY_NIGHT("☁\uD83C\uDF19"),
+    MOSTLY_CLOUDY_DAY("\uD83C\uDF25"),
+    MOSTLY_CLOUDY_NIGHT("☁\uD83C\uDF19"),
 }

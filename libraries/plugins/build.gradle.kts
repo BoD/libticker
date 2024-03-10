@@ -37,12 +37,8 @@ dependencies {
     // Slf4j
     implementation("org.slf4j:slf4j-api:_")
 
-    // Rx
-    implementation(ReactiveX.rxJava2)
-    implementation(ReactiveX.rxJava2.rxKotlin)
-
     // Coroutines
-    implementation(KotlinX.coroutines.jdk9)
+    implementation(KotlinX.coroutines.jdk8)
 
     // Sunrise sunset
     implementation("ca.rmen:lib-sunrise-sunset:_")

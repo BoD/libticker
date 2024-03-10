@@ -25,16 +25,24 @@
 
 package org.jraf.libticker.plugin.manager
 
-import io.reactivex.Flowable
-import io.reactivex.processors.PublishProcessor
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.boolean
+import kotlinx.serialization.json.booleanOrNull
+import kotlinx.serialization.json.double
+import kotlinx.serialization.json.doubleOrNull
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.long
+import kotlinx.serialization.json.longOrNull
 import org.jraf.libticker.message.MessageQueue
 import org.jraf.libticker.plugin.api.Configuration
 import org.jraf.libticker.plugin.api.Plugin
@@ -44,8 +52,8 @@ import java.util.ServiceLoader
 
 class PluginManager(private val messageQueue: MessageQueue) {
     private val _managedPlugins = mutableListOf<Plugin>()
-    private val _managedPluginsChanged = PublishProcessor.create<String>().toSerialized()
-    val managedPluginsChanged: Flowable<String> = _managedPluginsChanged.hide()
+    private val _managedPluginsChanged = MutableStateFlow<String?>(null)
+    val managedPluginsChanged: Flow<String> = _managedPluginsChanged.filterNotNull()
     val globalConfiguration: Configuration by lazy { Configuration() }
 
     fun managePlugin(
@@ -53,7 +61,7 @@ class PluginManager(private val messageQueue: MessageQueue) {
         pluginConfiguration: Configuration,
         notifyListeners: Boolean = false
     ) {
-        val plugin = (Class.forName(pluginClassName).newInstance() as Plugin)
+        val plugin = (Class.forName(pluginClassName).getDeclaredConstructor().newInstance() as Plugin)
         _managedPlugins += plugin
         plugin.init(messageQueue, pluginConfiguration, globalConfiguration)
         plugin.start()
@@ -67,7 +75,19 @@ class PluginManager(private val messageQueue: MessageQueue) {
             pluginJsonObject as JsonObject
             val pluginClassName = pluginJsonObject.get(JSON_CLASS_NAME)!!.jsonPrimitive.content
             val configuration = pluginJsonObject.get(JSON_CONFIGURATION)?.jsonObject?.let { configurationJsonObject ->
-                Configuration(*configurationJsonObject.entries.map { it.key to it.value }.toTypedArray())
+                Configuration(
+                    *configurationJsonObject.entries.map { (key: String, value: JsonElement) ->
+                        val jsonPrimitive = value.jsonPrimitive
+                        // Unfortunately, https://github.com/Kotlin/kotlinx.serialization/issues/1298
+                        key to when {
+                            jsonPrimitive.isString -> jsonPrimitive.content
+                            jsonPrimitive.booleanOrNull != null -> jsonPrimitive.boolean
+                            jsonPrimitive.doubleOrNull != null -> jsonPrimitive.double
+                            jsonPrimitive.longOrNull != null -> jsonPrimitive.long
+                            else -> error("Unsupported type: ${value::class.simpleName}")
+                        }
+                    }.toTypedArray()
+                )
             } ?: Configuration()
             managePlugin(pluginClassName, configuration)
         }
@@ -94,7 +114,7 @@ class PluginManager(private val messageQueue: MessageQueue) {
     }
 
     private fun notifyListeners() {
-        _managedPluginsChanged.onNext(getManagedPluginsAsJsonString())
+        _managedPluginsChanged.value = getManagedPluginsAsJsonString()
     }
 
     val managedPlugins: List<Plugin> = _managedPlugins

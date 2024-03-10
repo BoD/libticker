@@ -25,14 +25,14 @@
 
 package org.jraf.libticker.plugin.base
 
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.util.ResourceBundle
-import java.util.concurrent.TimeUnit
+import kotlin.concurrent.thread
 
 abstract class PeriodicPlugin : BasePlugin() {
+    private var started = false
+
     abstract val periodMs: Long
     open val initialDelayMs: Long = 0
 
@@ -40,29 +40,26 @@ abstract class PeriodicPlugin : BasePlugin() {
         ResourceBundle.getBundle(javaClass.name)
     }
 
-    private var taskDisposable: Disposable? = null
-
     override fun start() {
         super.start()
-        taskDisposable = Schedulers.computation().schedulePeriodicallyDirect(
-            {
+        started = true
+        thread {
+            Thread.sleep(500)
+            while (started) {
                 try {
                     queueMessage()
                 } catch (t: Throwable) {
                     LOGGER.warn("Exception caught when calling queueMessage from ${this.javaClass}", t)
                 }
-            },
-            // Add a few milliseconds because sometimes we are called too early!
-            initialDelayMs + 500,
-            periodMs,
-            TimeUnit.MILLISECONDS
-        )
+                Thread.sleep(periodMs)
+            }
+        }
     }
 
     abstract fun queueMessage()
 
     override fun stop() {
-        taskDisposable?.dispose()
+        started = false
         super.stop()
     }
 
