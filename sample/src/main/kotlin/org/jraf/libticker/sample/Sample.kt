@@ -25,7 +25,6 @@
 
 package org.jraf.libticker.sample
 
-import io.reactivex.schedulers.Schedulers
 import org.jraf.libticker.httpconf.HttpConf
 import org.jraf.libticker.httpconf.HttpConfSettings
 import org.jraf.libticker.message.BasicMessageQueue
@@ -37,9 +36,9 @@ import org.jraf.libticker.plugin.frc.FrcPluginDescriptor
 import org.jraf.libticker.plugin.googlephotos.GooglePhotosPluginDescriptor
 import org.jraf.libticker.plugin.manager.PluginManager
 import org.jraf.libticker.plugin.weather.WeatherPluginDescriptor
-import java.util.concurrent.TimeUnit
+import kotlin.concurrent.thread
 
-fun main() {
+suspend fun main() {
     // Logging
     System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace")
 
@@ -67,7 +66,7 @@ fun main() {
                 WeatherPluginDescriptor.KEY_PERIOD to 5,
                 WeatherPluginDescriptor.KEY_FORMATTING_LOCALE to "fr",
 
-            )
+                )
         )
 
         // Btc
@@ -151,13 +150,12 @@ fun main() {
 
     println(pluginManager.getManagedPluginsAsJsonString())
 
-    pluginManager.managedPluginsChanged.subscribe { jsonConf ->
-        println("Managed plugins changed!\n$jsonConf")
+    thread {
+        while (true) {
+            messageQueue.getNext()?.let(::println)
+            Thread.sleep(5000)
+        }
     }
-
-    Schedulers.computation().schedulePeriodicallyDirect({
-        messageQueue.getNext()?.let(::println)
-    }, 0, 5, TimeUnit.SECONDS)
 
     val httpConf = HttpConf(pluginManager, HttpConfSettings(port = 8043))
     httpConf.start()
