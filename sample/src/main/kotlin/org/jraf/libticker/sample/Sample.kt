@@ -30,6 +30,7 @@ import org.jraf.libticker.httpconf.HttpConfSettings
 import org.jraf.libticker.message.BasicMessageQueue
 import org.jraf.libticker.plugin.api.Configuration
 import org.jraf.libticker.plugin.appstorerating.AppStoreRatingPluginDescriptor
+import org.jraf.libticker.plugin.bingimages.BingImagesPluginDescriptor
 import org.jraf.libticker.plugin.btc.BtcPluginDescriptor
 import org.jraf.libticker.plugin.datetime.DateTimePluginDescriptor
 import org.jraf.libticker.plugin.frc.FrcPluginDescriptor
@@ -41,6 +42,8 @@ import kotlin.concurrent.thread
 suspend fun main() {
     // Logging
     System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace")
+    System.setProperty("org.slf4j.simpleLogger.showDateTime", "true")
+    System.setProperty("org.slf4j.simpleLogger.dateTimeFormat", "yyyy-MM-dd HH:mm:ss")
 
     val messageQueue = BasicMessageQueue(40)
 
@@ -93,6 +96,14 @@ suspend fun main() {
                 GooglePhotosPluginDescriptor.KEY_CLIENT_ID to "200586986744-9c4qkqc87je1mc2h1474dlvm9k3pqpc9.apps.googleusercontent.com",
                 GooglePhotosPluginDescriptor.KEY_CLIENT_SECRET to System.getenv("org.jraf.libticker.plugin.googlephotos.GooglePhotosPlugin.clientSecret"),
                 GooglePhotosPluginDescriptor.KEY_REFRESH_TOKEN to System.getenv("org.jraf.libticker.plugin.googlephotos.GooglePhotosPlugin.refreshToken"),
+            )
+        )
+
+        // Bing images
+        managePlugin(
+            "org.jraf.libticker.plugin.bingimages.BingImagesPlugin", Configuration(
+                BingImagesPluginDescriptor.KEY_PERIOD to 60,
+                BingImagesPluginDescriptor.KEY_QUEUE_SIZE to 24
             )
         )
 

@@ -47,11 +47,14 @@ abstract class PeriodicPlugin : BasePlugin() {
             Thread.sleep(500)
             while (started) {
                 try {
+                    LOGGER.debug("Calling queueMessage from {}", this.javaClass)
                     queueMessage()
                 } catch (t: Throwable) {
                     LOGGER.warn("Exception caught when calling queueMessage from ${this.javaClass}", t)
                 }
-                Thread.sleep(periodMs)
+                val delay = periodMs - System.currentTimeMillis() % periodMs
+                LOGGER.debug("Sleeping for {}ms", delay)
+                Thread.sleep(delay)
             }
         }
     }
